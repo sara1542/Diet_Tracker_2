@@ -8,22 +8,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatDetailsScreen extends StatelessWidget {
-
- //receiver model
-  SocialUserModel userModel;
+  //receiver model
+  UserModel userModel;
 
   ChatDetailsScreen({Key? key, required this.userModel}) : super(key: key);
 
-    var messageController=TextEditingController();
+  var messageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Builder(
-      builder: (BuildContext context)
-      {
+      builder: (BuildContext context) {
         SocialCubit.get(context).getMessages(receiverId: userModel.uId);
-      return  BlocConsumer<SocialCubit,SocialStates>(
+        return BlocConsumer<SocialCubit, SocialStates>(
           listener: (context, state) {},
-          builder: (context,state){
+          builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
                 titleSpacing: 0.0,
@@ -51,26 +49,25 @@ class ChatDetailsScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ListView.separated(
-                        physics: BouncingScrollPhysics(),
-                          itemBuilder: (context,index)
-                          {
-                              var message=  SocialCubit.get(context).messages[index];
-                              if(SocialCubit.get(context).userModel.uId==message.senderId){
-                                return buildMyMessage(message);
-                              }
-                              else{
-                                return buildMessage(message);
-                              }
+                          physics: BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            var message =
+                                SocialCubit.get(context).messages[index];
+                            if (SocialCubit.get(context).userModel.uId ==
+                                message.senderId) {
+                              return buildMyMessage(message);
+                            } else {
+                              return buildMessage(message);
+                            }
                           },
-                          separatorBuilder: (context,index)=>SizedBox(height: 10.0,),
+                          separatorBuilder: (context, index) => SizedBox(
+                                height: 10.0,
+                              ),
                           itemCount: SocialCubit.get(context).messages.length),
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.grey,
-                            width: 1.0
-                        ),
+                        border: Border.all(color: Colors.grey, width: 1.0),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -81,15 +78,14 @@ class ChatDetailsScreen extends StatelessWidget {
                               controller: messageController,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: 'Type your message here ...'
-                              ),
+                                  hintText: 'Type your message here ...'),
                             ),
                           ),
                           Container(
                             height: 50.0,
                             color: Colors.blue,
                             child: MaterialButton(
-                              onPressed: (){
+                              onPressed: () {
                                 SocialCubit.get(context).sendMessage(
                                     receiverId: userModel.uId,
                                     dateTime: DateTime.now().toString(),
@@ -114,47 +110,41 @@ class ChatDetailsScreen extends StatelessWidget {
         );
       },
     );
-
   }
-  Widget buildMessage(MessageModel message)=>Align(
-    alignment: AlignmentDirectional.centerStart,
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius:  BorderRadiusDirectional.only(
-          bottomEnd: Radius.circular(10.0),
-          topEnd: Radius.circular(10.0),
-          topStart: Radius.circular(10.0),
-        ),
-      ),
-      padding: EdgeInsets.symmetric(
-          vertical: 5.0,
-          horizontal: 10.0
-      ),
-      child: Text(
-        message.text,
-      ),
-    ),
-  );
 
-  Widget buildMyMessage(MessageModel message)=>Align(
-    alignment: AlignmentDirectional.centerEnd,
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.blue[100],
-        borderRadius:  BorderRadiusDirectional.only(
-          bottomStart: Radius.circular(10.0),
-          topEnd: Radius.circular(10.0),
-          topStart: Radius.circular(10.0),
+  Widget buildMessage(MessageModel message) => Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadiusDirectional.only(
+              bottomEnd: Radius.circular(10.0),
+              topEnd: Radius.circular(10.0),
+              topStart: Radius.circular(10.0),
+            ),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+          child: Text(
+            message.text,
+          ),
         ),
-      ),
-      padding: EdgeInsets.symmetric(
-          vertical: 5.0,
-          horizontal: 10.0
-      ),
-      child: Text(
-        message.text,
-      ),
-    ),
-  );
+      );
+
+  Widget buildMyMessage(MessageModel message) => Align(
+        alignment: AlignmentDirectional.centerEnd,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.blue[100],
+            borderRadius: BorderRadiusDirectional.only(
+              bottomStart: Radius.circular(10.0),
+              topEnd: Radius.circular(10.0),
+              topStart: Radius.circular(10.0),
+            ),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+          child: Text(
+            message.text,
+          ),
+        ),
+      );
 }

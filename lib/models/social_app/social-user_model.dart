@@ -1,5 +1,4 @@
-class SocialUserModel
-{
+class UserModel {
   late String name;
   late String email;
   late String phone;
@@ -11,44 +10,43 @@ class SocialUserModel
   late int height;
   late int weight;
 
-  SocialUserModel({
+  UserModel({
     required this.name,
     required this.email,
     required this.phone,
     required this.uId,
     required this.image,
-  required this.isEmailVerified,
+    required this.isEmailVerified,
     required this.age,
     required this.weight,
     required this.height,
     required this.currentCase,
   });
 
-  SocialUserModel.fromJson(Map<String, dynamic> json)
-  {
-    name=json['name'];
-    email=json['email'];
-    phone=json['phone'];
-    uId=json['uId'];
-    image=json['image'];
-    isEmailVerified=json['isEmailVerified'];
-    age=json['age'];
-    weight=json['weight'];
-    height=json['height'];
-    currentCase=json['currentCase'];
+  UserModel.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    email = json['email'];
+    phone = json['phone'];
+    uId = json['uId'];
+    image = json['image'];
+    isEmailVerified = json['isEmailVerified'];
+    age = json['age'];
+    weight = json['weight'];
+    height = json['height'];
+    currentCase = json['currentCase'];
   }
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       'name': name,
       'email': email,
       'phone': phone,
-      'uId':uId,
-      'image':image,
-      'isEmailVerified':isEmailVerified,
-      'age':age,
-      'weight':weight,
-      'height':height,
-      'currentCase':currentCase,
+      'uId': uId,
+      'image': image,
+      'isEmailVerified': isEmailVerified,
+      'age': age,
+      'weight': weight,
+      'height': height,
+      'currentCase': currentCase,
     };
   }
 }

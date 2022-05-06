@@ -11,7 +11,6 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
 
   static SocialRegisterCubit get(context) => BlocProvider.of(context);
 
-
   void userRegister({
     required String name,
     required String email,
@@ -22,64 +21,70 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
     required int height,
     required int weight,
     required String currentCase,
-  })
-  {
+  }) {
     emit(SocialRegisterLoadingState());
-    FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password
-    ).then((value) {
+    FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((value) {
       print(value.user!.email);
       print(value.user!.uid);
-      userCreate(name: name, email: email, phone: phone, uId: value.user!.uid,isEmailVerified: isEmailVerified, age: age,
+      userCreate(
+          name: name,
+          email: email,
+          phone: phone,
+          uId: value.user!.uid,
+          isEmailVerified: isEmailVerified,
+          age: age,
           weight: weight,
           currentCase: currentCase,
           height: height);
-
-    })
-    .catchError((error){
+    }).catchError((error) {
+      print("***********************8" + error.toString());
       emit(SocialRegisterErrorState(error.toString()));
     });
-
   }
-  late SocialUserModel model;
-  void userCreate({
-    required String name,
-    required String email,
-    required String phone,
-    required String uId,
-    required int age,
-    required int height,
-    required int weight,
-    required String currentCase,
-    bool isEmailVerified=false
-}){
-     model= SocialUserModel(name: name,
-         email: email,
-         phone: phone,
-         uId: uId,
-         image:'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
-         isEmailVerified: isEmailVerified,
-         age: age,
-         weight: weight,
-         currentCase: currentCase,
-     height: height);
-    FirebaseFirestore.instance.collection('users').doc(uId).set(model.toMap())
-    .then((value) {
+
+  late UserModel model;
+  void userCreate(
+      {required String name,
+      required String email,
+      required String phone,
+      required String uId,
+      required int age,
+      required int height,
+      required int weight,
+      required String currentCase,
+      bool isEmailVerified = false}) {
+    model = UserModel(
+        name: name,
+        email: email,
+        phone: phone,
+        uId: uId,
+        image:
+            'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
+        isEmailVerified: isEmailVerified,
+        age: age,
+        weight: weight,
+        currentCase: currentCase,
+        height: height);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .set(model.toMap())
+        .then((value) {
       emit(SocialCreateuserSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       emit(SocialCreateUserErrorState(error));
     });
-
   }
 
   IconData suffix = Icons.visibility_outlined;
   bool isPassword = true;
 
-  void changePasswordVisibility()
-  {
+  void changePasswordVisibility() {
     isPassword = !isPassword;
-    suffix = isPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined ;
+    suffix =
+        isPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;
 
     emit(SocialRegisterChangePasswordVisibilityState());
   }
