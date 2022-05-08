@@ -7,6 +7,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firstgp/layout/social_app/social_layout.dart';
 import 'package:firstgp/modules/social_app/social_login/social_login_screen.dart';
+import 'package:firstgp/providers/buttonProviders.dart';
+import 'package:firstgp/providers/mainPageProvider.dart';
+import 'package:firstgp/screens/loginandregister.dart';
 import 'package:firstgp/shared/bloc_observer.dart';
 import 'package:firstgp/shared/components/constants.dart';
 import 'package:firstgp/shared/cubit/cubit.dart';
@@ -14,6 +17,7 @@ import 'package:firstgp/shared/cubit/states.dart';
 import 'package:firstgp/shared/network/local/cache_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import 'layout/social_app/cubit/cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -59,29 +63,43 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return MultiBlocProvider(
+    return MultiProvider(
         providers: [
-          BlocProvider(
-            create: (BuildContext context) => AppCubit(),
-          ),
-          BlocProvider(
-        create: (BuildContext context)=>SocialCubit()..getUserData(),
-          )  ],
-        child: BlocConsumer<AppCubit,AppStates>(
-          listener: (context,state){
-
-           // debugPrint('Current state: ' +state.toString());
-          },
-          builder: (context,state){
-          //  SocialCubit.get(context).getUserData();
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: startWidget,
-            );
-          },
-        )
+          ChangeNotifierProvider(create: (_) => mainProvider()),
+          ChangeNotifierProvider(create: (_) => buttonProvider()),
+        ],
+        child: MaterialApp(
+            theme: ThemeData(
+              scaffoldBackgroundColor: Color(0xFFEFEFF6),
+              primarySwatch: Colors.lightGreen,
+            ),
+            home: LoginScreen())
+//              mainPage()),
     );
+
+    // return MultiBlocProvider(
+    //     providers: [
+    //       BlocProvider(
+    //         create: (BuildContext context) => AppCubit(),
+    //       ),
+    //       BlocProvider(
+    //     create: (BuildContext context)=>SocialCubit()..getUserData(),
+    //       ) ,
+    //     ],
+    //     child: BlocConsumer<AppCubit,AppStates>(
+    //       listener: (context,state){
+    //
+    //        // debugPrint('Current state: ' +state.toString());
+    //       },
+    //       builder: (context,state){
+    //       //  SocialCubit.get(context).getUserData();
+    //         return MaterialApp(
+    //           debugShowCheckedModeBanner: false,
+    //           home: startWidget,
+    //         );
+    //       },
+    //     )
+    // );
   }
 
 
