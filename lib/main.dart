@@ -1,7 +1,6 @@
 // @dart=2.9
 //null safety problem solved by previous line
 
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,40 +21,56 @@ import 'package:provider/provider.dart';
 import 'layout/social_app/cubit/cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   BlocOverrides.runZoned(
-        () {
+    () {
       AppCubit();
     },
     blocObserver: MyBlocObserver(),
   );
-await CacheHelper.init();
+  await CacheHelper.init();
   Widget widget;
-  uId=CacheHelper.getData(key: 'uId');
+  uId = CacheHelper.getData(key: 'uId');
 
- if(uId != null){
-   widget=SocialLayout();
-   print('111111'+uId);
- }
- else{
-   widget=SocialLoginScreen();
-   print('222222');
- }
+  if (uId != null) {
+    widget = SocialLayout();
+    print('111111' + uId);
+  } else {
+    widget = SocialLoginScreen();
+    print('222222');
+  }
 
-  runApp(MyApp(
-
-    startWidget: widget,
-  ));
+  runApp(MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (BuildContext context) => AppCubit(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => SocialCubit()..getUserData(),
+        ),
+      ],
+      child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => mainProvider()),
+            ChangeNotifierProvider(create: (_) => buttonProvider()),
+          ],
+          child: BlocConsumer<AppCubit, AppStates>(listener: (context, state) {
+            debugPrint('Current state: ' + state.toString());
+          }, builder: (context, state) {
+            SocialCubit.get(context).getUserData();
+            return MyApp(
+              startWidget: widget,
+            );
+          }))));
 }
 
 class MyApp extends StatelessWidget {
   // constructor
   // build
-   Widget startWidget;
+  Widget startWidget;
 
   MyApp({
     this.startWidget,
@@ -63,19 +78,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => mainProvider()),
-          ChangeNotifierProvider(create: (_) => buttonProvider()),
-        ],
-        child: MaterialApp(
-            theme: ThemeData(
-              scaffoldBackgroundColor: Color(0xFFEFEFF6),
-              primarySwatch: Colors.lightGreen,
-            ),
-            home: LoginScreen())
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: Color(0xFFEFEFF6),
+          primarySwatch: Colors.lightGreen,
+        ),
+        home: LoginScreen());
 //              mainPage()),
-    );
 
     // return MultiBlocProvider(
     //     providers: [
@@ -101,8 +111,6 @@ class MyApp extends StatelessWidget {
     //     )
     // );
   }
-
-
 }
 
 // MultiBlocProvider(

@@ -1,18 +1,21 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firstgp/globals/globalVariables.dart';
+import 'package:flutter/material.dart';
 
 enum gender { male, female }
 
 class user {
-  String username, email, password;
-  String Gender;
+  late String username, email, password;
+  late String Gender;
   late String uId;
   late String image;
   late bool isEmailVerified;
   // int age;
-
-  user(this.username, this.email, this.password, this.Gender);
+  user.empty();
+  user.inlogin(this.uId, this.username);
+  user.withnames(
+      this.uId, this.username, this.email, this.password, this.Gender);
   Dio dio = new Dio();
 
   Map<String, dynamic> toMap() {
@@ -22,23 +25,31 @@ class user {
     return map;
   }
 
-  final usersUrl = 'http://192.168.56.1:6666/api/';
+  final usersUrl = 'http://192.168.1.60:6666/api/';
   factory user.fromJson(dynamic json) {
-    return user(json["username"] as String, json["email"] as String,
-        json["password"] as String, json["gender"] as String //,
-        //json["age"] as int
-        );
+    debugPrint("heloooooo");
+    debugPrint("44444444444" + json["_id"] + "     " + json["username"]);
+    return user.inlogin(
+      json["_id"] as String,
+      json["username"] as String,
+    );
   }
   Future<int?> login(String username, String password) async {
+    debugPrint("******************************88");
     final response = await dio.post(usersUrl + 'login',
         //options: Options(headers: {"Content-Type": "application/json"}),
-        data: json.encode(<String, dynamic>{
-          "username": username,
+        data: json.encode(<String, String>{
+          "email": username,
           "password": password,
         }));
-    print("in login" + response.data);
+
     //currentuser.fromJson(response.data);
     if (response.statusCode == 200) {
+      debugPrint("in login FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+      debugPrint("in login" + response.data["data"]["User"].toString());
+      currentuser = user.fromJson(response.data["data"]["User"]);
+
+      debugPrint("**********************88 in login");
       return response.statusCode;
     } else {
       throw Exception('failed to login');
@@ -46,4 +57,5 @@ class user {
   }
 
   Future<int?> register() async {} //overrided by patient, doctor
+
 }

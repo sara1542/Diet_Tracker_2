@@ -15,7 +15,7 @@ class patient extends user {
       : Age = age,
         Case = c,
         Inbody = inb,
-        super(username, email, password, Gender);
+        super.withnames("", username, email, password, Gender);
 
   Future<int?> register() async {
     print("herrrrrrrrrrrrrrrrrrrrrrr" + Inbody.BMI.toString());
@@ -25,7 +25,7 @@ class patient extends user {
           "email": email.trim(),
           "password": password.trim(),
           "gender": Gender,
-          "case": Case,
+          "Case": Case,
           "height": Inbody.height,
           "weight": Inbody.weight,
           "BMI": Inbody.BMI

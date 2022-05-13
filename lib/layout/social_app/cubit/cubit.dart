@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firstgp/apiServices/api.dart';
 import 'package:firstgp/layout/social_app/cubit/states.dart';
 import 'package:firstgp/models/social_app/chat_model.dart';
 
@@ -15,6 +16,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../globals/globalVariables.dart';
+import '../../../screens/doctorsScreen.dart';
 import '../../../shared/components/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -57,6 +60,7 @@ class SocialCubit extends Cubit<SocialStates> {
     FeedsScreen(),
     ChatsScreen(),
     SettingsScreen(),
+    doctorsScreen()
   ];
 
   void ChangeBottomNav(int index) {
@@ -70,7 +74,7 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialChangeBottomNavState());
   }
 
-  List<String> titles = ['News Feed', 'Chats', 'Settings'];
+  List<String> titles = ['News Feed', 'Chats', 'Settings', 'doctors'];
 
   File? profileImage;
   var picker = ImagePicker();
@@ -146,7 +150,11 @@ class SocialCubit extends Cubit<SocialStates> {
     }).catchError((error) {});
   }
 
+  apiServices api = new apiServices();
   List<UserModel> users = [];
+  Future<void> getdoctors() async {
+    await api.getdoctors();
+  }
 
   void getUsers() {
     users = [];

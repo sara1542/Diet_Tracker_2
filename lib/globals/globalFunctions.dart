@@ -1,4 +1,3 @@
-
 import 'package:firstgp/layout/social_app/social_layout.dart';
 import 'package:firstgp/modules/social_app/social_login/social_login_screen.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../models/doctor.dart';
 import '../models/inbody.dart';
 import '../models/patient.dart';
+import '../shared/network/local/cache_helper.dart';
 import 'globalVariables.dart';
 import 'globalwidgets.dart';
 
@@ -23,25 +23,31 @@ String getLocation(String fullAdress) {
 void submit(context) {
   print("in submit " + authData.toString());
   if (provider.isLogin) {
-    currentuser.login(authData['email']!, authData['password']!).then((value) {
-      showToast(true, 'signed in succesfully');
-      print('signed in succesfully');
-      authData['email'] = '';
-      authData['password'] = '';
-      button_provider.togglesigninOrsignupProgressIndicator();
-
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => SocialLayout(),
-        ),
-        (route) => false,
-      );
-    }).catchError((error) {
-      button_provider.togglesigninOrsignupProgressIndicator();
-      showToast(false, 'failed to sign in : $error');
-      print('failed to sign in : $error');
-    });
+    currentuser
+        .login(authData['email']!, authData['password']!)
+        .then((value) {
+          showToast(true, 'signed in succesfully');
+          print('signed in succesfully');
+          authData['email'] = '';
+          authData['password'] = '';
+          button_provider.togglesigninOrsignupProgressIndicator();
+        })
+        .then((value) => CacheHelper.saveData(
+              key: 'uId',
+              value: currentuser.uId,
+            ))
+        .then((value) => Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => SocialLayout(),
+              ),
+              (route) => false,
+            ))
+        .catchError((error) {
+          button_provider.togglesigninOrsignupProgressIndicator();
+          showToast(false, 'failed to sign in : $error');
+          print('failed to sign in : $error');
+        });
   } else {
     /*'email': '',
   'password': '',
@@ -56,6 +62,7 @@ void submit(context) {
     if (authData['isdoctor'] == 'true') {
       print('registering a doctor');
       currentuser = new doctor(
+          "",
           authData['username']!,
           authData['email']!,
           authData['password']!,
@@ -80,7 +87,7 @@ void submit(context) {
     }
     currentuser.register().then((value) {
       button_provider.togglesigninOrsignupProgressIndicator();
-       showToast(true, 'signed up succesfully');
+      showToast(true, 'signed up succesfully');
       provider.toggleisLogin();
     }).catchError((error) {
       button_provider.togglesigninOrsignupProgressIndicator();

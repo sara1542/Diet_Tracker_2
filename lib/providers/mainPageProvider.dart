@@ -8,6 +8,10 @@ class mainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void getusers() {
+    // http://192.168.56.1:6666/api/
+    //192.168.1.60:6666
+  }
   bool showPassword = false;
   void togglePassword() {
     showPassword = !showPassword;

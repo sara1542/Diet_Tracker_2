@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +21,7 @@ class CustomContainer_HomePage extends StatelessWidget {
             children: [
               Text(
                 doctorName,
-                style: TextStyle(fontSize: 15, color: Color(0xFF6B6B9E)),
+                style: TextStyle(fontSize: 20, color: Color(0xFF6B6B9E)),
               ),
               SizedBox(
                 height: 10,

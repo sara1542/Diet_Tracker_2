@@ -1,5 +1,3 @@
-
-
 // late Position position;
 import '../models/doctor.dart';
 import '../models/user.dart';
@@ -9,11 +7,12 @@ List<String> doctorsVisitaUrl = [
   'https://www.vezeeta.com/ar/dr/%D8%AF%D9%83%D8%AA%D9%88%D8%B1-%D9%85%D8%AD%D9%85%D8%AF-%D8%A7%D8%AD%D9%85%D8%AF-%D9%85%D9%86%D8%B5%D9%88%D8%B1#patients-reviews'
 ];
 List<doctor> doctors = [];
+late Future f;
 
-List<doctor> temp = [];
+//List<doctor> temp = [];
 var provider;
 var button_provider;
-late user currentuser;
+user currentuser = new user.empty();
 Map<String, String> authData = {
   'email': '',
   'password': '',
