@@ -17,12 +17,12 @@ late Future f;
 var provider;
 var button_provider;
 user currentuser = new user.empty();
-patient currentpatient=new patient.empty();
-inbody currentInbody=new inbody.empty();
-doctor currentdoctor= new doctor.empty();
+patient currentpatient = new patient.empty();
+inbody currentInbody = new inbody.empty();
+doctor currentdoctor = new doctor.empty();
 
-String GlobalUrl="http://192.168.1.15:6666/api/";
-
+String GlobalUrl = "http://192.168.1.60:6666/api/";
+String chatbotUrl = 'http://192.168.1.60:5005/webhooks/rest/webhook';
 Map<String, String> authData = {
   'email': '',
   'password': '',
@@ -36,6 +36,7 @@ Map<String, String> authData = {
   'height': '',
   'weight': '',
   'age': '',
-  'image': 'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png',
+  'image':
+      'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png',
   'detection price': ''
 };

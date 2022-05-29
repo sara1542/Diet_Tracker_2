@@ -13,8 +13,8 @@ import '../../../models/patient.dart';
 
 class ChatDetailsScreen extends StatefulWidget {
   //receiver model
-
-  ChatDetailsScreen({Key? key}) : super(key: key);
+  String receiver;
+  ChatDetailsScreen({Key? key, required this.receiver}) : super(key: key);
 
   @override
   State<ChatDetailsScreen> createState() => _ChatDetailsScreenState();
@@ -27,7 +27,11 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   Widget build(BuildContext context) {
     return Builder(
       builder: (BuildContext context) {
-        SocialCubit.get(context).getMessages();
+        if (widget.receiver == 'community') {
+          SocialCubit.get(context).getMessages();
+        } else {
+          SocialCubit.get(context).getMessagesfromChatbot();
+        }
         return BlocConsumer<SocialCubit, SocialStates>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -38,8 +42,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                   const CircleAvatar(
                     radius: 20.0,
                     backgroundImage: NetworkImage(
-                     'https://cdn4.vectorstock.com/i/1000x1000/81/88/community-logo-icon-vector-19168188.jpg'
-                    ),
+                        'https://cdn4.vectorstock.com/i/1000x1000/81/88/community-logo-icon-vector-19168188.jpg'),
                   ),
                   const SizedBox(
                     width: 15.0,
@@ -63,6 +66,11 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                             var message =
                                 SocialCubit.get(context).messages[index];
                             if (currentpatient.uId == message.senderId) {
+                              if (widget.receiver == 'chatbot') {
+                                message.imageOfSender =
+                                    'https://cdn-icons-png.flaticon.com/512/2040/2040946.png';
+                              }
+
                               return buildMyMessage(message);
                             } else {
                               return buildMessage(message);
@@ -94,10 +102,17 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                             color: Colors.blue,
                             child: MaterialButton(
                               onPressed: () {
-                                SocialCubit.get(context).sendMessageTogroup(
-                                    dateTime: DateTime.now().toString(),
-                                    text: messageController.text);
-                                messageController.text="";
+                                if (widget.receiver == 'community') {
+                                  SocialCubit.get(context).sendMessageTogroup(
+                                      dateTime: DateTime.now().toString(),
+                                      text: messageController.text);
+                                } else {
+                                  SocialCubit.get(context).sendMessageToChatbot(
+                                      dateTime: DateTime.now().toString(),
+                                      text: messageController.text);
+                                }
+
+                                messageController.text = "";
                               },
                               minWidth: 1.0,
                               child: const Icon(
@@ -124,11 +139,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         alignment: AlignmentDirectional.centerStart,
         child: Row(
           children: [
-             CircleAvatar(
+            CircleAvatar(
               radius: 20.0,
-              backgroundImage: NetworkImage(
-                message.imageOfSender
-              ),
+              backgroundImage: NetworkImage(message.imageOfSender),
             ),
             const SizedBox(
               width: 15.0,
@@ -156,7 +169,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.blue[100],
-            borderRadius: BorderRadiusDirectional.only(
+            borderRadius: const BorderRadiusDirectional.only(
               bottomStart: Radius.circular(10.0),
               topEnd: Radius.circular(10.0),
               topStart: Radius.circular(10.0),
