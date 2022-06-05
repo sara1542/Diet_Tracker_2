@@ -13,6 +13,7 @@ import 'package:firstgp/models/social_app/chat_model.dart';
 
 import 'package:firstgp/models/social_app/social-user_model.dart';
 import 'package:firstgp/modules/social_app/chats/chats_screen.dart';
+import 'package:firstgp/modules/social_app/chats/displayChats.dart';
 import 'package:firstgp/modules/social_app/feeds/feeds_screen.dart';
 import 'package:firstgp/modules/social_app/settings/settings_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,8 +59,9 @@ class SocialCubit extends Cubit<SocialStates> {
   int currentIndex = 0;
   List<Widget> screens = [
     FeedsScreen(),
-    ChatsScreen(receiver: 'community'),
-    ChatsScreen(receiver: 'chatbot'),
+    //ChatsScreen(receiver: 'community'),
+    //ChatsScreen(receiver: 'chatbot'),
+    allChats(),
     SettingsScreen(),
     doctorsScreen()
   ];
@@ -187,7 +189,6 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  apiServices api = new apiServices();
   List<patient> patientsOfSameCase = [];
   Future<void> getdoctors() async {
     await api.getdoctors();

@@ -11,12 +11,13 @@ class user {
   late String username, email, password;
   late String Gender;
   late String uId;
+  late String role;
   String image =
       'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png';
   late bool isEmailVerified;
   // int age;
   user.empty();
-  user.inlogin(this.uId, this.username, this.image);
+  user.inlogin(this.uId, this.username, this.role, this.image);
   user.withnames(this.uId, this.username, this.email, this.password,
       this.Gender, this.image);
   Dio dio = new Dio();
@@ -34,6 +35,7 @@ class user {
     return user.inlogin(
         json["_id"] as String,
         json["username"] as String,
+        json["itemtype"] as String,
         (json["image"] != null)
             ? json["image"] as String
             : 'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png');

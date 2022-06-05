@@ -9,20 +9,35 @@ import '../../../shared/components/components.dart';
 
 class ChatsScreen extends StatelessWidget {
   String receiver;
+  String background = "";
   ChatsScreen({Key? key, required this.receiver}) : super(key: key);
+
+//receiver=='chatbot'? NetworkImage('https://cdn-icons-png.flaticon.com/512/2040/2040946.png'
+  //               ):NetworkImage('https://cdn4.vectorstock.com/i/1000x1000/81/88/community-logo-icon-vector-19168188.jpg'),
 
   @override
   Widget build(BuildContext context) {
+    if (receiver == 'chatbot') {
+      background = 'https://cdn-icons-png.flaticon.com/512/2040/2040946.png';
+    } else {
+      background =
+          'https://cdn4.vectorstock.com/i/1000x1000/81/88/community-logo-icon-vector-19168188.jpg';
+    }
+    debugPrint('heloooooooooooo');
     return Builder(
       builder: (BuildContext context) {
         return BlocConsumer<SocialCubit, SocialStates>(
           listener: (context, state) {},
           builder: (context, state) {
-            return ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => buildChatItem(context, receiver),
-              separatorBuilder: (context, index) => myDivider(),
-              itemCount: 1, ////////will be 2 when doctor chat is added
+            return SizedBox(
+              height: 100,
+              child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) =>
+                    buildChatItem(context, receiver),
+                separatorBuilder: (context, index) => myDivider(),
+                itemCount: 1, ////////will be 2 when doctor chat is added
+              ),
             );
           },
         );
@@ -41,11 +56,8 @@ class ChatsScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(children: [
-            const CircleAvatar(
-              radius: 25.0,
-              backgroundImage: NetworkImage(
-                  'https://cdn4.vectorstock.com/i/1000x1000/81/88/community-logo-icon-vector-19168188.jpg'),
-            ),
+            CircleAvatar(
+                radius: 25.0, backgroundImage: NetworkImage(background)),
             const SizedBox(
               width: 15.0,
             ),

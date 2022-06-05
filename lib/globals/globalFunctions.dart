@@ -30,7 +30,6 @@ Future<void> getpatient(String uId) async {
   await api.getpatient(uId);
 }
 
-
 void submit(context) {
   print("in submit " + authData.toString());
   if (provider.isLogin) {
@@ -40,9 +39,10 @@ void submit(context) {
           showToast(true, 'signed in succesfully');
           print('signed in succesfully');
 
-          currentuser.email = authData['email']!;
+          //currentuser.email = authData['email']!;
           authData['email'] = '';
           authData['password'] = '';
+          debugPrint("&&&&&&&&" + currentuser.role);
           button_provider.togglesigninOrsignupProgressIndicator();
         })
         .then((value) {
@@ -74,16 +74,14 @@ void submit(context) {
           authData['gender']!,
           double.parse(authData['detection price']!),
           authData['clinic number']!,
-           authData['image']!);
+          authData['image']!);
     } else {
-
       print('registering a patient');
       double height = double.parse(authData['height']!);
       double weight = double.parse(authData['weight']!);
 
-
-
-      currentInbody= inbody(height ,weight,weight/(height/100.0), 0.0, 0.0);
+      currentInbody =
+          inbody(height, weight, weight / (height / 100.0), 0.0, 0.0);
 
       currentuser = patient(
           '',
@@ -96,7 +94,6 @@ void submit(context) {
           authData['image']!);
     }
     currentuser.register().then((value) {
-
       button_provider.togglesigninOrsignupProgressIndicator();
       showToast(true, 'signed up succesfully');
       provider.toggleisLogin();

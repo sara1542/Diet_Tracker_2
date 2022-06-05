@@ -20,7 +20,7 @@ class _doctorsScreenState extends State<doctorsScreen> {
     //f = SocialCubit.get(context).getdoctors();
     tempDoctors = doctors;
 
-    print('hey' + doctors.toString());
+    // print('%%%%%%%%%%%%%%%%%%' + tempDoctors[1].uId);
   }
 
   bool viewTextField = false;
@@ -34,6 +34,7 @@ class _doctorsScreenState extends State<doctorsScreen> {
   @override
   Widget build(BuildContext context) {
     print("heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+
     return SizedBox(
       height: 700,
       child: SingleChildScrollView(
@@ -112,7 +113,7 @@ class _doctorsScreenState extends State<doctorsScreen> {
                             itemBuilder: (BuildContext context, int index) {
                               return CustomContainer_HomePage(
                                   doctorName: tempDoctors[index].username,
-                                  location: "",
+                                  doctorId: tempDoctors[index].uId,
                                   price: tempDoctors[index].price.toString());
                             }),
                       ),

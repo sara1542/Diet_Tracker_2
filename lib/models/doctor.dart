@@ -17,30 +17,37 @@ class doctor extends user {
 
   doctor.empty() : super.empty();
   doctor(
-      String uid,
-      String username,
-      String email,
-      String password,
-      String Gender,
-      // String cliniqueLoc,
-      num pr,
-      //  String detailedLoc,
-      String cliniquePh,
-  String image)
-      :
+    String uid,
+    String username,
+    String email,
+    String password,
+    String Gender,
+    // String cliniqueLoc,
+    num pr,
+    //  String detailedLoc,
+    String cliniquePh,
+    String image,
+  )   :
         //: cliniqueLocation = cliniqueLoc,
         price = pr,
         //detailedLocation = detailedLoc,
         cliniquePhone = cliniquePh,
-        super.withnames(uid, username, email, password, Gender,image);
+        super.withnames(uid, username, email, password, Gender, image);
 
   factory doctor.fromJson(dynamic json) {
-    return doctor(json["id"], json["username"], json["email"], json["password"],
-        json["gender"], json["price"], json["clinicPhone"], json["image"]);
+    return doctor(
+        json["_id"],
+        json["username"],
+        json["email"],
+        json["password"],
+        json["gender"],
+        json["price"],
+        json["clinicPhone"],
+        json["image"]);
   }
   Future<int?> register() async {
     if (authData['visita url (optional)'] != '') {
-      final getScore = await dio.post(GlobalUrl+'getscore',
+      final getScore = await dio.post(GlobalUrl + 'getscore',
           data: json.encode(
               <String, String>{"url": authData['visita url (optional)']!}));
       if (getScore.statusCode == 200) {

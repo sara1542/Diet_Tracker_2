@@ -33,6 +33,9 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  quiver: ^3.0.0
+  ffi: ^1.0.0
+  tflite_flutter: ^0.9.0
   provider: ^6.0.2
   cupertino_icons: ^1.0.2
   sqflite:
@@ -67,11 +70,18 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  plugin:
+   platforms:
+      android:
+        package: com.tfliteflutter.tflite_flutter_plugin
+        pluginClass: TfliteFlutterPlugin
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/
 
   fonts:
     - family: Jannah

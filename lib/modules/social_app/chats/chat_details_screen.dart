@@ -146,7 +146,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             const SizedBox(
               width: 15.0,
             ),
-            Container(
+            Flexible(
+                child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey[300],
                 borderRadius: const BorderRadiusDirectional.only(
@@ -158,26 +159,33 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
               child: Text(
                 message.text,
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+                //  softWrap: false,
               ),
-            ),
+            )),
           ],
         ),
       );
 
   Widget buildMyMessage(MessageModel message) => Align(
         alignment: AlignmentDirectional.centerEnd,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blue[100],
-            borderRadius: const BorderRadiusDirectional.only(
-              bottomStart: Radius.circular(10.0),
-              topEnd: Radius.circular(10.0),
-              topStart: Radius.circular(10.0),
+        child: Flexible(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blue[100],
+              borderRadius: const BorderRadiusDirectional.only(
+                bottomStart: Radius.circular(10.0),
+                topEnd: Radius.circular(10.0),
+                topStart: Radius.circular(10.0),
+              ),
             ),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-          child: Text(
-            message.text,
+            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+            child: Text(
+              message.text,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
       );

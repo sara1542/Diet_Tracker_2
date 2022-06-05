@@ -1,4 +1,5 @@
 // late Position position;
+import 'package:firstgp/apiServices/api.dart';
 import 'package:firstgp/models/inbody.dart';
 import 'package:firstgp/models/patient.dart';
 
@@ -20,7 +21,7 @@ user currentuser = new user.empty();
 patient currentpatient = new patient.empty();
 inbody currentInbody = new inbody.empty();
 doctor currentdoctor = new doctor.empty();
-
+apiServices api = new apiServices();
 String GlobalUrl = "http://192.168.1.60:6666/api/";
 String chatbotUrl = 'http://192.168.1.60:5005/webhooks/rest/webhook';
 Map<String, String> authData = {
