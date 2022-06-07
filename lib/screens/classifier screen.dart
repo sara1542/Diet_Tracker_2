@@ -1,9 +1,14 @@
+import 'package:firstgp/globals/globalFunctions.dart';
+import 'package:firstgp/screens/doctorDetails.dart';
 import 'package:flutter/material.dart';
 
 import '../apiServices/classifier.dart';
+import '../models/doctor.dart';
 //import 'package:tflite_flutter_plugin_example/classifier.dart';
 
 class classifier extends StatefulWidget {
+  doctor doc;
+  classifier({required this.doc});
   @override
   _classifierState createState() => _classifierState();
 }
@@ -27,9 +32,22 @@ class _classifierState extends State<classifier> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.orangeAccent,
-              title: const Text('Text classification'),
-            ),
+                backgroundColor: Colors.orangeAccent,
+                title: const Text('Feedback'),
+                leading: GestureDetector(
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              doctorDetails(Doctor: widget.doc)),
+                      (route) => false,
+                    );
+                  },
+                  child: const Icon(
+                    Icons.arrow_back, // add custom icons also
+                  ),
+                )),
             body: Container(
                 padding: const EdgeInsets.all(4),
                 child: Column(children: <Widget>[
@@ -48,7 +66,7 @@ class _classifierState extends State<classifier> {
                         Expanded(
                           child: TextField(
                             decoration: const InputDecoration(
-                                hintText: 'Write some text here'),
+                                hintText: 'Write your feedback here'),
                             controller: _controller,
                           ),
                         ),
@@ -57,6 +75,11 @@ class _classifierState extends State<classifier> {
                             onPressed: () async {
                               final text = _controller.text;
                               var prediction = _classifier.classify(text);
+                              if (prediction[1] > prediction[0]) {
+                                api.increaseScore(widget.doc.uId);
+                              } else {
+                                api.decreaseScore(widget.doc.uId);
+                              }
                               setState(() {
                                 _children.add(Dismissible(
                                   key: GlobalKey(),
@@ -70,8 +93,9 @@ class _classifierState extends State<classifier> {
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
+                                        children: const <Widget>[
+                                          Text('thanks for your feedback'),
+                                          /*   Text(
                                             "Input: $text",
                                             style:
                                                 const TextStyle(fontSize: 16),
@@ -83,6 +107,7 @@ class _classifierState extends State<classifier> {
                                           else
                                             Text(
                                                 "   Negative: ${prediction[0]}"),
+                                       */
                                         ],
                                       ),
                                     ),

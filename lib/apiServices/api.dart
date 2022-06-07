@@ -15,7 +15,33 @@ class apiServices {
   String patientsurl = GlobalUrl + "getpatients";
   String patienturl = GlobalUrl + "getpatient/";
   String inbodyurl = GlobalUrl + "getinbody/";
+  String decScore = GlobalUrl + "decreaseScore";
+  String incScore = GlobalUrl + "increaseScore";
   Dio dio = new Dio();
+  Future<void> increaseScore(String docId) async {
+    final response = await dio.put(incScore,
+        data: json.encode(<String, dynamic>{
+          "_id": docId,
+        }));
+    if (response.statusCode == 200) {
+      showToast(true, 'your feedback is recorded successfuly');
+    } else {
+      throw Exception('failed to subscribe the doctor');
+    }
+  }
+
+  Future<void> decreaseScore(String docId) async {
+    final response = await dio.put(decScore,
+        data: json.encode(<String, dynamic>{
+          "_id": docId,
+        }));
+    if (response.statusCode == 200) {
+      showToast(true, 'your feedback is recorded successfuly');
+    } else {
+      throw Exception('failed to subscribe the doctor');
+    }
+  }
+
   Future<void> registerAdoctor(String docId) async {
     debugPrint(GlobalUrl + 'subscribeAdoctor');
     debugPrint(docId);
