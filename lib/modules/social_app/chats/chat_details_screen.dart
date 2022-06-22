@@ -71,7 +71,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                           separatorBuilder: (context, index) => const SizedBox(
                                 height: 10.0,
                               ),
-                          itemCount: SocialCubit.get(context).messages.length),
+                          itemCount: SocialCubit.get(context).messages.length
+                      ),
                     ),
                     Container(
                       decoration: BoxDecoration(

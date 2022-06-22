@@ -21,7 +21,7 @@ patient currentpatient=new patient.empty();
 inbody currentInbody=new inbody.empty();
 doctor currentdoctor= new doctor.empty();
 
-String GlobalUrl="http://192.168.1.15:6666/api/";
+String GlobalUrl="http://192.168.43.80:6666/api/";
 
 Map<String, String> authData = {
   'email': '',
