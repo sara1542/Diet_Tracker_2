@@ -20,8 +20,10 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   var nameController = TextEditingController();
-  var emailController = TextEditingController();
   var ageController = TextEditingController();
+  var priceController = TextEditingController();
+  var clinicPhoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
@@ -34,9 +36,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }
       },
       builder: (context, state) {
-        nameController.text = currentpatient.username;
-        emailController.text = currentpatient.email;
-        ageController.text = currentpatient.Age.toString();
+        if (isDoctor) {
+          nameController.text = currentdoctor.username;
+          clinicPhoneController.text = currentdoctor.cliniquePhone;
+          priceController.text = currentdoctor.price.toString();
+        } else {
+          nameController.text = currentpatient.username;
+          ageController.text = currentpatient.Age.toString();
+        }
         var profileImage = SocialCubit.get(context).profileImage;
         return Scaffold(
           appBar: defaultAppBar(
@@ -54,17 +61,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               defaultTextButton(
                 function: () {
                   if (SocialCubit.get(context).profileImage == null) {
-                    SocialCubit.get(context).updateUserProfile(
-                      name: nameController.text,
-                      email: emailController.text,
-                      age: int.parse(ageController.text),
-                    );
-                  } else {
-                    SocialCubit.get(context).uploadProfileImage(
+                    if (isDoctor) {
+                      SocialCubit.get(context).updateUserProfile(
                         name: nameController.text,
-                        email: emailController.text,
-                        age: int.parse(ageController.text));
-
+                        age: 0,
+                        clinicPhone: clinicPhoneController.text,
+                        price: num.parse(priceController.text),
+                      );
+                    } else {
+                      SocialCubit.get(context).updateUserProfile(
+                        name: nameController.text,
+                        age: int.parse(ageController.text),
+                        clinicPhone: '',
+                        price: 0,
+                      );
+                    }
+                  } else {
+                    if (isDoctor) {
+                      SocialCubit.get(context).uploadProfileImage(
+                        name: nameController.text,
+                        age: 0,
+                        clinicPhone: clinicPhoneController.text,
+                        price: num.parse(priceController.text),
+                      );
+                    } else {
+                      SocialCubit.get(context).uploadProfileImage(
+                        name: nameController.text,
+                        age: int.parse(ageController.text),
+                        clinicPhone: '',
+                        price: 0,
+                      );
+                    }
                   }
                   setState(() {});
                 },
@@ -131,54 +158,67 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     label: 'Name',
                     prefix: IconBroken.User,
                   ),
+
                   const SizedBox(
                     height: 20.0,
                   ),
-                  defaultFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
+                  if (isDoctor)
+                    defaultFormField(
+                      controller: priceController,
+                      keyboardType: TextInputType.number,
+                      label: ' Enter your Price',
+                      prefix: IconBroken.Paper,
+                      validate: (String? value) {
+                        if (value!.isEmpty) {
+                          return 'Price can not be empty';
+                        }
+                        return null;
+                      },
+                    )
+                  else
+                    defaultFormField(
+                      controller: ageController,
+                      keyboardType: TextInputType.number,
+                      label: ' Enter your age',
+                      prefix: IconBroken.User,
+                      validate: (String? value) {
+                        if (value!.isEmpty) {
+                          return 'Age can not be empty';
+                        }
+                        return null;
+                      },
+                    ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  if (!isDoctor)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ScanInbodyScreen()),
+                              ).then((value) => setState(() {}));
+                            },
+                            child: const Text('Scan InBody'),
+                          ),
+                        )
+                      ],
+                    )
+                  else defaultFormField(
+                    controller: clinicPhoneController,
+                    keyboardType: TextInputType.phone,
                     validate: (String? value) {
                       if (value!.isEmpty) {
-                        return 'Email can not be empty';
+                        return 'Clinic Phone can not be empty';
                       }
                       return null;
                     },
-                    label: 'Email address',
-                    prefix: IconBroken.Message,
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  defaultFormField(
-                    controller: ageController,
-                    keyboardType: TextInputType.number,
-                    label: ' Enter your age',
-                    prefix: IconBroken.User,
-                    validate: (String? value) {
-                      if (value!.isEmpty) {
-                        return 'Age can not be empty';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ScanInbodyScreen()),
-                            ).then((value) => setState(() {}));
-                          },
-                          child: const Text('Scan InBody'),
-                        ),
-                      )
-                    ],
+                    label: 'Clinic Phone',
+                    prefix: IconBroken.Call,
                   ),
                 ],
               ),

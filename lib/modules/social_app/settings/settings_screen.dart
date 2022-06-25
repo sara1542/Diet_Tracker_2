@@ -27,11 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var cubit=SocialCubit.get(context);
 
-    setState(() {
-      cubit.getUserData();
-    });
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -57,7 +53,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
              Padding(
                padding: const EdgeInsets.only(bottom: 50.0),
                child: Text(
-                 currentpatient.username,
+
+                 isDoctor?currentdoctor.username:currentpatient.username,
                  style: TextStyle(
                      fontSize: 20.0,
                      fontWeight: FontWeight.bold,
@@ -79,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const SizedBox(
           height: 50.0,
         ),
-        Row(
+      if(!isDoctor)    Row(
           children:  [
             const Text(
               '  Weight:  ',
@@ -99,10 +96,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
-        const SizedBox(
+
+        if(!isDoctor)   const SizedBox(
           height: 10.0,
         ),
-        Row(
+        if(!isDoctor)  Row(
           children:  [
             const Text(
               '  Height:  ',
@@ -122,10 +120,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
-        const SizedBox(
+
+
+        if (!isDoctor)const SizedBox(
           height: 10.0,
         ),
-        Row(
+        if(!isDoctor)     Row(
           children:  [
             const Text(
               '  Case:     ',
@@ -145,11 +145,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
 
           ],
+        )
+        else Row(
+          children:  [
+            const Text(
+              '  Price:     ',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold
+                  ,color: Colors.blue
+              ),
+            ),
+            Text(
+              currentdoctor.price.toString()+ " L.E.",
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontWeight: FontWeight.bold,
+                fontSize: 17.0,
+              ),
+            ),
+
+          ],
         ),
+
         const SizedBox(
           height: 10.0,
         ),
-        Row(
+        if(!isDoctor)   Row(
           children:  [
             const Text(
               '  Age:     ',
@@ -170,10 +192,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
 
           ],
+        )
+        else Row(
+          children:  [
+            const Text(
+              '  Clinic phone: ',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold
+                  ,color: Colors.blue
+              ),
+            ),
+            Text(
+              currentdoctor.cliniquePhone,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontWeight: FontWeight.bold,
+                fontSize: 17.0,
+              ),
+            ),
+
+          ],
         ),
         const SizedBox(
           height: 10.0,
         ),///Height
+
         Row(
           children:  [
             const Text(
@@ -185,7 +229,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             Text(
-              currentpatient.email,
+              isDoctor?currentdoctor.email:currentpatient.email,
               style: TextStyle(
                 color: Colors.grey[600],
                 fontWeight: FontWeight.bold,

@@ -1,5 +1,5 @@
-
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -13,7 +13,9 @@ import 'package:firstgp/models/social_app/chat_model.dart';
 
 import 'package:firstgp/models/social_app/social-user_model.dart';
 import 'package:firstgp/modules/social_app/chats/chats_screen.dart';
+import 'package:firstgp/modules/social_app/chats/displayChats.dart';
 import 'package:firstgp/modules/social_app/feeds/feeds_screen.dart';
+import 'package:firstgp/modules/social_app/generator/generator_screen.dart';
 import 'package:firstgp/modules/social_app/settings/settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,14 +53,15 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  void verifyEmailSuccessfully() {
-    emit(SocialVerifyUserEmailState());
-  }
 
   int currentIndex = 0;
   List<Widget> screens = [
-    FeedsScreen(),
-    ChatsScreen(),
+    // FeedsScreen(),
+
+    Generator(),
+    //ChatsScreen(receiver: 'community'),
+    //ChatsScreen(receiver: 'chatbot'),
+    allChats(),
     SettingsScreen(),
     doctorsScreen()
   ];
@@ -95,8 +98,9 @@ class SocialCubit extends Cubit<SocialStates> {
 
   void uploadProfileImage({
     required String name,
-    required String email,
     required int age,
+    required num price,
+    required String clinicPhone,
   }) {
     emit(SocialUserUpdateLoadingState());
 
@@ -107,7 +111,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .then((value) {
       value.ref.getDownloadURL().then((value) {
         currentuser.image = value;
-        updateUserProfile(name: name, email: email, image: value, age: age);
+        updateUserProfile(name: name, image: value, age: age, price: price, clinicPhone: clinicPhone);
       }).catchError((error) {});
       emit(SocialUploadProfileImageErrorState());
     }).catchError((error) {
@@ -118,131 +122,169 @@ class SocialCubit extends Cubit<SocialStates> {
 
   Dio dio = new Dio();
 
-  Future<int?> updateUserProfile (
-      {required String name, required String email,required int age, String? image})async {
-    emit(SocialUserUpdateLoadingState ());
-    final response = await dio.put(GlobalUrl+"updatepatient",
-        data: json.encode(<String, dynamic>{
-          "_id":currentuser.uId,
-          "username": name,
-          "email": email,
-          "age": age,
-          "Case":currentpatient.Case,
-          "image": image??currentpatient.image,
-        }));
-    if (response.statusCode == 200 && response.statusMessage == 'OK') {
-      print("Patient updated successfully");
-      currentpatient.image=image??currentpatient.image;
-      currentuser.image=image??currentpatient.image;
-      currentpatient.username=name;
-      currentpatient.email=email;
-      currentpatient.Age=age;
+  Future<int?> updateUserProfile(
+      {required String name,
+      required int age,
+        required num price,
+        required String clinicPhone,
+      String? image}) async {
+    emit(SocialUserUpdateLoadingState());
 
+   if(isDoctor) {
+     final response = await dio.put(GlobalUrl + "updatedoctor",
+         data: json.encode(<String, dynamic>{
+           "_id": currentuser.uId,
+           "username": name,
+           "price":price,
+           "clinicPhone":clinicPhone,
+           "image": image ?? currentdoctor.image,
+         }));
+     if (response.statusCode == 200 && response.statusMessage == 'OK') {
+       print("Doctor updated successfully");
+       currentdoctor.image = image ?? currentdoctor.image;
+       currentuser.image = image ?? currentdoctor.image;
+       currentdoctor.username = name;
+       currentdoctor.price=price;
+       currentdoctor.cliniquePhone=clinicPhone;
 
-      emit( SocialUserUpdateSuccessState());
-      return response.statusCode;
-    } else {
-      throw Exception('failed to update patient' + response.statusMessage!);
+     emit(SocialUserUpdateSuccessState());
+     return response.statusCode;
+   } else {
+     throw Exception('failed to update doctor' + response.statusMessage!);
+   }
+   }
+else {
+     final response = await dio.put(GlobalUrl + "updatepatient",
+         data: json.encode(<String, dynamic>{
+           "_id": currentuser.uId,
+           "username": name,
+           "age": age,
+           "Case": currentpatient.Case,
+           "image": image ?? currentpatient.image,
+         }));
+     if (response.statusCode == 200 && response.statusMessage == 'OK') {
+       print("Patient updated successfully");
+       currentpatient.image = image ?? currentpatient.image;
+       currentuser.image = image ?? currentpatient.image;
+       currentpatient.username = name;
+       currentpatient.Age = age;
+
+     emit(SocialUserUpdateSuccessState());
+     return response.statusCode;
+   } else {
+    throw Exception('failed to update patient' + response.statusMessage!);
     }
+
+}
   }
 
-  Future<int?> updateUserInBody (
-      { required double height, required double weight, required num PBF, required num PBW})async {
-    emit(SocialUserUpdateLoadingState ());
+
+  Future<int?> updateUserInBody(
+      {required double height,
+      required double weight,
+      required num PBF,
+      required num PBW}) async {
+    emit(SocialUserUpdateLoadingState());
     print("entered inbody update");
-    print(height.toString()+" "+weight.toString()+" "+PBF.toString()+" "+PBW.toString());
-    final response = await dio.put(GlobalUrl+"updateinbody",
+    print(height.toString() +
+        " " +
+        weight.toString() +
+        " " +
+        PBF.toString() +
+        " " +
+        PBW.toString());
+    final response = await dio.put(GlobalUrl + "updateinbody",
         data: json.encode(<String, dynamic>{
-          "_id":currentuser.uId,
+          "_id": currentuser.uId,
           "height": height,
           "weight": weight,
-          "BMI":weight/(height/100.0),
-          "PBF" : PBF,
+          "BMI": weight / (height / 100.0),
+          "PBF": PBF,
           "PBW": PBW,
         }));
     if (response.statusCode == 200 && response.statusMessage == 'OK') {
       print("Patient updated successfully");
-      currentInbody.height=height;
-      currentInbody.weight=weight;
-      currentInbody.BMI=weight/(height/100.0);
-      currentInbody.PBF=PBF;
-      currentInbody.PBW=PBW;
-      emit( SocialUserUpdateSuccessState());
+      currentInbody.height = height;
+      currentInbody.weight = weight;
+      currentInbody.BMI = weight / (height / 100.0);
+      currentInbody.PBF = PBF;
+      currentInbody.PBW = PBW;
+      emit(SocialUserUpdateSuccessState());
       return response.statusCode;
     } else {
-      throw Exception('failed to update patient inbody' + response.statusMessage!);
+      throw Exception(
+          'failed to update patient inbody' + response.statusMessage!);
     }
+  }
+
+
+  Future<int?> addPatientToDoctorList({
+  required String doctorUID,
+})async {
+
 
   }
-  apiServices api = new apiServices();
   List<patient> patientsOfSameCase = [];
   Future<void> getdoctors() async {
     await api.getdoctors();
   }
-  // Future<void> getpatients() async {
-  //   await api.getpatients();
-  // }
-  Future<int?> getPatientsOfSameCase() async{
+
+  Future<int?> getPatientsOfSameCase() async {
     patientsOfSameCase = [];
 
     final response = await dio.get(
-      GlobalUrl+"getpatients",
+      GlobalUrl + "getpatients",
     );
 
     if (response.statusCode == 200) {
-
       patients = (response.data['patients'] as List)
           .map((data) => patient.fromJson(data))
           .toList();
 
       //returning patients of same case for chatroom
-      for(int i=0;i<patients.length;i++){
-        if(patients[i].Case==currentpatient.Case && patients[i].uId!=currentpatient.uId ){
-          print("^^^^^^^^^^^^^^^^^^"+currentuser.uId +"  "+patients[i].uId);
-        patientsOfSameCase.add(patients[i]);
+      for (int i = 0; i < patients.length; i++) {
+        if (patients[i].Case == currentpatient.Case &&
+            patients[i].uId != currentpatient.uId) {
+          print(
+              "^^^^^^^^^^^^^^^^^^" + currentuser.uId + "  " + patients[i].uId);
+          patientsOfSameCase.add(patients[i]);
         }
         emit(SocialGetAllUsersSuccessState());
       }
       return response.statusCode;
     } else {
-
       throw Exception('failed to get patients');
     }
-
-
   }
 
   void sendMessageTogroup({
     required String dateTime,
     required String text,
   }) {
-
     MessageModel model = MessageModel(
         senderId: currentpatient.uId,
         receiverId: currentpatient.Case,
         dateTime: dateTime,
         text: text);
-    model.imageOfSender=currentpatient.image;
+    model.imageOfSender = currentpatient.image;
 
-      //set my chat
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentpatient.Case)
-          .collection('messages')
-          .add(model.toMap())
-          .then((value) {
-        emit(SocialSendMessageSuccessState());
-      }).catchError((error) {
-        emit(SocialSendMessageErrorState());
-      });
-
+    //set my chat
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentpatient.Case)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).catchError((error) {
+      emit(SocialSendMessageErrorState());
+    });
   }
 
   List<MessageModel> messages = [];
 
   void getMessages() {
-
-    for(int i=0;i<patientsOfSameCase.length;i++){
+    for (int i = 0; i < patientsOfSameCase.length; i++) {
       FirebaseFirestore.instance
           .collection('users')
           .doc(currentpatient.Case)
@@ -250,12 +292,111 @@ class SocialCubit extends Cubit<SocialStates> {
           .orderBy('dateTime')
           .snapshots()
           .listen((event) {
-        messages=[];
-            event.docs.forEach((element) {
+        messages = [];
+        event.docs.forEach((element) {
           messages.add(MessageModel.fromJson(element.data()));
         });
         emit(SocialGetMessagesSuccessState());
       });
     }
+  }
+
+  bool isfirstMessage = true;
+  // Dio dio = new Dio();
+  String chatbotMessage = "";
+  void sendMessageToChatbot({
+    required String dateTime,
+    required String text,
+  }) {
+    MessageModel model = MessageModel(
+        senderId: userModel.uId,
+        receiverId: 'chatBot',
+        dateTime: dateTime,
+        text: text);
+
+    //set my chat
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel.uId)
+        .collection('chats')
+        .doc('chatBot')
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).then((value) async {
+      debugPrint('sending message to chatbot' + currentpatient.uId);
+      if (isfirstMessage) text += ' ' + currentpatient.uId;
+      isfirstMessage = false;
+      debugPrint('text is : ' + text);
+      final response = await dio.post(chatbotUrl,
+          //options: Options(headers: {"Content-Type": "application/json"}),
+          data: json.encode(<String, String>{
+            "message": text,
+            "sender": currentpatient.username,
+          }));
+      debugPrint(response.toString() + response.statusCode.toString());
+      //currentuser.fromJson(response.data);
+      if (response.statusCode == 200) {
+        debugPrint("##############333");
+        debugPrint("in chatbot message" + response.data[0]["text"]);
+        chatbotMessage = (response.data[0]["text"]);
+      } else {
+        emit(SocialSendMessageErrorState());
+      }
+    }).then((value) {
+      MessageModel botModel = MessageModel(
+          senderId: 'chatBot',
+          receiverId: currentpatient.uId,
+          dateTime: dateTime,
+          text: chatbotMessage);
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc('chatBot')
+          .collection('chats')
+          .doc(currentpatient.uId)
+          .collection('messages')
+          .add(botModel.toMap())
+          .then((value) {
+        emit(SocialSendMessageSuccessState());
+      });
+    }).catchError((error) {
+      emit(SocialSendMessageErrorState());
+    });
+
+    //set receiver chat
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc('chatBot')
+        .collection('chats')
+        .doc(currentpatient.uId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).catchError((error) {
+      emit(SocialSendMessageErrorState());
+    });
+  }
+
+  // List<MessageModel> messages = [];
+
+  void getMessagesfromChatbot() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc('chatBot')
+        .collection('chats')
+        .doc(currentpatient.uId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+      event.docs.forEach((element) {
+        messages.add(MessageModel.fromJson(element.data()));
+      });
+      emit(SocialGetMessagesSuccessState());
+    });
   }
 }

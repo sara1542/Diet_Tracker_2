@@ -16,22 +16,27 @@ class patient extends user {
 
   patient.empty() : super.empty();
 
-  patient( String uId, String username, String email, String password, String Gender,
-      int age, String c, String image)
-      :Age = age,
+  patient(String uId, String username, String email, String password,
+      String Gender, int age, String c, String image)
+      : Age = age,
         Case = c,
-
-        super.withnames(uId, username, email, password, Gender,image);
+        super.withnames(uId, username, email, password, Gender, image);
 
   factory patient.fromJson(dynamic json) {
-
-    return patient(json["_id"],json["username"], json["email"], json["password"],
-        json["gender"], json["age"], json["case"], json["image"]);
+    return patient(
+        json["_id"],
+        json["username"],
+        json["email"],
+        json["password"],
+        json["gender"],
+        json["age"],
+        json["case"],
+        json["image"]);
   }
 
   @override
   Future<int?> register() async {
-    Inbody=currentInbody;
+    Inbody = currentInbody;
     print("herrrrrrrrrrrrrrrrrrrrrrr register" + Inbody.BMI.toString());
     final response = await dio.post(GlobalUrl + "patientRegister",
         data: json.encode(<String, dynamic>{
@@ -46,7 +51,7 @@ class patient extends user {
           "BMI": Inbody.BMI,
         }));
     if (response.statusCode == 200 && response.statusMessage == 'OK') {
-      uId=currentuser.uId=currentpatient.uId=uId.trim();
+      uId = currentuser.uId = currentpatient.uId = uId.trim();
 
       return response.statusCode;
     } else {

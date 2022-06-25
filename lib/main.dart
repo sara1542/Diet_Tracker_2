@@ -75,10 +75,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          scaffoldBackgroundColor: Color(0xFFEFEFF6),
-          primarySwatch: Colors.lightGreen,
-        ),
-        home: LoginScreen());
+            scaffoldBackgroundColor: Color(0xFFEFEFF6),
+            primarySwatch: Colors.lightGreen,
+            textTheme: TextTheme(
+                bodyText2: TextStyle(
+                  color: Colors.green[400],
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                bodyText1: const TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey))),
+        home: //SocialLayout()
+            LoginScreen());
 //              mainPage()),
 
     // return MultiBlocProvider(

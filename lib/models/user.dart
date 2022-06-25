@@ -11,13 +11,15 @@ class user {
   late String username, email, password;
   late String Gender;
   late String uId;
-   String image='https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png';
+  late String role;
+  String image =
+      'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png';
   late bool isEmailVerified;
   // int age;
   user.empty();
-  user.inlogin(this.uId, this.username, this.image);
-  user.withnames(
-      this.uId, this.username, this.email, this.password, this.Gender, this.image);
+  user.inlogin(this.uId, this.username, this.role, this.image);
+  user.withnames(this.uId, this.username, this.email, this.password,
+      this.Gender, this.image);
   Dio dio = new Dio();
 
   Map<String, dynamic> toMap() {
@@ -31,10 +33,12 @@ class user {
     debugPrint("heloooooo");
     debugPrint("44444444444" + json["_id"] + "     " + json["username"]);
     return user.inlogin(
-      json["_id"] as String,
-      json["username"] as String,
-        (json["image"]!=null)?json["image"] as String:'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png'
-    );
+        json["_id"] as String,
+        json["username"] as String,
+        json["itemtype"] as String,
+        (json["image"] != null)
+            ? json["image"] as String
+            : 'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png');
   }
   Future<int?> login(String username, String password) async {
     debugPrint("******************************88");
@@ -44,19 +48,21 @@ class user {
           "email": username,
           "password": password,
         }));
-
-    //currentuser.fromJson(response.data);
     if (response.statusCode == 200) {
       debugPrint("in login FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-      debugPrint("in login" + response.data["data"]["User"].toString());
+      debugPrint("in login" + response.data.toString());
       currentuser = user.fromJson(response.data["data"]["User"]);
-      debugPrint(currentuser.uId+" 7777777777777777");
-      uId=currentuser.uId;
-
-      //to get info of current patient
-      getpatient(uId);
-      getinbody(uId);
-
+      debugPrint(currentuser.uId + " 7777777777777777");
+      uId = currentuser.uId;
+      if(currentuser.role=='doctor'){
+        getDoctor(uId);
+        debugPrint("get doctor successfully");
+      }
+      else {
+        //to get info of current patient
+        getpatient(uId);
+        getinbody(uId);
+      }
       debugPrint("**********************88 in login");
       return response.statusCode;
     } else {
@@ -65,6 +71,5 @@ class user {
   }
 
   Future<int?> register() async {} //overrided by patient, doctor
-
 
 }

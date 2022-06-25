@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../globals/globalVariables.dart';
 
 class doctor extends user {
-  late double ratingScore;
+  late num ratingScore;
   late String cliniqueLocation;
   late String detailedLocation;
   late num price;
@@ -16,31 +16,35 @@ class doctor extends user {
   late List<patient> patients;
 
   doctor.empty() : super.empty();
+
   doctor(
-      String uid,
-      String username,
-      String email,
-      String password,
-      String Gender,
-      // String cliniqueLoc,
-      num pr,
-      //  String detailedLoc,
-      String cliniquePh,
-  String image)
-      :
-        //: cliniqueLocation = cliniqueLoc,
+    String uid,
+    String username,
+    String email,
+    String password,
+    String Gender,
+    num pr,
+    String cliniquePh,
+    String image,
+  )   :
         price = pr,
-        //detailedLocation = detailedLoc,
         cliniquePhone = cliniquePh,
-        super.withnames(uid, username, email, password, Gender,image);
+        super.withnames(uid, username, email, password, Gender, image);
 
   factory doctor.fromJson(dynamic json) {
-    return doctor(json["id"], json["username"], json["email"], json["password"],
-        json["gender"], json["price"], json["clinicPhone"], json["image"]);
+    return doctor(
+        json["_id"],
+        json["username"],
+        json["email"],
+        json["password"],
+        json["gender"],
+        json["price"],
+        json["clinicPhone"],
+        json["image"]);
   }
   Future<int?> register() async {
     if (authData['visita url (optional)'] != '') {
-      final getScore = await dio.post(GlobalUrl+'getscore',
+      final getScore = await dio.post(GlobalUrl + 'getscore',
           data: json.encode(
               <String, String>{"url": authData['visita url (optional)']!}));
       if (getScore.statusCode == 200) {
@@ -65,6 +69,7 @@ class doctor extends user {
           "price": price
         }));
     if (response.statusCode == 200) {
+      uId = currentuser.uId = currentdoctor.uId = uId.trim();
       return response.statusCode;
     } else {
       throw Exception('failed to register');

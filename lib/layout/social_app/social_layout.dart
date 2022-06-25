@@ -36,45 +36,6 @@ class SocialLayout extends StatelessWidget {
           ],
         ),
         body:
-            // Column(
-            //   children: [
-            //     if (!user.isEmailVerified)
-            //       Container(
-            //         height: 50.0,
-            //         child: Row(
-            //           children: [
-            //             Icon(Icons.info_outline),
-            //             const SizedBox(
-            //               width: 10.0,
-            //             ),
-            //             const Expanded(
-            //               child: Text(
-            //                 'Please verify your e-mail',
-            //               ),
-            //             ),
-            //             const SizedBox(
-            //               width: 10.0,
-            //             ),
-            //             defaultTextButton(
-            //               function: () {
-            //                 FirebaseAuth.instance.currentUser
-            //                     ?.sendEmailVerification()
-            //                     .then((value) {
-            //                   showToast(
-            //                       text: 'Check your mail',
-            //                       state: ToastStates.SUCCESS);
-            //                   SocialCubit.get(context).verifyEmailSuccessfully();
-            //                 }).catchError((error) {});
-            //               },
-            //               text: 'Send',
-            //             )
-            //           ],
-            //         ),
-            //       ),
-            //   ],
-            //
-            //   cubit.screens[cubit.currentIndex],
-            // ),
 
             cubit.screens[cubit.currentIndex],
         bottomNavigationBar: BottomNavigationBar(
