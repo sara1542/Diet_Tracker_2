@@ -31,7 +31,8 @@ class patient extends user {
         json["gender"],
         json["age"],
         json["case"],
-        json["image"]);
+        json["image"]
+    );
   }
 
   @override

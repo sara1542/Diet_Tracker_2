@@ -35,6 +35,10 @@ Future<void> getinbody(String uId) async {
 Future<void> getpatient(String uId) async {
   await api.getpatient(uId);
 }
+
+Future<void> getPatientDoctor(String uId) async {
+  await api.getPatientDoctor( uId);
+}
 Future<void> getDoctor(String uId) async {
   await api.getDoctor(uId);
 }
@@ -50,10 +54,9 @@ void submit(context) {
           //currentuser.email = authData['email']!;
           authData['email'] = '';
           authData['password'] = '';
-          debugPrint("&&&&&&&&" + currentuser.role);
           isDoctor=currentuser.role=='doctor'?true:false;
 
-          debugPrint("&&&&&&&&" + isDoctor.toString());
+
           button_provider.togglesigninOrsignupProgressIndicator();
         })
         .then((value) {
@@ -102,7 +105,8 @@ void submit(context) {
           authData['gender']!,
           int.parse(authData['age']!),
           authData['case']!,
-          authData['image']!);
+          authData['image']!,
+      );
     }
     currentuser.register().then((value) {
       button_provider.togglesigninOrsignupProgressIndicator();

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firstgp/globals/globalVariables.dart';
+import 'package:firstgp/layout/social_app/cubit/cubit.dart';
 import 'package:flutter/material.dart';
 
 import '../globals/globalFunctions.dart';
@@ -54,14 +55,15 @@ class user {
       currentuser = user.fromJson(response.data["data"]["User"]);
       debugPrint(currentuser.uId + " 7777777777777777");
       uId = currentuser.uId;
-      if(currentuser.role=='doctor'){
+      if (currentuser.role == 'doctor') {
         getDoctor(uId);
         debugPrint("get doctor successfully");
-      }
-      else {
+
+      } else {
         //to get info of current patient
         getpatient(uId);
         getinbody(uId);
+        getPatientDoctor(uId);
       }
       debugPrint("**********************88 in login");
       return response.statusCode;

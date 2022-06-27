@@ -8,68 +8,84 @@ import '../../../layout/social_app/cubit/states.dart';
 import '../../../shared/components/components.dart';
 
 class ChatsScreen extends StatelessWidget {
-  String receiver;
-  String background = "";
-  ChatsScreen({Key? key, required this.receiver}) : super(key: key);
+  List<String> receivers=[];
+  List<String> images=[];
+  List <String> names=[];
 
-//receiver=='chatbot'? NetworkImage('https://cdn-icons-png.flaticon.com/512/2040/2040946.png'
-  //               ):NetworkImage('https://cdn4.vectorstock.com/i/1000x1000/81/88/community-logo-icon-vector-19168188.jpg'),
+  ChatsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (receiver == 'chatbot') {
-      background = 'https://cdn-icons-png.flaticon.com/512/2040/2040946.png';
-    } else {
-      background =
-          'https://cdn4.vectorstock.com/i/1000x1000/81/88/community-logo-icon-vector-19168188.jpg';
-    }
-    debugPrint('heloooooooooooo');
     return Builder(
       builder: (BuildContext context) {
         return BlocConsumer<SocialCubit, SocialStates>(
           listener: (context, state) {},
           builder: (context, state) {
-            return SizedBox(
-              height: 100,
-              child: ListView.separated(
+            if(reloadChats) {
+              //add other receivers
+              if (isDoctor) {
+                receivers=[];
+                images=[];
+                 names=[];
+                for (int i = 0; i < patients.length; i++) {
+                  receivers.add(patients[i].uId);
+                  names.add(patients[i].username);
+                  images.add(patients[i].image);
+                }
+              }
+              else {
+                receivers=['chatbot','community'];
+                images=[
+                  'https://cdn-icons-png.flaticon.com/512/2040/2040946.png',
+                  'https://cdn4.vectorstock.com/i/1000x1000/81/88/community-logo-icon-vector-19168188.jpg',
+                ];
+                names=[ 'Chat bot',currentpatient.Case + " Community"];
+
+                if (currentPatientDoctor != null) {
+                  receivers.add(currentPatientDoctor!.uId);
+                  names.add(currentPatientDoctor!.username);
+                  images.add(currentPatientDoctor!.image);
+                }
+              }
+              reloadChats = false;
+            }
+            return ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) =>
-                    buildChatItem(context, receiver),
+                    buildChatItem(context, receivers[index],names[index],images[index]),
                 separatorBuilder: (context, index) => myDivider(),
-                itemCount: 1, ////////will be 2 when doctor chat is added
-              ),
-            );
+                itemCount: receivers.length,
+              );
+
           },
         );
       },
     );
   }
 
-  Widget buildChatItem(context, receiver) => InkWell(
+  Widget buildChatItem(context,String receiver,String name,String image) => InkWell(
         onTap: () {
           navigateTo(
               context,
               ChatDetailsScreen(
                 receiver: receiver,
+                name: name,
+                image: image,
               ));
         },
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(children: [
             CircleAvatar(
-                radius: 25.0, backgroundImage: NetworkImage(background)),
+                radius: 25.0, backgroundImage: NetworkImage(image)),
             const SizedBox(
               width: 15.0,
             ),
-            receiver == 'community'
-                ? Text(currentpatient.Case + " Community",
+           Text(name,
                     style: const TextStyle(
                       height: 1.4,
                     ))
-                : const Text('chat with chatbot',
-                    style: TextStyle(
-                      height: 1.4,
-                    ))
+
           ]),
         ),
       );

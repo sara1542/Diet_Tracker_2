@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 
 class allChats extends StatelessWidget {
   allChats({Key? key}) : super(key: key);
-  List recievers = ['community', 'chatbot'];
+
+  List<String> chats=[];
   @override
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
       children: [
-        ChatsScreen(receiver: 'community'),
-        ChatsScreen(receiver: 'chatbot'),
+      //  ChatsScreen(receiver: 'community'),
+       // ChatsScreen(receiver: 'chatbot'),
       ],
     );
 

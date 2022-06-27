@@ -9,6 +9,7 @@ import 'package:firstgp/apiServices/api.dart';
 import 'package:firstgp/globals/globalVariables.dart';
 import 'package:firstgp/layout/social_app/cubit/states.dart';
 import 'package:firstgp/models/patient.dart';
+import 'package:firstgp/models/doctor.dart';
 import 'package:firstgp/models/social_app/chat_model.dart';
 
 import 'package:firstgp/models/social_app/social-user_model.dart';
@@ -59,16 +60,22 @@ class SocialCubit extends Cubit<SocialStates> {
     // FeedsScreen(),
 
     Generator(),
-    //ChatsScreen(receiver: 'community'),
-    //ChatsScreen(receiver: 'chatbot'),
-    allChats(),
+    ChatsScreen(),
+    // allChats(),
     SettingsScreen(),
     doctorsScreen()
   ];
 
   void ChangeBottomNav(int index) {
     if (index == 1) {
-      getPatientsOfSameCase();
+      if(isDoctor)
+        {
+          getDoctorPatients();
+        }
+      else
+      {
+        getPatientsOfSameCase();
+      }
     }
     if (index == 2) {
       getUserData();
@@ -224,7 +231,8 @@ else {
 
 
   }
-  List<patient> patientsOfSameCase = [];
+
+
   Future<void> getdoctors() async {
     await api.getdoctors();
   }
@@ -257,6 +265,28 @@ else {
     }
   }
 
+  Future<int?> getDoctorPatients() async {
+    print('got here');
+    final response = await dio.get(GlobalUrl + "getdoctorpatients",
+        queryParameters: <String,dynamic>{'id': uId}
+    );
+
+    if (response.statusCode == 200) {
+      print("ppppppppppppppppppppppppppp" +
+          response.data['patients'].toString() +
+          "                   ");
+
+      patients = (response.data['patients'] as List)
+          .map((data) => patient.fromJson(data))
+          .toList();
+
+      return response.statusCode;
+    } else {
+      throw Exception('failed to get patients');
+    }
+  }
+
+
   void sendMessageTogroup({
     required String dateTime,
     required String text,
@@ -281,9 +311,9 @@ else {
     });
   }
 
-  List<MessageModel> messages = [];
+  List<MessageModel> communityMessages = [];
 
-  void getMessages() {
+  void getCommunityMessages() {
     for (int i = 0; i < patientsOfSameCase.length; i++) {
       FirebaseFirestore.instance
           .collection('users')
@@ -292,13 +322,75 @@ else {
           .orderBy('dateTime')
           .snapshots()
           .listen((event) {
-        messages = [];
+        communityMessages = [];
         event.docs.forEach((element) {
-          messages.add(MessageModel.fromJson(element.data()));
+          communityMessages.add(MessageModel.fromJson(element.data()));
         });
         emit(SocialGetMessagesSuccessState());
       });
     }
+  }
+
+  List<MessageModel> messages = [];
+
+  void getMessages({
+    required String receiverId,
+  }) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+      event.docs.forEach((element) {
+        messages.add(MessageModel.fromJson(element.data()));
+      });
+      emit(SocialGetMessagesSuccessState());
+    });
+  }
+
+  void sendMessage({
+    required String receiverId,
+    required String dateTime,
+    required String text,
+  }) {
+    MessageModel model = MessageModel(
+        senderId: uId,
+        receiverId: receiverId,
+        dateTime: dateTime,
+        text: text);
+
+    //set my chat
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).catchError((error) {
+      emit(SocialSendMessageErrorState());
+    });
+
+    //set receiver chat
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(uId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).catchError((error) {
+      emit(SocialSendMessageErrorState());
+    });
   }
 
   bool isfirstMessage = true;
@@ -309,17 +401,17 @@ else {
     required String text,
   }) {
     MessageModel model = MessageModel(
-        senderId: userModel.uId,
-        receiverId: 'chatBot',
+        senderId: currentpatient.uId,
+        receiverId: 'chatbot',
         dateTime: dateTime,
         text: text);
 
     //set my chat
     FirebaseFirestore.instance
         .collection('users')
-        .doc(userModel.uId)
+        .doc(currentpatient.uId)
         .collection('chats')
-        .doc('chatBot')
+        .doc('chatbot')
         .collection('messages')
         .add(model.toMap())
         .then((value) {
@@ -346,14 +438,14 @@ else {
       }
     }).then((value) {
       MessageModel botModel = MessageModel(
-          senderId: 'chatBot',
+          senderId: 'chatbot',
           receiverId: currentpatient.uId,
           dateTime: dateTime,
           text: chatbotMessage);
 
       FirebaseFirestore.instance
           .collection('users')
-          .doc('chatBot')
+          .doc('chatbot')
           .collection('chats')
           .doc(currentpatient.uId)
           .collection('messages')
@@ -366,18 +458,18 @@ else {
     });
 
     //set receiver chat
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc('chatBot')
-        .collection('chats')
-        .doc(currentpatient.uId)
-        .collection('messages')
-        .add(model.toMap())
-        .then((value) {
-      emit(SocialSendMessageSuccessState());
-    }).catchError((error) {
-      emit(SocialSendMessageErrorState());
-    });
+    // FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc('chatBot')
+    //     .collection('chats')
+    //     .doc(currentpatient.uId)
+    //     .collection('messages')
+    //     .add(model.toMap())
+    //     .then((value) {
+    //   emit(SocialSendMessageSuccessState());
+    // }).catchError((error) {
+    //   emit(SocialSendMessageErrorState());
+    // });
   }
 
   // List<MessageModel> messages = [];
@@ -400,3 +492,6 @@ else {
     });
   }
 }
+
+
+

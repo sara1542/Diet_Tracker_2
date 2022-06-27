@@ -260,6 +260,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: OutlinedButton(
                 onPressed: (){
                   SocialCubit.get(context).currentIndex=0;
+                    reloadChats=true;
+                    currentPatientDoctor=null;
                  navigateAndFinish(
                     context,
                     LoginScreen(),

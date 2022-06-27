@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../globals/globalVariables.dart';
 import '../../shared/components/constants.dart';
 import '../../shared/network/local/cache_helper.dart';
 import 'cubit/cubit.dart';
@@ -14,16 +15,13 @@ class SocialLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(listener: (context, state) {
-      /*  if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        SocialCubit.get(context).userModel.isEmailVerified = true;
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(SocialCubit.get(context).userModel.uId)
-            .update({'isEmailVerified': true});
+    return BlocConsumer<SocialCubit, SocialStates>(
+        listener: (context, state) {}, builder: (context, state) {
+
+      if(isDoctor&&reloadChats) {
+        SocialCubit.get(context).getDoctorPatients();
       }
-      print('Current state: ' + state.toString());*/
-    }, builder: (context, state) {
+
       CacheHelper.init();
       uId = CacheHelper.getData(key: 'uId');
       var cubit = SocialCubit.get(context);

@@ -13,6 +13,7 @@ List<String> doctorsVisitaUrl = [
 ];
 List<doctor> doctors = [];
 List<patient> patients = [];
+List<patient> patientsOfSameCase = [];
 late Future f;
 
 //List<doctor> temp = [];
@@ -23,8 +24,13 @@ user currentuser = new user.empty();
 patient currentpatient=new patient.empty();
 inbody currentInbody=new inbody.empty();
 doctor currentdoctor= new doctor.empty();
+doctor? currentPatientDoctor=null;
 
 bool isDoctor=false;
+
+
+
+bool reloadChats=true;
 
 String GlobalUrl="http://192.168.1.10:6666/api/";
 
@@ -46,7 +52,8 @@ Map<String, String> authData = {
   'age': '',
   'image':
       'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png',
-  'detection price': ''
+  'detection price': '',
+  'doctor':''
 };
 
 

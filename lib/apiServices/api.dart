@@ -12,13 +12,14 @@ import '../globals/globalVariables.dart';
 
 class apiServices {
   String doctorsurl = GlobalUrl + "getdoctors";
-  String patientsurl = GlobalUrl + "getpatients";
   String patienturl = GlobalUrl + "getpatient/";
+  String patientDoctorurl = GlobalUrl + "getpatientdoctor/";
   String doctorurl = GlobalUrl + "getdoctor/";
   String inbodyurl = GlobalUrl + "getinbody/";
   String decScore = GlobalUrl + "decreaseScore";
   String incScore = GlobalUrl + "increaseScore";
   Dio dio = new Dio();
+
   Future<void> increaseScore(String docId) async {
     final response = await dio.put(incScore,
         data: json.encode(<String, dynamic>{
@@ -91,7 +92,6 @@ class apiServices {
     }
   }
 
-  ///subscribeAdoctor
   Future<num?> getInbody(String uId) async {
     final response = await dio.get(
       inbodyurl + uId,
@@ -107,6 +107,23 @@ class apiServices {
       return response.statusCode;
     } else {
       throw Exception('failed to get inbody');
+    }
+  }
+  Future<num?> getPatientDoctor(String uId) async {
+    final response = await dio.get(
+      patientDoctorurl + uId,
+    );
+
+    if (response.statusCode == 200) {
+      print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeDoctor" +
+          response.data['doctor'].toString() +
+          "                   ");
+
+      currentPatientDoctor = doctor.fromJson(response.data['doctor']);
+
+      return response.statusCode;
+    } else {
+      throw Exception('failed to get patient doctor');
     }
   }
 
@@ -128,29 +145,5 @@ class apiServices {
     }
   }
 
-  Future<int?> getpatients() async {
-    final response = await dio.get(
-      patientsurl,
-    );
-    if (response.statusCode == 200) {
-      print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee11" +
-          response.data['patients'].toString() +
-          "                   ");
 
-      patients = (response.data['patients'] as List)
-          .map((data) => patient.fromJson(data))
-          .toList();
-      for (int i = 0; i < patients.length; i++) {
-        if (patients[i].uId == currentuser.uId) {
-          currentpatient.Age = patients[i].Age;
-          currentpatient.Case = patients[i].Case;
-          break;
-        }
-      }
-      print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee22");
-      return response.statusCode;
-    } else {
-      throw Exception('failed to get patients');
-    }
-  }
 }
