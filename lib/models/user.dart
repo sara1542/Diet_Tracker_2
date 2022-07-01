@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firstgp/globals/globalVariables.dart';
+import 'package:firstgp/globals/globalwidgets.dart';
 import 'package:firstgp/layout/social_app/cubit/cubit.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class user {
             ? json["image"] as String
             : 'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png');
   }
-  Future<int?> login(String username, String password) async {
+  Future<void> login(String username, String password) async {
     debugPrint("******************************88");
     final response = await dio.post(GlobalUrl + 'login',
         //options: Options(headers: {"Content-Type": "application/json"}),
@@ -58,16 +59,16 @@ class user {
       if (currentuser.role == 'doctor') {
         getDoctor(uId);
         debugPrint("get doctor successfully");
-
       } else {
         //to get info of current patient
         getpatient(uId);
         getinbody(uId);
         getPatientDoctor(uId);
       }
-      debugPrint("**********************88 in login");
-      return response.statusCode;
+      //debugPrint("**********************88 in login" + response.data);
+      //  return response.data["error"];
     } else {
+      //showToast(false, "please check your internet connection");
       throw Exception('failed to login');
     }
   }

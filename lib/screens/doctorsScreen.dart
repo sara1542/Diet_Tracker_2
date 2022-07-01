@@ -107,9 +107,9 @@ class _doctorsScreenState extends State<doctorsScreen> {
                     init = false;
                     children = <Widget>[
                       SizedBox(
-                        height: 400,
+                        //height: 400,
                         child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            //   physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: tempDoctors.length,
                             itemBuilder: (BuildContext context, int index) {

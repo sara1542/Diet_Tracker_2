@@ -16,8 +16,6 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
-
-
 String getLocation(String fullAdress) {
   String res = "";
   for (int i = 0; i < fullAdress.length; i++) {
@@ -37,11 +35,13 @@ Future<void> getpatient(String uId) async {
 }
 
 Future<void> getPatientDoctor(String uId) async {
-  await api.getPatientDoctor( uId);
+  await api.getPatientDoctor(uId);
 }
+
 Future<void> getDoctor(String uId) async {
   await api.getDoctor(uId);
 }
+
 void submit(context) {
   print("in submit " + authData.toString());
   if (provider.isLogin) {
@@ -54,17 +54,17 @@ void submit(context) {
           //currentuser.email = authData['email']!;
           authData['email'] = '';
           authData['password'] = '';
-          isDoctor=currentuser.role=='doctor'?true:false;
-
+          isDoctor = currentuser.role == 'doctor' ? true : false;
 
           button_provider.togglesigninOrsignupProgressIndicator();
         })
-        .then((value) {
+        /*  .then((value) {
           return CacheHelper.saveData(
             key: 'uId',
             value: currentuser.uId,
           );
         })
+*/
         .then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -74,8 +74,13 @@ void submit(context) {
             ))
         .catchError((error) {
           button_provider.togglesigninOrsignupProgressIndicator();
-          showToast(false, 'failed to sign in : $error');
+          if (error.response.statusCode == 404) {
+            showToast(false, 'incorrect email or password');
+          } else {
+            showToast(false, 'check your internet connection and try again');
+          }
           print('failed to sign in : $error');
+          debugPrint(error.response.statusCode.toString());
         });
   } else {
     if (authData['isdoctor'] == 'true') {
@@ -98,14 +103,14 @@ void submit(context) {
           inbody(height, weight, weight / (height / 100.0), 0.0, 0.0);
 
       currentuser = patient(
-          '',
-          authData['username']!,
-          authData['email']!,
-          authData['password']!,
-          authData['gender']!,
-          int.parse(authData['age']!),
-          authData['case']!,
-          authData['image']!,
+        '',
+        authData['username']!,
+        authData['email']!,
+        authData['password']!,
+        authData['gender']!,
+        int.parse(authData['age']!),
+        authData['case']!,
+        authData['image']!,
       );
     }
     currentuser.register().then((value) {
@@ -137,8 +142,6 @@ String getMoneyValue(String money) {
   }
   return res;
 }
-
-
 
 /*Future<doctor?> extractData(String visitaUrl) async {
 //https://www.vezeeta.com/ar/dr/%D8%AF%D9%83%D8%AA%D9%88%D8%B1-%D8%A3%D8%AD%D9%85%D8%AF-%D9%85%D8%A7%D8%AC%D8%AF-%D8%AA%D8%AE%D8%B3%D9%8A%D8%B3-%D9%88%D8%AA%D8%BA%D8%B0%D9%8A%D8%A9#patients-reviews
@@ -279,8 +282,7 @@ Future getMeals() async {
 }
 
 Future getSnacks() async {
-  var responce =
-  await http.get(Uri.parse(GlobalUrl+'getsnacks'));
+  var responce = await http.get(Uri.parse(GlobalUrl + 'getsnacks'));
   var jsonData = jsonDecode(responce.body);
   for (var i in jsonData) {
     Dish dish = Dish(
@@ -299,8 +301,7 @@ Future getSnacks() async {
 }
 
 Future getBreakfastMeals() async {
-  var responce =
-  await http.get(Uri.parse(GlobalUrl+'getbreakfast'));
+  var responce = await http.get(Uri.parse(GlobalUrl + 'getbreakfast'));
   var jsonData = jsonDecode(responce.body);
   for (var i in jsonData) {
     Dish dish = Dish(
@@ -580,8 +581,7 @@ String generateBreakfastMeals() {
 }
 
 Future getLunchMeals() async {
-  var responce =
-  await http.get(Uri.parse(GlobalUrl+'getlunch'));
+  var responce = await http.get(Uri.parse(GlobalUrl + 'getlunch'));
   var jsonData = jsonDecode(responce.body);
   for (var i in jsonData) {
     Dish dish = Dish(
@@ -1006,7 +1006,7 @@ String generateDinnerMeals() {
 
 Future<http.Response> createBadCombination(String bad) {
   return http.post(
-    Uri.parse(GlobalUrl+'postameal'),
+    Uri.parse(GlobalUrl + 'postameal'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -1017,8 +1017,7 @@ Future<http.Response> createBadCombination(String bad) {
 }
 
 Future getBadCombo() async {
-  var responce =
-  await http.get(Uri.parse(GlobalUrl+'getbadmeals'));
+  var responce = await http.get(Uri.parse(GlobalUrl + 'getbadmeals'));
   var jsonData = jsonDecode(responce.body);
   for (var i in jsonData) {
     List<dynamic> list = <dynamic>[];

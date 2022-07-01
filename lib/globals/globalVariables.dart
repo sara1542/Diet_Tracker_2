@@ -21,21 +21,19 @@ var provider;
 var button_provider;
 user currentuser = new user.empty();
 
-patient currentpatient=new patient.empty();
-inbody currentInbody=new inbody.empty();
-doctor currentdoctor= new doctor.empty();
-doctor? currentPatientDoctor=null;
+patient currentpatient = new patient.empty();
+inbody currentInbody = new inbody.empty();
+doctor currentdoctor = new doctor.empty();
+doctor? currentPatientDoctor = null;
 
-bool isDoctor=false;
+bool isDoctor = false;
 
+bool reloadChats = true;
 
-
-bool reloadChats=true;
-
-String GlobalUrl="http://192.168.1.10:6666/api/";
+String GlobalUrl = "http://192.168.1.60:6666/api/";
 
 apiServices api = new apiServices();
-String chatbotUrl = 'http://192.168.1.10:5005/webhooks/rest/webhook';
+String chatbotUrl = 'http://192.168.1.60:5005/webhooks/rest/webhook';
 Map<String, String> authData = {
   'email': '',
   'password': '',
@@ -44,7 +42,7 @@ Map<String, String> authData = {
   'visita url (optional)': '',
   'isdoctor': '',
   'gender': '',
-  'ratingScore':'',
+  'ratingScore': '',
   'clinic number': '',
   'case': '',
   'height': '',
@@ -53,9 +51,8 @@ Map<String, String> authData = {
   'image':
       'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png',
   'detection price': '',
-  'doctor':''
+  'doctor': ''
 };
-
 
 double calories = 0.0, carb = 0.0, protein = 0.0, fat = 0.0;
 double cur_calories = 0.0, cur_carb = 0.0, cur_protein = 0.0, cur_fat = 0.0;

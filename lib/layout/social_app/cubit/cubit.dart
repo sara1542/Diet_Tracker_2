@@ -54,7 +54,6 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-
   int currentIndex = 0;
   List<Widget> screens = [
     // FeedsScreen(),
@@ -68,12 +67,9 @@ class SocialCubit extends Cubit<SocialStates> {
 
   void ChangeBottomNav(int index) {
     if (index == 1) {
-      if(isDoctor)
-        {
-          getDoctorPatients();
-        }
-      else
-      {
+      if (isDoctor) {
+        getDoctorPatients();
+      } else {
         getPatientsOfSameCase();
       }
     }
@@ -118,7 +114,12 @@ class SocialCubit extends Cubit<SocialStates> {
         .then((value) {
       value.ref.getDownloadURL().then((value) {
         currentuser.image = value;
-        updateUserProfile(name: name, image: value, age: age, price: price, clinicPhone: clinicPhone);
+        updateUserProfile(
+            name: name,
+            image: value,
+            age: age,
+            price: price,
+            clinicPhone: clinicPhone);
       }).catchError((error) {});
       emit(SocialUploadProfileImageErrorState());
     }).catchError((error) {
@@ -132,59 +133,56 @@ class SocialCubit extends Cubit<SocialStates> {
   Future<int?> updateUserProfile(
       {required String name,
       required int age,
-        required num price,
-        required String clinicPhone,
+      required num price,
+      required String clinicPhone,
       String? image}) async {
     emit(SocialUserUpdateLoadingState());
 
-   if(isDoctor) {
-     final response = await dio.put(GlobalUrl + "updatedoctor",
-         data: json.encode(<String, dynamic>{
-           "_id": currentuser.uId,
-           "username": name,
-           "price":price,
-           "clinicPhone":clinicPhone,
-           "image": image ?? currentdoctor.image,
-         }));
-     if (response.statusCode == 200 && response.statusMessage == 'OK') {
-       print("Doctor updated successfully");
-       currentdoctor.image = image ?? currentdoctor.image;
-       currentuser.image = image ?? currentdoctor.image;
-       currentdoctor.username = name;
-       currentdoctor.price=price;
-       currentdoctor.cliniquePhone=clinicPhone;
+    if (isDoctor) {
+      final response = await dio.put(GlobalUrl + "updatedoctor",
+          data: json.encode(<String, dynamic>{
+            "_id": currentuser.uId,
+            "username": name,
+            "price": price,
+            "clinicPhone": clinicPhone,
+            "image": image ?? currentdoctor.image,
+          }));
+      if (response.statusCode == 200 && response.statusMessage == 'OK') {
+        print("Doctor updated successfully");
+        currentdoctor.image = image ?? currentdoctor.image;
+        currentuser.image = image ?? currentdoctor.image;
+        currentdoctor.username = name;
+        currentdoctor.price = price;
+        currentdoctor.cliniquePhone = clinicPhone;
 
-     emit(SocialUserUpdateSuccessState());
-     return response.statusCode;
-   } else {
-     throw Exception('failed to update doctor' + response.statusMessage!);
-   }
-   }
-else {
-     final response = await dio.put(GlobalUrl + "updatepatient",
-         data: json.encode(<String, dynamic>{
-           "_id": currentuser.uId,
-           "username": name,
-           "age": age,
-           "Case": currentpatient.Case,
-           "image": image ?? currentpatient.image,
-         }));
-     if (response.statusCode == 200 && response.statusMessage == 'OK') {
-       print("Patient updated successfully");
-       currentpatient.image = image ?? currentpatient.image;
-       currentuser.image = image ?? currentpatient.image;
-       currentpatient.username = name;
-       currentpatient.Age = age;
+        emit(SocialUserUpdateSuccessState());
+        return response.statusCode;
+      } else {
+        throw Exception('failed to update doctor' + response.statusMessage!);
+      }
+    } else {
+      final response = await dio.put(GlobalUrl + "updatepatient",
+          data: json.encode(<String, dynamic>{
+            "_id": currentuser.uId,
+            "username": name,
+            "age": age,
+            "Case": currentpatient.Case,
+            "image": image ?? currentpatient.image,
+          }));
+      if (response.statusCode == 200 && response.statusMessage == 'OK') {
+        print("Patient updated successfully");
+        currentpatient.image = image ?? currentpatient.image;
+        currentuser.image = image ?? currentpatient.image;
+        currentpatient.username = name;
+        currentpatient.Age = age;
 
-     emit(SocialUserUpdateSuccessState());
-     return response.statusCode;
-   } else {
-    throw Exception('failed to update patient' + response.statusMessage!);
+        emit(SocialUserUpdateSuccessState());
+        return response.statusCode;
+      } else {
+        throw Exception('failed to update patient' + response.statusMessage!);
+      }
     }
-
-}
   }
-
 
   Future<int?> updateUserInBody(
       {required double height,
@@ -224,14 +222,9 @@ else {
     }
   }
 
-
   Future<int?> addPatientToDoctorList({
-  required String doctorUID,
-})async {
-
-
-  }
-
+    required String doctorUID,
+  }) async {}
 
   Future<void> getdoctors() async {
     await api.getdoctors();
@@ -267,8 +260,9 @@ else {
 
   Future<int?> getDoctorPatients() async {
     print('got here');
-    final response = await dio.get(GlobalUrl + "getdoctorpatients",
-        queryParameters: <String,dynamic>{'id': uId}
+    final response = await dio.get(
+      GlobalUrl + "getdoctorpatients/" + uId,
+      //  queryParameters: <String,dynamic>{'id': uId}
     );
 
     if (response.statusCode == 200) {
@@ -285,7 +279,6 @@ else {
       throw Exception('failed to get patients');
     }
   }
-
 
   void sendMessageTogroup({
     required String dateTime,
@@ -359,10 +352,7 @@ else {
     required String text,
   }) {
     MessageModel model = MessageModel(
-        senderId: uId,
-        receiverId: receiverId,
-        dateTime: dateTime,
-        text: text);
+        senderId: uId, receiverId: receiverId, dateTime: dateTime, text: text);
 
     //set my chat
     FirebaseFirestore.instance
@@ -492,6 +482,3 @@ else {
     });
   }
 }
-
-
-
