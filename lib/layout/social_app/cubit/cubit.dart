@@ -1,24 +1,22 @@
 import 'dart:convert';
-import 'dart:ffi';
+
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
-import 'package:firstgp/apiServices/api.dart';
+import 'package:firstgp/models/dish/meal_model.dart';
 import 'package:firstgp/globals/globalVariables.dart';
 import 'package:firstgp/layout/social_app/cubit/states.dart';
 import 'package:firstgp/models/patient.dart';
-import 'package:firstgp/models/doctor.dart';
 import 'package:firstgp/models/social_app/chat_model.dart';
 
 import 'package:firstgp/models/social_app/social-user_model.dart';
 import 'package:firstgp/modules/social_app/chats/chats_screen.dart';
-import 'package:firstgp/modules/social_app/chats/displayChats.dart';
 import 'package:firstgp/modules/social_app/feeds/feeds_screen.dart';
-import 'package:firstgp/modules/social_app/generator/generator_screen.dart';
 import 'package:firstgp/modules/social_app/settings/settings_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -42,7 +40,8 @@ class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
 
   static SocialCubit get(context) => BlocProvider.of(context);
-
+  String getMeals = GlobalUrl + "getTodaymeal/";
+  String incrementCounter = GlobalUrl + "incrementMealCounter/";
   void getUserData() {
     emit(SocialGetUserLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
@@ -56,9 +55,9 @@ class SocialCubit extends Cubit<SocialStates> {
 
   int currentIndex = 0;
   List<Widget> screens = [
-    // FeedsScreen(),
+    FeedsScreen(),
 
-    Generator(),
+    // Generator(),
     ChatsScreen(),
     // allChats(),
     SettingsScreen(),
@@ -258,6 +257,47 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
+  Future<void> getPatientMealAndUpdate() async {
+    await getPatientMeals();
+    // if(patientmeal.lastFetched)
+    DateTime now = new DateTime.now();
+    DateTime date = new DateTime(now.year, now.month, now.day);
+    var dateTime = new DateFormat("yyyy-MM-dd").format(date);
+
+//var formate1 = "${dateTime.day}-${dateTime.month}-${dateTime.year}";
+
+    //var formate2 = "${dateTime.year}-${dateTime.month}-${dateTime.day}";
+    debugPrint(patientmeal.lastFetched + "     " + dateTime.toString());
+    if (patientmeal.lastFetched != dateTime) {
+      await incrementMealCounter(patientmeal.id);
+    }
+  }
+
+  Future<void> getPatientMeals() async {
+    final response = await dio.get(
+      getMeals + uId,
+    );
+    if (response.statusCode == 200) {
+      print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee11" +
+          response.data['diet'].toString() +
+          "                   ");
+      patientmeal = meal.fromJson(response.data['diet']);
+    } else {
+      throw Exception('failed to get meal');
+    }
+  }
+
+  Future<void> incrementMealCounter(String dietId) async {
+    final response = await dio.put(
+      incrementCounter + dietId,
+    );
+    /*if (response.statusCode == 200) {
+      //showToast(true, 'you subscibed the doctor successfuly');
+    } else {
+      throw Exception('failed to subscribe the doctor');
+    }*/
+  }
+
   Future<int?> getDoctorPatients() async {
     print('got here');
     final response = await dio.get(
@@ -443,31 +483,56 @@ class SocialCubit extends Cubit<SocialStates> {
           .then((value) {
         emit(SocialSendMessageSuccessState());
       });
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentpatient.uId)
+          .collection('chats')
+          .doc('chatbot')
+          .collection('messages')
+          .add(botModel.toMap())
+          .then((value) {
+        emit(SocialSendMessageSuccessState());
+      });
     }).catchError((error) {
       emit(SocialSendMessageErrorState());
     });
 
     //set receiver chat
-    // FirebaseFirestore.instance
-    //     .collection('users')
-    //     .doc('chatBot')
-    //     .collection('chats')
-    //     .doc(currentpatient.uId)
-    //     .collection('messages')
-    //     .add(model.toMap())
-    //     .then((value) {
-    //   emit(SocialSendMessageSuccessState());
-    // }).catchError((error) {
-    //   emit(SocialSendMessageErrorState());
-    // });
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc('chatbot')
+        .collection('chats')
+        .doc(currentpatient.uId)
+        .collection('messages')
+        .add(model.toMap())
+        .then((value) {
+      emit(SocialSendMessageSuccessState());
+    }).catchError((error) {
+      emit(SocialSendMessageErrorState());
+    });
   }
+
+  //set receiver chat
+  // FirebaseFirestore.instance
+  //     .collection('users')
+  //     .doc('chatBot')
+  //     .collection('chats')
+  //     .doc(currentpatient.uId)
+  //     .collection('messages')
+  //     .add(model.toMap())
+  //     .then((value) {
+  //   emit(SocialSendMessageSuccessState());
+  // }).catchError((error) {
+  //   emit(SocialSendMessageErrorState());
+  // });
 
   // List<MessageModel> messages = [];
 
   void getMessagesfromChatbot() {
     FirebaseFirestore.instance
         .collection('users')
-        .doc('chatBot')
+        .doc('chatbot')
         .collection('chats')
         .doc(currentpatient.uId)
         .collection('messages')

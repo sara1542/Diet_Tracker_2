@@ -58,13 +58,12 @@ void submit(context) {
 
           button_provider.togglesigninOrsignupProgressIndicator();
         })
-        /*  .then((value) {
+        .then((value) {
           return CacheHelper.saveData(
             key: 'uId',
             value: currentuser.uId,
           );
         })
-*/
         .then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(

@@ -2,44 +2,45 @@ import 'package:firstgp/globals/globalVariables.dart';
 import 'package:firstgp/layout/social_app/cubit/cubit.dart';
 import 'package:firstgp/layout/social_app/cubit/states.dart';
 import 'package:firstgp/models/social_app/chat_model.dart';
-import 'package:firstgp/models/social_app/social-user_model.dart';
+
 import 'package:firstgp/shared/components/constants.dart';
 import 'package:firstgp/shared/styles/icon_broken.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../globals/globalVariables.dart';
-import '../../../models/patient.dart';
-
-
 class ChatDetailsScreen extends StatelessWidget {
-
   String receiver, name, image;
-  ChatDetailsScreen({Key? key, required this.receiver,required this.name,required this.image}) : super(key: key);
+  ChatDetailsScreen(
+      {Key? key,
+      required this.receiver,
+      required this.name,
+      required this.image})
+      : super(key: key);
 
   var messageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Builder(
       builder: (BuildContext context) {
-        if(receiver=="community") {
+        if (receiver == "community") {
           SocialCubit.get(context).getCommunityMessages();
-        } else if(receiver=="chatbot") {
-          SocialCubit.get(context).getMessages(receiverId: 'chatbot');
+        } else if (receiver == "chatbot") {
+          SocialCubit.get(context).getMessagesfromChatbot();
         } else {
           SocialCubit.get(context).getMessages(receiverId: receiver);
+          //SocialCubit.get(context).getMessagesfromChatbot();
         }
         return BlocConsumer<SocialCubit, SocialStates>(
           listener: (context, state) {},
           builder: (context, state) {
             int ItemCount;
-            if(receiver=="community") {
-             ItemCount= SocialCubit.get(context).communityMessages.length;
-            } else if(receiver=="chatbot") {
-              ItemCount= SocialCubit.get(context).messages.length;
+            if (receiver == "community") {
+              ItemCount = SocialCubit.get(context).communityMessages.length;
+            } else if (receiver == "chatbot") {
+              ItemCount = SocialCubit.get(context).messages.length;
             } else {
-              ItemCount= SocialCubit.get(context).messages.length;
+              ItemCount = SocialCubit.get(context).messages.length;
             }
             return Scaffold(
               appBar: AppBar(
@@ -71,29 +72,27 @@ class ChatDetailsScreen extends StatelessWidget {
                           physics: BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             var message;
-                            if(receiver=="community") {
+                            if (receiver == "community") {
+                              message = SocialCubit.get(context)
+                                  .communityMessages[index];
+                            } else if (receiver == "chatbot") {
                               message =
-                            SocialCubit.get(context).communityMessages[index];
-                            }
-                            else if(receiver=="chatbot") {
+                                  SocialCubit.get(context).messages[index];
+                            } else {
                               message =
-                              SocialCubit.get(context).messages[index];
+                                  SocialCubit.get(context).messages[index];
                             }
-                            else{
-                              message =
-                              SocialCubit.get(context).messages[index];
-                            }
-                            if (uId ==
-                                message.senderId) {
+                            if (uId == message.senderId) {
                               return buildMyMessage(message);
                             } else {
-
-                              return receiver=="community"?buildCommunityMessage(message):buildMessage(message);
+                              return receiver == "community"
+                                  ? buildCommunityMessage(message)
+                                  : buildMessage(message);
                             }
                           },
                           separatorBuilder: (context, index) => const SizedBox(
-                            height: 10.0,
-                          ),
+                                height: 10.0,
+                              ),
                           itemCount: ItemCount),
                     ),
                     Container(
@@ -117,28 +116,25 @@ class ChatDetailsScreen extends StatelessWidget {
                             color: Colors.blue,
                             child: MaterialButton(
                               onPressed: () {
-
-                                if(receiver=="community") {
+                                if (receiver == "community") {
                                   SocialCubit.get(context).sendMessageTogroup(
                                       dateTime: DateTime.now().toString(),
                                       text: messageController.text);
-                                  messageController.text='';
-                                }
-                                else if(receiver=="chatbot") {
+                                  messageController.text = '';
+                                } else if (receiver == "chatbot") {
                                   // to do
                                   SocialCubit.get(context).sendMessageToChatbot(
                                       dateTime: DateTime.now().toString(),
                                       text: messageController.text);
-                                  messageController.text='';
-                                }
-                                else{
+                                  messageController.text = '';
+                                } else {
                                   SocialCubit.get(context).sendMessage(
                                       receiverId: receiver,
                                       dateTime: DateTime.now().toString(),
                                       text: messageController.text);
-                                  messageController.text='';
+                                  messageController.text = '';
                                 }
-                                },
+                              },
                               minWidth: 1.0,
                               child: const Icon(
                                 IconBroken.Send,
@@ -318,12 +314,11 @@ class ChatDetailsScreen extends StatelessWidget {
         ),
       );
   Widget buildMessage(MessageModel message) => Align(
-    alignment: AlignmentDirectional.centerStart,
-    child: Row(
-      children: [
-
-        Flexible(
-            child: Container(
+        alignment: AlignmentDirectional.centerStart,
+        child: Row(
+          children: [
+            Flexible(
+                child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey[300],
                 borderRadius: const BorderRadiusDirectional.only(
@@ -340,9 +335,9 @@ class ChatDetailsScreen extends StatelessWidget {
                 //  softWrap: false,
               ),
             )),
-      ],
-    ),
-  );
+          ],
+        ),
+      );
   Widget buildMyMessage(MessageModel message) => Align(
         alignment: AlignmentDirectional.centerEnd,
         child: Flexible(

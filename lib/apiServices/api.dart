@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:firstgp/globals/globalwidgets.dart';
+
 import 'package:firstgp/models/doctor.dart';
 import 'package:firstgp/models/inbody.dart';
 import 'package:firstgp/models/patient.dart';
@@ -18,6 +19,8 @@ class apiServices {
   String inbodyurl = GlobalUrl + "getinbody/";
   String decScore = GlobalUrl + "decreaseScore";
   String incScore = GlobalUrl + "increaseScore";
+  String getDiet = GlobalUrl + "getdiet/";
+
   Dio dio = new Dio();
 
   Future<void> increaseScore(String docId) async {
@@ -44,6 +47,23 @@ class apiServices {
     }
   }
 
+  /* Future<int> getPatientDiet() async {
+    final response = await dio.get(
+      getDiet + currentuser.uId,
+    );
+    if (response.statusCode == 200) {
+      print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee11" +
+          response.data['diet'].toString() +
+          "                   ");
+
+      currentdoctor = doctor.fromJson(response.data['diet']);
+
+      return response.statusCode!;
+    } else {
+      throw Exception('failed to get doctor');
+    }
+  }
+*/
   Future<void> registerAdoctor(String docId) async {
     debugPrint(GlobalUrl + 'subscribeAdoctor');
     debugPrint(docId);
@@ -109,6 +129,7 @@ class apiServices {
       throw Exception('failed to get inbody');
     }
   }
+
   Future<num?> getPatientDoctor(String uId) async {
     final response = await dio.get(
       patientDoctorurl + uId,
@@ -144,6 +165,4 @@ class apiServices {
       throw Exception('failed to get patient');
     }
   }
-
-
 }

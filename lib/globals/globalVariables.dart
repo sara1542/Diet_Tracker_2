@@ -1,5 +1,6 @@
 // late Position position;
 import 'package:firstgp/apiServices/api.dart';
+import 'package:firstgp/models/dish/meal_model.dart';
 import 'package:firstgp/models/inbody.dart';
 import 'package:firstgp/models/patient.dart';
 
@@ -53,7 +54,7 @@ Map<String, String> authData = {
   'detection price': '',
   'doctor': ''
 };
-
+late meal patientmeal;
 double calories = 0.0, carb = 0.0, protein = 0.0, fat = 0.0;
 double cur_calories = 0.0, cur_carb = 0.0, cur_protein = 0.0, cur_fat = 0.0;
 double bfCalories = 0.0, bfCarb = 0.0, bfProtein = 0.0, bfFat = 0.0;
