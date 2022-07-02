@@ -10,7 +10,7 @@ class FeedsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
-        future: SocialCubit.get(context).getPatientMealAndUpdate(),
+        future: SocialCubit.get(context).getPatientMeals(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           List<Widget> children;
           if (snapshot.connectionState == ConnectionState.done) {
@@ -56,16 +56,15 @@ class FeedsScreen extends StatelessWidget {
             ];
             return const CircularProgressIndicator();
           } else {
-            children = const <Widget>[
-              SizedBox(
-                width: 60,
-                height: 60,
-                child: CircularProgressIndicator(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting result...'),
-              ),
+            children = <Widget>[
+              Center(
+                child: Column(
+                  children: const [
+                    CircularProgressIndicator(),
+                    Text('Awaiting result...')
+                  ],
+                ),
+              )
             ];
           }
           return Padding(
@@ -92,7 +91,7 @@ Widget getmeal(String title, String content, Icon icon) => Container(
             color: Colors.black45,
           ),
         ),
-        Text(content),
+        content != null ? Text(content) : Text("no meal today"),
         const SizedBox(
           height: 10,
         )

@@ -221,10 +221,6 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  Future<int?> addPatientToDoctorList({
-    required String doctorUID,
-  }) async {}
-
   Future<void> getdoctors() async {
     await api.getdoctors();
   }
@@ -257,22 +253,23 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  Future<void> getPatientMealAndUpdate() async {
+  /*Future<void> getPatientMealAndUpdate() async {
     await getPatientMeals();
     // if(patientmeal.lastFetched)
-    DateTime now = new DateTime.now();
-    DateTime date = new DateTime(now.year, now.month, now.day);
-    var dateTime = new DateFormat("yyyy-MM-dd").format(date);
+    // DateTime now = new DateTime.now();
+    //DateTime date = new DateTime(now.year, now.month, now.day);
+    //var dateTime = new DateFormat("yyyy-MM-dd").format(date);
 
 //var formate1 = "${dateTime.day}-${dateTime.month}-${dateTime.year}";
 
     //var formate2 = "${dateTime.year}-${dateTime.month}-${dateTime.day}";
-    debugPrint(patientmeal.lastFetched + "     " + dateTime.toString());
-    if (patientmeal.lastFetched != dateTime) {
-      await incrementMealCounter(patientmeal.id);
-    }
-  }
+    debugPrint(patientmeal.lastFetched);
 
+    /* if (patientmeal.lastFetched != dateTime) {
+      await incrementMealCounter(patientmeal.id);
+    }*/
+  }
+*/
   Future<void> getPatientMeals() async {
     final response = await dio.get(
       getMeals + uId,
@@ -287,7 +284,7 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  Future<void> incrementMealCounter(String dietId) async {
+  /*Future<void> incrementMealCounter(String dietId) async {
     final response = await dio.put(
       incrementCounter + dietId,
     );
@@ -297,7 +294,7 @@ class SocialCubit extends Cubit<SocialStates> {
       throw Exception('failed to subscribe the doctor');
     }*/
   }
-
+*/
   Future<int?> getDoctorPatients() async {
     print('got here');
     final response = await dio.get(

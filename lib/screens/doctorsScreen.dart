@@ -40,38 +40,68 @@ class _doctorsScreenState extends State<doctorsScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              children: [
-                Text('filter by: ',
-                    style: Theme.of(context).textTheme.bodyText1),
-                DropdownButton<String>(
-                    value: dropdownValue,
-                    focusColor: Colors.cyan,
-                    onChanged: (String? value) async {
-                      dropdownValue = value!;
-                      viewDoctors.clear();
-                      if (value == 'price') {
-                        setState(() {
-                          viewTextField = true;
-                        });
-                        print("priceeeeeeeeeeeeeeeee");
-                        //List<doctor> viewDoctors = [];
-                      } else if (value == 'all') {
-                        viewDoctors = doctors;
-                        setState(() {
-                          viewTextField = false;
-                          tempDoctors = viewDoctors;
-                        });
-                      }
-                    },
-                    items: <String>['all', 'price', 'nearest location']
-                        .map((String val) {
-                      return DropdownMenuItem(
-                        value: val,
-                        child: new Text(val),
-                      );
-                    }).toList()),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 60),
+              child: Row(
+                children: [
+                  Text('filter by: ',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1!
+                          .copyWith(color: Colors.black54)),
+                  DropdownButton<String>(
+                      value: dropdownValue,
+                      focusColor: Colors.cyan,
+                      onChanged: (String? value) async {
+                        dropdownValue = value!;
+                        viewDoctors.clear();
+                        if (value == 'price') {
+                          setState(() {
+                            viewTextField = true;
+                          });
+                          print("priceeeeeeeeeeeeeeeee");
+                          //List<doctor> viewDoctors = [];
+                        } else if (value == 'all') {
+                          viewDoctors = doctors;
+                          setState(() {
+                            viewTextField = false;
+                            tempDoctors = viewDoctors;
+                          });
+                        } else if (value == 'only males') {
+                          tempDoctors = [];
+                          for (int i = 0; i < doctors.length; i++) {
+                            if (doctors[i].Gender == "male") {
+                              tempDoctors.add(doctors[i]);
+                            }
+                          }
+                          setState(() {
+                            viewTextField = false;
+                          });
+                        } else {
+                          tempDoctors = [];
+                          for (int i = 0; i < doctors.length; i++) {
+                            if (doctors[i].Gender == "female") {
+                              tempDoctors.add(doctors[i]);
+                            }
+                          }
+                          setState(() {
+                            viewTextField = false;
+                          });
+                        }
+                      },
+                      items: <String>[
+                        'all',
+                        'price',
+                        'only males',
+                        'only females'
+                      ].map((String val) {
+                        return DropdownMenuItem(
+                          value: val,
+                          child: new Text(val),
+                        );
+                      }).toList()),
+                ],
+              ),
             ),
             if (viewTextField)
               TextField(
