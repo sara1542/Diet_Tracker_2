@@ -50,12 +50,15 @@ class ChatsScreen extends StatelessWidget {
               }
               reloadChats = false;
             }
-            return ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => buildChatItem(
-                  context, receivers[index], names[index], images[index]),
-              separatorBuilder: (context, index) => myDivider(),
-              itemCount: receivers.length,
+            return SizedBox(
+              height: 700,
+              child: ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => buildChatItem(
+                    context, receivers[index], names[index], images[index]),
+                separatorBuilder: (context, index) => myDivider(),
+                itemCount: receivers.length,
+              ),
             );
           },
         );

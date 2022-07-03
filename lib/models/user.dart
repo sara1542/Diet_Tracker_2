@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firstgp/globals/globalVariables.dart';
-import 'package:firstgp/globals/globalwidgets.dart';
-import 'package:firstgp/layout/social_app/cubit/cubit.dart';
 import 'package:flutter/material.dart';
 
 import '../globals/globalFunctions.dart';
+import '../globals/globalwidgets.dart';
 
 enum gender { male, female }
 
@@ -43,34 +42,59 @@ class user {
             : 'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png');
   }
   Future<void> login(String username, String password) async {
-    debugPrint("******************************88");
-    final response = await dio.post(GlobalUrl + 'login',
-        //options: Options(headers: {"Content-Type": "application/json"}),
-        data: json.encode(<String, String>{
-          "email": username,
-          "password": password,
-        }));
-    if (response.statusCode == 200) {
+    try {
+      debugPrint("******************************88");
+      final response = await dio.post(GlobalUrl + 'login',
+          /*     options: Options(
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! <= 500;
+            },
+          ),*/
+          data: json.encode(<String, String>{
+            "email": username,
+            "password": password,
+          }));
+      //  if (response.statusCode == 200) {
       debugPrint("in login FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
       debugPrint("in login" + response.data.toString());
       currentuser = user.fromJson(response.data["data"]["User"]);
       debugPrint(currentuser.uId + " 7777777777777777");
       uId = currentuser.uId;
       if (currentuser.role == 'doctor') {
-        getDoctor(uId);
-        debugPrint("get doctor successfully");
+        await getDoctor(uId);
+        debugPrint("get doctor successfully " + currentdoctor.uId);
       } else {
         //to get info of current patient
-        getpatient(uId);
-        getinbody(uId);
-        getPatientDoctor(uId);
+        await getpatient(uId);
+        await getinbody(uId);
+        await getPatientDoctor(uId);
       }
+
       //debugPrint("**********************88 in login" + response.data);
       //  return response.data["error"];
-    } else {
-      //showToast(false, "please check your internet connection");
-      throw Exception('failed to login');
+      //}
+    } on DioError catch (e) {
+      /* if (e.response!.statusCode == 404) {
+        print(e.response!.statusCode);
+      } else {
+        print(e.message);
+        // print(e.request);
+      }
+*/
+      button_provider.togglesigninOrsignupProgressIndicator();
+      if (e.response!.statusCode == 404) {
+        showToast(false, 'incorrect email or password');
+      } else {
+        showToast(false, 'check your internet connection and try again');
+      }
+      print('failed to sign in : $e');
+      debugPrint(e.response!.statusCode.toString());
     }
+
+    // print("shott");
+    //showToast(false, "please check your internet connection");
+    //throw Exception('failed to login');
   }
 
   Future<int?> register() async {} //overrided by patient, doctor

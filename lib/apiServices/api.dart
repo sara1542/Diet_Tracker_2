@@ -80,6 +80,7 @@ class apiServices {
   }
 
   Future<num?> getDoctor(String uId) async {
+    print("in get doctor take care");
     final response = await dio.get(
       doctorurl + uId,
     );
@@ -98,14 +99,30 @@ class apiServices {
   }
 
   Future<int?> getdoctors() async {
+    print("ibvgfgdyshdy");
     final response = await dio.get(
       doctorsurl,
     );
     if (response.statusCode == 200) {
+      print("dkdjdd");
       doctors = (response.data['doctors'] as List)
           .map((data) => doctor.fromJson(data))
           .toList();
-
+      /*for (int i = 0; i < doctors.length; i++) {
+        print("before " +
+            doctors[i].username +
+            " " +
+            doctors[i].ratingScore.toString() +
+            "\n");
+      }*/
+      doctors.sort((a, b) => b.ratingScore.compareTo(a.ratingScore));
+      for (int i = 0; i < doctors.length; i++) {
+        print("after " +
+            doctors[i].username +
+            " " +
+            doctors[i].ratingScore.toString() +
+            "\n");
+      }
       return response.statusCode;
     } else {
       throw Exception('failed to get doctors');

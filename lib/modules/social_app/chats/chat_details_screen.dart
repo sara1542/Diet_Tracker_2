@@ -26,10 +26,9 @@ class ChatDetailsScreen extends StatelessWidget {
         if (receiver == "community") {
           SocialCubit.get(context).getCommunityMessages();
         } else if (receiver == "chatbot") {
-          SocialCubit.get(context).getMessagesfromChatbot();
+          SocialCubit.get(context).getMessages(receiverId: receiver);
         } else {
           SocialCubit.get(context).getMessages(receiverId: receiver);
-          //SocialCubit.get(context).getMessagesfromChatbot();
         }
         return BlocConsumer<SocialCubit, SocialStates>(
           listener: (context, state) {},

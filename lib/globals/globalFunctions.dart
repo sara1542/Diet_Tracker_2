@@ -42,36 +42,34 @@ Future<void> getDoctor(String uId) async {
   await api.getDoctor(uId);
 }
 
-void submit(context) {
+void submit(context) async {
   print("in submit " + authData.toString());
   if (provider.isLogin) {
-    currentuser
+    await currentuser
         .login(authData['email']!, authData['password']!)
         .then((value) {
-          showToast(true, 'signed in succesfully');
-          print('signed in succesfully');
+      showToast(true, 'signed in succesfully');
+      print('signed in succesfully');
 
-          //currentuser.email = authData['email']!;
-          authData['email'] = '';
-          authData['password'] = '';
-          isDoctor = currentuser.role == 'doctor' ? true : false;
+      //currentuser.email = authData['email']!;
+      authData['email'] = '';
+      authData['password'] = '';
+      isDoctor = currentuser.role == 'doctor' ? true : false;
 
-          button_provider.togglesigninOrsignupProgressIndicator();
-        })
-        .then((value) {
-          return CacheHelper.saveData(
-            key: 'uId',
-            value: currentuser.uId,
-          );
-        })
-        .then((value) => Navigator.pushAndRemoveUntil(
+      button_provider.togglesigninOrsignupProgressIndicator();
+    }).then((value) {
+      return CacheHelper.saveData(
+        key: 'uId',
+        value: currentuser.uId,
+      );
+    }).then((value) => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) => SocialLayout(),
               ),
               (route) => false,
-            ))
-        .catchError((error) {
+            ));
+    /*.catchError((error) {
           button_provider.togglesigninOrsignupProgressIndicator();
           if (error.response.statusCode == 404) {
             showToast(false, 'incorrect email or password');
@@ -80,7 +78,7 @@ void submit(context) {
           }
           print('failed to sign in : $error');
           debugPrint(error.response.statusCode.toString());
-        });
+        });*/
   } else {
     if (authData['isdoctor'] == 'true') {
       print('registering a doctor');

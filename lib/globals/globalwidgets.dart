@@ -75,8 +75,14 @@ Widget defaultTextForm(
           )),
       controller: controller,
       validator: (value) {
-        if (value!.isEmpty && text != 'visita url (optional)') {
+        if (value!.isEmpty) {
           return 'Invalid $text!';
+        } else if (text == "email") {
+          bool emailValid = RegExp(
+                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+              .hasMatch(value);
+          print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh' + emailValid.toString());
+          if (!emailValid) return 'invalid email';
         }
         print("in validatorrr");
         return null;

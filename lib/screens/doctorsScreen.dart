@@ -6,10 +6,6 @@ import '../models/doctor.dart';
 import '../widgets/customContainerWidget.dart';
 
 class doctorsScreen extends StatefulWidget {
-//  final List<doctor> temp;
-
-  //const MyApp({Key? key, required this.temp}) : super(key: key);
-
   @override
   _doctorsScreenState createState() => _doctorsScreenState();
 }
@@ -17,10 +13,14 @@ class doctorsScreen extends StatefulWidget {
 class _doctorsScreenState extends State<doctorsScreen> {
   @override
   void initState() {
-    //f = SocialCubit.get(context).getdoctors();
+    /*for (int i = 0; i < doctors.length; i++) {
+      print("in init state" +
+          doctors[i].username +
+          " " +
+          doctors[i].ratingScore.toString() +
+          "\n");
+    }*/
     tempDoctors = doctors;
-
-    // print('%%%%%%%%%%%%%%%%%%' + tempDoctors[1].uId);
   }
 
   bool viewTextField = false;
@@ -33,158 +33,149 @@ class _doctorsScreenState extends State<doctorsScreen> {
   bool init = true;
   @override
   Widget build(BuildContext context) {
-    print("heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-
-    return SizedBox(
-      height: 700,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 60),
-              child: Row(
-                children: [
-                  Text('filter by: ',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .copyWith(color: Colors.black54)),
-                  DropdownButton<String>(
-                      value: dropdownValue,
-                      focusColor: Colors.cyan,
-                      onChanged: (String? value) async {
-                        dropdownValue = value!;
-                        viewDoctors.clear();
-                        if (value == 'price') {
-                          setState(() {
-                            viewTextField = true;
-                          });
-                          print("priceeeeeeeeeeeeeeeee");
-                          //List<doctor> viewDoctors = [];
-                        } else if (value == 'all') {
-                          viewDoctors = doctors;
-                          setState(() {
-                            viewTextField = false;
-                            tempDoctors = viewDoctors;
-                          });
-                        } else if (value == 'only males') {
-                          tempDoctors = [];
-                          for (int i = 0; i < doctors.length; i++) {
-                            if (doctors[i].Gender == "male") {
-                              tempDoctors.add(doctors[i]);
-                            }
-                          }
-                          setState(() {
-                            viewTextField = false;
-                          });
-                        } else {
-                          tempDoctors = [];
-                          for (int i = 0; i < doctors.length; i++) {
-                            if (doctors[i].Gender == "female") {
-                              tempDoctors.add(doctors[i]);
-                            }
-                          }
-                          setState(() {
-                            viewTextField = false;
-                          });
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 60),
+          child: Row(
+            children: [
+              Text('filter by: ',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: Colors.black54)),
+              DropdownButton<String>(
+                  value: dropdownValue,
+                  focusColor: Colors.cyan,
+                  onChanged: (String? value) async {
+                    dropdownValue = value!;
+                    viewDoctors.clear();
+                    if (value == 'price') {
+                      setState(() {
+                        viewTextField = true;
+                      });
+                      print("priceeeeeeeeeeeeeeeee");
+                      //List<doctor> viewDoctors = [];
+                    } else if (value == 'all') {
+                      viewDoctors = doctors;
+                      setState(() {
+                        viewTextField = false;
+                        tempDoctors = viewDoctors;
+                      });
+                    } else if (value == 'only males') {
+                      tempDoctors = [];
+                      for (int i = 0; i < doctors.length; i++) {
+                        if (doctors[i].Gender == "male") {
+                          tempDoctors.add(doctors[i]);
                         }
-                      },
-                      items: <String>[
-                        'all',
-                        'price',
-                        'only males',
-                        'only females'
-                      ].map((String val) {
-                        return DropdownMenuItem(
-                          value: val,
-                          child: new Text(val),
-                        );
-                      }).toList()),
-                ],
-              ),
-            ),
-            if (viewTextField)
-              TextField(
-                controller: priceController,
-                keyboardType: TextInputType.number,
-                onSubmitted: (val) {
-                  viewDoctors.clear();
-                  inputPrice = double.parse(val);
-                  double mindiff = 100000000000000;
-                  int index = -1;
-                  for (int i = 0; i < doctors.length; i++) {
-                    print(doctors[i].price - inputPrice);
-                    if ((doctors[i].price - inputPrice).abs() <= mindiff) {
-                      index = i;
-                      mindiff = (doctors[i].price - inputPrice).abs();
+                      }
+                      setState(() {
+                        viewTextField = false;
+                      });
+                    } else {
+                      tempDoctors = [];
+                      for (int i = 0; i < doctors.length; i++) {
+                        if (doctors[i].Gender == "female") {
+                          tempDoctors.add(doctors[i]);
+                        }
+                      }
+                      setState(() {
+                        viewTextField = false;
+                      });
                     }
-                  }
-                  if (!viewDoctors.contains(doctors[index])) {
-                    viewDoctors.add(doctors[index]);
-                  }
-                  setState(() {
-                    print("vieww doctors: " + viewDoctors.toString());
-                    tempDoctors = viewDoctors;
-                  });
-                },
-              ),
-            FutureBuilder<void>(
-                future: SocialCubit.get(context).getdoctors(),
-                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                  List<Widget> children;
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    tempDoctors = (init) ? doctors : tempDoctors;
-                    init = false;
-                    children = <Widget>[
-                      SizedBox(
-                        //height: 400,
-                        child: ListView.builder(
-                            //   physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: tempDoctors.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return CustomContainer_HomePage(
-                                Doctor: tempDoctors[index],
-                              );
-                            }),
-                      ),
-                    ];
-                  } else if (snapshot.hasError) {
-                    children = <Widget>[
-                      const Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 60,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Text('Error: ${snapshot.error}'),
-                      )
-                    ];
-                    return CircularProgressIndicator();
-                  } else {
-                    children = const <Widget>[
-                      SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: CircularProgressIndicator(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: Text('Awaiting result...'),
-                      ),
-                    ];
-                  }
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: children,
-                    ),
-                  );
-                })
-          ],
+                  },
+                  items: <String>['all', 'price', 'only males', 'only females']
+                      .map((String val) {
+                    return DropdownMenuItem(
+                      value: val,
+                      child: new Text(val),
+                    );
+                  }).toList()),
+            ],
+          ),
         ),
-      ),
+        if (viewTextField)
+          TextField(
+            controller: priceController,
+            keyboardType: TextInputType.number,
+            onSubmitted: (val) {
+              viewDoctors.clear();
+              inputPrice = double.parse(val);
+              double mindiff = 100000000000000;
+              int index = -1;
+              for (int i = 0; i < doctors.length; i++) {
+                print(doctors[i].price - inputPrice);
+                if ((doctors[i].price - inputPrice).abs() <= mindiff) {
+                  index = i;
+                  mindiff = (doctors[i].price - inputPrice).abs();
+                }
+              }
+              if (!viewDoctors.contains(doctors[index])) {
+                viewDoctors.add(doctors[index]);
+              }
+              setState(() {
+                print("vieww doctors: " + viewDoctors.toString());
+                tempDoctors = viewDoctors;
+              });
+            },
+          ),
+        FutureBuilder<void>(
+            future: SocialCubit.get(context).getdoctors(),
+            builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+              List<Widget> children;
+              if (snapshot.connectionState == ConnectionState.done) {
+                tempDoctors = (init) ? doctors : tempDoctors;
+                init = false;
+                children = <Widget>[
+                  SizedBox(
+                    height: 900,
+                    width: double.infinity,
+                    child: ListView.builder(
+                        //scrollDirection: Axis.horizontal,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: tempDoctors.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return CustomContainer_HomePage(
+                            Doctor: tempDoctors[index],
+                          );
+                        }),
+                  ),
+                ];
+              } else if (snapshot.hasError) {
+                children = <Widget>[
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text('Error: ${snapshot.error}'),
+                  )
+                ];
+                return CircularProgressIndicator();
+              } else {
+                children = const <Widget>[
+                  SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Awaiting result...'),
+                  ),
+                ];
+              }
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: children,
+                ),
+              );
+            }),
+      ],
     );
   }
 }

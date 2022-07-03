@@ -26,13 +26,17 @@ class doctor extends user {
     num pr,
     String cliniquePh,
     String image,
-  )   :
-        price = pr,
+  )   : price = pr,
         cliniquePhone = cliniquePh,
         super.withnames(uid, username, email, password, Gender, image);
-
+  doctor.withscore(String uid, String username, String email, String password,
+      String Gender, num pr, String cliniquePh, String image, num ratingsc)
+      : price = pr,
+        cliniquePhone = cliniquePh,
+        ratingScore = ratingsc,
+        super.withnames(uid, username, email, password, Gender, image);
   factory doctor.fromJson(dynamic json) {
-    return doctor(
+    return doctor.withscore(
         json["_id"],
         json["username"],
         json["email"],
@@ -40,7 +44,8 @@ class doctor extends user {
         json["gender"],
         json["price"],
         json["clinicPhone"],
-        json["image"]);
+        json["image"],
+        json["ratingScore"]);
   }
   Future<int?> register() async {
     if (authData['visita url (optional)'] != '') {
@@ -52,7 +57,7 @@ class doctor extends user {
         ratingScore = double.parse(getScore.data['score']);
         //  return getScore.statusCode;
       } else {
-        throw Exception('failed to register');
+        throw Exception('failed to post rating score from visita');
       }
     }
     print("after condition");

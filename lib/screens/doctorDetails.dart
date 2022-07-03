@@ -7,15 +7,20 @@ import 'package:flutter/material.dart';
 
 import '../models/doctor.dart';
 
-class doctorDetails extends StatelessWidget {
+class doctorDetails extends StatefulWidget {
   doctor Doctor;
 
   doctorDetails({Key? key, required this.Doctor}) : super(key: key);
 
   @override
+  State<doctorDetails> createState() => _doctorDetailsState();
+}
+
+class _doctorDetailsState extends State<doctorDetails> {
+  @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(30),
+      padding: EdgeInsets.only(top: 30),
       //margin: EdgeInsets.only(top: 20),
       color: Colors.white,
       child: Column(crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,35 +28,43 @@ class doctorDetails extends StatelessWidget {
           children: [
             Column(
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 57,
-                      backgroundColor: Colors.green[400],
-                      child: CircleAvatar(
-                          radius: 55.0,
-                          backgroundImage: NetworkImage(Doctor.image)),
-                    ),
-                    const SizedBox(
-                      width: 5.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, bottom: 50.0),
-                      child: Text(
-                        Doctor.username,
-                        style: const TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 57,
+                        backgroundColor: Colors.green[400],
+                        child: CircleAvatar(
+                            radius: 55.0,
+                            backgroundImage: NetworkImage(widget.Doctor.image)),
                       ),
-                    ),
-                  ],
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, bottom: 50.0),
+                        child: Text(
+                          widget.Doctor.username,
+                          style: const TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 if (currentPatientDoctor == null)
                   Padding(
                     padding: EdgeInsets.only(left: 100),
                     child: FlatButton(
-                        onPressed: () => api.registerAdoctor(Doctor.uId),
+                        onPressed: () => {
+                              api.registerAdoctor(widget.Doctor.uId),
+                              setState(() {
+                                currentpatient.Doctor = widget.Doctor;
+                              })
+                            },
                         child: Row(
                           children: [
                             Icon(
@@ -81,7 +94,7 @@ class doctorDetails extends StatelessWidget {
               children: [
                 Text("detection price: ",
                     style: Theme.of(context).textTheme.bodyText2),
-                Text(Doctor.price.toString(),
+                Text(widget.Doctor.price.toString(),
                     style: Theme.of(context).textTheme.bodyText1)
               ],
             ),
@@ -91,7 +104,7 @@ class doctorDetails extends StatelessWidget {
             Row(
               children: [
                 Text("Gender: ", style: Theme.of(context).textTheme.bodyText2),
-                Text(Doctor.Gender,
+                Text(widget.Doctor.Gender,
                     style: Theme.of(context).textTheme.bodyText1)
               ],
             ),
@@ -102,7 +115,7 @@ class doctorDetails extends StatelessWidget {
               children: [
                 Text("clinic phone :",
                     style: Theme.of(context).textTheme.bodyText2),
-                Text(Doctor.cliniquePhone,
+                Text(widget.Doctor.cliniquePhone,
                     style: Theme.of(context).textTheme.bodyText1)
               ],
             ),
@@ -119,7 +132,7 @@ class doctorDetails extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) => classifier(
-                                  doc: Doctor,
+                                  doc: widget.Doctor,
                                 ),
                               ),
                               (route) => false,
@@ -137,7 +150,7 @@ class doctorDetails extends StatelessWidget {
                                   const BorderRadius.all(Radius.circular(10))),
                           child: Text(
                               'click here to give your feedback about doctor ' +
-                                  Doctor.username,
+                                  widget.Doctor.username,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText1!

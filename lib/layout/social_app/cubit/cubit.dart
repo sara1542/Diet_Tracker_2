@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../modules/social_app/generator/generator_screen.dart';
 import '../../../screens/doctorsScreen.dart';
 import '../../../shared/components/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -55,16 +56,14 @@ class SocialCubit extends Cubit<SocialStates> {
 
   int currentIndex = 0;
   List<Widget> screens = [
-    FeedsScreen(),
-
-    // Generator(),
+    isDoctor ? Generator() : FeedsScreen(),
     ChatsScreen(),
-    // allChats(),
     SettingsScreen(),
     doctorsScreen()
   ];
 
   void ChangeBottomNav(int index) {
+    print(isDoctor.toString());
     if (index == 1) {
       if (isDoctor) {
         getDoctorPatients();
@@ -79,7 +78,12 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialChangeBottomNavState());
   }
 
-  List<String> titles = ['News Feed', 'Chats', 'Settings', 'doctors'];
+  List<String> titles = [
+    'News Feed',
+    'Chats',
+    'Settings',
+    (!isDoctor) ? 'doctors' : "patients"
+  ];
 
   File? profileImage;
   var picker = ImagePicker();
@@ -467,22 +471,11 @@ class SocialCubit extends Cubit<SocialStates> {
       MessageModel botModel = MessageModel(
           senderId: 'chatbot',
           receiverId: currentpatient.uId,
-          dateTime: dateTime,
+          dateTime: DateTime.now().toString(),
           text: chatbotMessage);
 
       FirebaseFirestore.instance
           .collection('users')
-          .doc('chatbot')
-          .collection('chats')
-          .doc(currentpatient.uId)
-          .collection('messages')
-          .add(botModel.toMap())
-          .then((value) {
-        emit(SocialSendMessageSuccessState());
-      });
-
-      FirebaseFirestore.instance
-          .collection('users')
           .doc(currentpatient.uId)
           .collection('chats')
           .doc('chatbot')
@@ -491,20 +484,6 @@ class SocialCubit extends Cubit<SocialStates> {
           .then((value) {
         emit(SocialSendMessageSuccessState());
       });
-    }).catchError((error) {
-      emit(SocialSendMessageErrorState());
-    });
-
-    //set receiver chat
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc('chatbot')
-        .collection('chats')
-        .doc(currentpatient.uId)
-        .collection('messages')
-        .add(model.toMap())
-        .then((value) {
-      emit(SocialSendMessageSuccessState());
     }).catchError((error) {
       emit(SocialSendMessageErrorState());
     });
