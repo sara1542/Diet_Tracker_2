@@ -293,8 +293,51 @@ Future getSnacks() async {
 
     snacks.add(dish);
   }
-  snack1 = snacks[0];
-  snack2 = snacks[0];
+  filterSnack1 = snacks[0];
+  filterSnack2 = snacks[1];
+}
+
+generateSnacks() {
+  var sCalories = ((calories - cur_calories) * 0.5).abs();
+  if (sCalories < 10) {
+    sCalories = 20;
+  }
+  do {
+    var rand = Random();
+
+    int len = snacks.length;
+    int randomNumber = rand.nextInt(len);
+    var amount;
+    amount = Is_Meal(snacks[randomNumber], sCalories);
+    if (snacks[randomNumber].Name.contains('Gram')) {
+      First_Snack = (100 * amount).round().toString() +
+          " " +
+          snacks[randomNumber].Name +
+          "\n";
+    } else {
+      First_Snack = amount.toString() + " " + snacks[randomNumber].Name;
+    }
+    s1Calories = snacks[randomNumber].Calories * amount;
+
+    randomNumber = rand.nextInt(len);
+    amount = Is_Meal(snacks[randomNumber], sCalories);
+
+    if (snacks[randomNumber].Name.contains('Gram')) {
+      Second_Snack = (100 * amount).round().toString() +
+          " " +
+          snacks[randomNumber].Name +
+          "\n";
+    } else {
+      Second_Snack = amount.toString() + " " + snacks[randomNumber].Name;
+    }
+    s2Calories = snacks[randomNumber].Calories * amount;
+    print("here");
+    print(((s1Calories + s2Calories) - (calories - cur_calories).abs()).abs());
+  } while (
+      ((s1Calories + s2Calories) - (calories - cur_calories).abs()).abs() >=
+          50);
+  sMeals.add(First_Snack);
+  sMeals.add(Second_Snack);
 }
 
 Future getBreakfastMeals() async {
@@ -327,8 +370,8 @@ Future getBreakfastMeals() async {
 }
 
 double Is_Meal(Dish dish, var value) {
-  var amount = 0.0;
-  while (value - (amount * dish.Calories) > 10) {
+  double amount = 0.0;
+  while (value - (amount * dish.Calories) >= 10) {
     if (dish.Name.contains('Gram')) {
       amount += 0.10;
     } else {
@@ -339,10 +382,8 @@ double Is_Meal(Dish dish, var value) {
 }
 
 String generateBreakfastMeals() {
-  List<dynamic> breakfastMeals = [];
-
   String breakfast = "";
-  var breakfastCalories = calories * 0.3;
+  var breakfastCalories = calories * 0.35;
   do {
     breakfast = "";
     var rand = Random();
@@ -350,34 +391,28 @@ String generateBreakfastMeals() {
     int len = breakfastProtein.length;
     int randomNumber = rand.nextInt(len);
     var amount;
-    var value = protein * breakfastCalories * 0.5;
+    var value = 0.4 * breakfastCalories * 0.5;
     //print(breakfastProtein[randomNumber].Calories);
     //print(value);
-    print(breakfastProtein[randomNumber].Name);
+    //print(breakfastProtein[randomNumber].Name);
 
     if (breakfastProtein[randomNumber].Meal == 1) {
       amount = Is_Meal(breakfastProtein[randomNumber], breakfastCalories);
-      breakfastMeals.clear();
 
       bfCalories = breakfastProtein[randomNumber].Calories * amount;
+
       bfCarb = breakfastProtein[randomNumber].Carbohydrates * amount;
       bfFat = breakfastProtein[randomNumber].Fat * amount;
       bfProtein = breakfastProtein[randomNumber].Protein * amount;
 
       if (breakfastProtein[randomNumber].Name.contains('Gram')) {
-        breakfast = (100 * amount).toString() +
+        breakfast = (100 * amount).round().toString() +
             " " +
-            breakfastProtein[randomNumber].Name;
-
-        breakfastMeals.add((100 * amount).toString() +
-            " " +
-            breakfastProtein[randomNumber].Name);
+            breakfastProtein[randomNumber].Name +
+            "\n";
       } else {
         breakfast =
             amount.toString() + " " + breakfastProtein[randomNumber].Name;
-
-        breakfastMeals
-            .add(amount.toString() + " " + breakfastProtein[randomNumber].Name);
       }
       break;
     } else {
@@ -385,16 +420,13 @@ String generateBreakfastMeals() {
     }
 
     if (breakfastProtein[randomNumber].Name.contains('Gram')) {
-      breakfast +=
-          (100 * amount).toString() + " " + breakfastProtein[randomNumber].Name;
-      breakfastMeals.add((100 * amount).toString() +
+      breakfast += (100 * amount).round().toString() +
           " " +
-          breakfastProtein[randomNumber].Name);
+          breakfastProtein[randomNumber].Name +
+          "\n";
     } else {
       breakfast +=
-          amount.toString() + " " + breakfastProtein[randomNumber].Name;
-      breakfastMeals
-          .add(amount.toString() + " " + breakfastProtein[randomNumber].Name);
+          amount.toString() + " " + breakfastProtein[randomNumber].Name + "\n";
     }
 
     bfCalories = breakfastProtein[randomNumber].Calories * amount;
@@ -405,15 +437,14 @@ String generateBreakfastMeals() {
     len = breakfastDairyAndLegumes.length;
     randomNumber = rand.nextInt(len);
 
-    value = protein * breakfastCalories * 0.5;
+    value = 0.4 * breakfastCalories * 0.5;
     //print(breakfastDairyAndLegumes[randomNumber].Calories);
     //print(value);
-    print(breakfastDairyAndLegumes[randomNumber].Name);
+    //print(breakfastDairyAndLegumes[randomNumber].Name);
 
     if (breakfastDairyAndLegumes[randomNumber].Meal == 1) {
       amount =
           Is_Meal(breakfastDairyAndLegumes[randomNumber], breakfastCalories);
-      breakfastMeals.clear();
 
       bfCalories = breakfastDairyAndLegumes[randomNumber].Calories * amount;
       bfCarb = breakfastDairyAndLegumes[randomNumber].Carbohydrates * amount;
@@ -421,19 +452,13 @@ String generateBreakfastMeals() {
       bfProtein = breakfastDairyAndLegumes[randomNumber].Protein * amount;
 
       if (breakfastDairyAndLegumes[randomNumber].Name.contains('Gram')) {
-        breakfast = (100 * amount).toString() +
+        breakfast = (100 * amount).round().toString() +
             " " +
             breakfastDairyAndLegumes[randomNumber].Name;
-        breakfastMeals.add((100 * amount).toString() +
-            " " +
-            breakfastDairyAndLegumes[randomNumber].Name);
       } else {
         breakfast = amount.toString() +
             " " +
             breakfastDairyAndLegumes[randomNumber].Name;
-        breakfastMeals.add(amount.toString() +
-            " " +
-            breakfastDairyAndLegumes[randomNumber].Name);
       }
 
       break;
@@ -442,20 +467,16 @@ String generateBreakfastMeals() {
     }
     if (breakfastDairyAndLegumes[randomNumber].Name.contains('Gram')) {
       breakfast += " " +
-          (100 * amount).toString() +
+          (100 * amount).round().toString() +
           " " +
-          breakfastDairyAndLegumes[randomNumber].Name;
-
-      breakfastMeals.add((100 * amount).toString() +
-          breakfastDairyAndLegumes[randomNumber].Name);
+          breakfastDairyAndLegumes[randomNumber].Name +
+          "\n";
     } else {
       breakfast += " " +
           amount.toString() +
           " " +
-          breakfastDairyAndLegumes[randomNumber].Name;
-      breakfastMeals.add(amount.toString() +
-          " " +
-          breakfastDairyAndLegumes[randomNumber].Name);
+          breakfastDairyAndLegumes[randomNumber].Name +
+          "\n";
     }
 
     bfCalories += breakfastDairyAndLegumes[randomNumber].Calories * amount;
@@ -466,15 +487,13 @@ String generateBreakfastMeals() {
     len = breakfastVegeies.length;
     randomNumber = rand.nextInt(len);
 
-    value = carb * breakfastCalories * 0.2;
+    value = 0.4 * breakfastCalories * 0.2;
     //print(breakfastVegeies[randomNumber].Calories);
     //print(value);
-    print(breakfastVegeies[randomNumber].Name);
+    //print(breakfastVegeies[randomNumber].Name);
 
     if (breakfastVegeies[randomNumber].Meal == 1) {
       amount = Is_Meal(breakfastVegeies[randomNumber], breakfastCalories);
-
-      breakfastMeals.clear();
 
       bfCalories = breakfastVegeies[randomNumber].Calories * amount;
       bfCarb = breakfastVegeies[randomNumber].Carbohydrates * amount;
@@ -482,17 +501,12 @@ String generateBreakfastMeals() {
       bfProtein = breakfastVegeies[randomNumber].Protein * amount;
 
       if (breakfastVegeies[randomNumber].Name.contains('Gram')) {
-        breakfast = (100 * amount).toString() +
+        breakfast = (100 * amount).round().toString() +
             " " +
             breakfastVegeies[randomNumber].Name;
-        breakfastMeals.add((100 * amount).toString() +
-            " " +
-            breakfastVegeies[randomNumber].Name);
       } else {
         breakfast =
             amount.toString() + " " + breakfastVegeies[randomNumber].Name;
-        breakfastMeals
-            .add(amount.toString() + " " + breakfastVegeies[randomNumber].Name);
       }
       break;
     } else {
@@ -500,17 +514,16 @@ String generateBreakfastMeals() {
     }
     if (breakfastVegeies[randomNumber].Name.contains('Gram')) {
       breakfast += " " +
-          (100 * amount).toString() +
+          (100 * amount).round().toString() +
           " " +
-          breakfastVegeies[randomNumber].Name;
-      breakfastMeals.add((100 * amount).toString() +
-          " " +
-          breakfastVegeies[randomNumber].Name);
+          breakfastVegeies[randomNumber].Name +
+          "\n";
     } else {
-      breakfast +=
-          " " + amount.toString() + " " + breakfastVegeies[randomNumber].Name;
-      breakfastMeals
-          .add(amount.toString() + " " + breakfastVegeies[randomNumber].Name);
+      breakfast += " " +
+          amount.toString() +
+          " " +
+          breakfastVegeies[randomNumber].Name +
+          "\n";
     }
 
     bfCalories += breakfastVegeies[randomNumber].Calories * amount;
@@ -521,14 +534,13 @@ String generateBreakfastMeals() {
     len = breakfastCarb.length;
     randomNumber = rand.nextInt(len);
 
-    value = carb * breakfastCalories * 0.8;
+    value = 0.4 * breakfastCalories * 0.8;
     //print(breakfastCarb[randomNumber].Calories);
     //print(value);
-    print(breakfastCarb[randomNumber].Name);
+    //print(breakfastCarb[randomNumber].Name);
 
     if (breakfastCarb[randomNumber].Meal == 1) {
       amount = Is_Meal(breakfastCarb[randomNumber], breakfastCalories);
-      breakfastMeals.clear();
 
       bfCalories = breakfastCarb[randomNumber].Calories * amount;
       bfCarb = breakfastCarb[randomNumber].Carbohydrates * amount;
@@ -536,14 +548,11 @@ String generateBreakfastMeals() {
       bfProtein = breakfastCarb[randomNumber].Protein * amount;
 
       if (breakfastCarb[randomNumber].Name.contains('Gram')) {
-        breakfast =
-            (100 * amount).toString() + " " + breakfastCarb[randomNumber].Name;
-        breakfastMeals.add(
-            (100 * amount).toString() + " " + breakfastCarb[randomNumber].Name);
+        breakfast = (100 * amount).round().toString() +
+            " " +
+            breakfastCarb[randomNumber].Name;
       } else {
         breakfast = amount.toString() + " " + breakfastCarb[randomNumber].Name;
-        breakfastMeals
-            .add(amount.toString() + " " + breakfastCarb[randomNumber].Name);
       }
       break;
     } else {
@@ -552,28 +561,32 @@ String generateBreakfastMeals() {
 
     if (breakfastCarb[randomNumber].Name.contains('Gram')) {
       breakfast += " " +
-          (100 * amount).toString() +
+          (100 * amount).round().toString() +
           " " +
-          breakfastCarb[randomNumber].Name;
-      breakfastMeals.add(
-          (100 * amount).toString() + " " + breakfastCarb[randomNumber].Name);
+          breakfastCarb[randomNumber].Name +
+          "\n";
     } else {
-      breakfast +=
-          " " + amount.toString() + " " + breakfastCarb[randomNumber].Name;
-      breakfastMeals
-          .add(amount.toString() + " " + breakfastCarb[randomNumber].Name);
+      breakfast += " " +
+          amount.toString() +
+          " " +
+          breakfastCarb[randomNumber].Name +
+          "\n";
     }
 
     bfCalories += breakfastCarb[randomNumber].Calories * amount;
     bfCarb += breakfastCarb[randomNumber].Carbohydrates * amount;
     bfFat += breakfastCarb[randomNumber].Fat * amount;
     bfProtein += breakfastCarb[randomNumber].Protein * amount;
-  } while (bfCalories > (breakfastCalories));
+  } while (bfCalories > (breakfastCalories) ||
+      bfFat > fat * 0.4 ||
+      bfCarb > carb * 0.4 ||
+      bfProtein > protein * 0.4);
 
   if (checkBad(breakfast)) {
     generateBreakfastMeals();
   }
-  bfMeals.add(breakfastMeals);
+  bfMeals.add(breakfast.replaceAll("\n", ""));
+  //print(bfCalories);
   return breakfast;
 }
 
@@ -607,7 +620,6 @@ String generateLunchMeals() {
   //print("im in here");
   String lunch = "";
   var lunchCalories = calories * 0.45;
-  List<dynamic> lunchMeals = [];
   do {
     lunch = "";
     var rand = Random();
@@ -616,28 +628,24 @@ String generateLunchMeals() {
     int randomNumber = rand.nextInt(len);
 
     var amount;
-    var value = protein * lunchCalories;
+    var value = 0.4 * lunchCalories;
     //print(lunchProtein[randomNumber].Calories);
     //print(value);
-    print(lunchProtein[randomNumber].Name);
+    //print(lunchProtein[randomNumber].Name);
 
     if (lunchProtein[randomNumber].Meal == 1) {
       amount = Is_Meal(lunchProtein[randomNumber], lunchCalories);
-      lunchMeals.clear();
       lCalories = lunchProtein[randomNumber].Calories * amount;
       lCarb = lunchProtein[randomNumber].Carbohydrates * amount;
       lFat = lunchProtein[randomNumber].Fat * amount;
       lProtein = lunchProtein[randomNumber].Protein * amount;
 
       if (lunchProtein[randomNumber].Name.contains('Gram')) {
-        lunch =
-            (100 * amount).toString() + " " + lunchProtein[randomNumber].Name;
-        lunchMeals.add(
-            (100 * amount).toString() + " " + lunchProtein[randomNumber].Name);
+        lunch = (100 * amount).round().toString() +
+            " " +
+            lunchProtein[randomNumber].Name;
       } else {
         lunch = amount.toString() + " " + lunchProtein[randomNumber].Name;
-        lunchMeals
-            .add(amount.toString() + " " + lunchProtein[randomNumber].Name);
       }
       break;
     } else {
@@ -645,13 +653,12 @@ String generateLunchMeals() {
     }
 
     if (lunchProtein[randomNumber].Name.contains('Gram')) {
-      lunch +=
-          (100 * amount).toString() + " " + lunchProtein[randomNumber].Name;
-      lunchMeals.add(
-          (100 * amount).toString() + " " + lunchProtein[randomNumber].Name);
+      lunch += (100 * amount).round().toString() +
+          " " +
+          lunchProtein[randomNumber].Name +
+          "\n";
     } else {
-      lunch += amount.toString() + " " + lunchProtein[randomNumber].Name;
-      lunchMeals.add(amount.toString() + " " + lunchProtein[randomNumber].Name);
+      lunch += amount.toString() + " " + lunchProtein[randomNumber].Name + "\n";
     }
 
     lCalories = lunchProtein[randomNumber].Calories * amount;
@@ -662,14 +669,13 @@ String generateLunchMeals() {
     len = lunchVegeiesAndLegumes.length;
     randomNumber = rand.nextInt(len);
 
-    value = carb * lunchCalories * 0.5;
+    value = 0.4 * lunchCalories * 0.5;
     //print(lunchVegeiesAndLegumes[randomNumber].Calories);
     //print(value);
-    print(lunchVegeiesAndLegumes[randomNumber].Name);
+    //print(lunchVegeiesAndLegumes[randomNumber].Name);
 
     if (lunchVegeiesAndLegumes[randomNumber].Meal == 1) {
       amount = Is_Meal(lunchVegeiesAndLegumes[randomNumber], lunchCalories);
-      lunchMeals.clear();
 
       lCalories = lunchVegeiesAndLegumes[randomNumber].Calories * amount;
       lCarb = lunchVegeiesAndLegumes[randomNumber].Carbohydrates * amount;
@@ -677,18 +683,12 @@ String generateLunchMeals() {
       lProtein = lunchVegeiesAndLegumes[randomNumber].Protein * amount;
 
       if (lunchVegeiesAndLegumes[randomNumber].Name.contains('Gram')) {
-        lunch = (100 * amount).toString() +
+        lunch = (100 * amount).round().toString() +
             " " +
             lunchVegeiesAndLegumes[randomNumber].Name;
-        lunchMeals.add((100 * amount).toString() +
-            " " +
-            lunchVegeiesAndLegumes[randomNumber].Name);
       } else {
         lunch =
             amount.toString() + " " + lunchVegeiesAndLegumes[randomNumber].Name;
-        lunchMeals.add(amount.toString() +
-            " " +
-            lunchVegeiesAndLegumes[randomNumber].Name);
       }
       break;
     } else {
@@ -697,19 +697,16 @@ String generateLunchMeals() {
 
     if (lunchVegeiesAndLegumes[randomNumber].Name.contains('Gram')) {
       lunch += " " +
-          (100 * amount).toString() +
+          (100 * amount).round().toString() +
           " " +
-          lunchVegeiesAndLegumes[randomNumber].Name;
-      lunchMeals.add((100 * amount).toString() +
-          " " +
-          lunchVegeiesAndLegumes[randomNumber].Name);
+          lunchVegeiesAndLegumes[randomNumber].Name +
+          "\n";
     } else {
       lunch += " " +
           amount.toString() +
           " " +
-          lunchVegeiesAndLegumes[randomNumber].Name;
-      lunchMeals.add(
-          amount.toString() + " " + lunchVegeiesAndLegumes[randomNumber].Name);
+          lunchVegeiesAndLegumes[randomNumber].Name +
+          "\n";
     }
 
     lCalories += lunchVegeiesAndLegumes[randomNumber].Calories * amount;
@@ -720,14 +717,13 @@ String generateLunchMeals() {
     len = lunchCarb.length;
     randomNumber = rand.nextInt(len);
 
-    value = carb * lunchCalories * 0.5;
+    value = 0.4 * lunchCalories * 0.2;
     //print(lunchCarb[randomNumber].Calories);
     //print(value);
-    print(lunchCarb[randomNumber].Name);
+    //print(lunchCarb[randomNumber].Name);
 
     if (lunchCarb[randomNumber].Meal == 1) {
       amount = Is_Meal(lunchCarb[randomNumber], lunchCalories);
-      lunchMeals.clear();
 
       lCalories = lunchCarb[randomNumber].Calories * amount;
       lCarb = lunchCarb[randomNumber].Carbohydrates * amount;
@@ -735,12 +731,11 @@ String generateLunchMeals() {
       lProtein = lunchCarb[randomNumber].Protein * amount;
 
       if (lunchCarb[randomNumber].Name.contains('Gram')) {
-        lunch = (100 * amount).toString() + " " + lunchCarb[randomNumber].Name;
-        lunchMeals.add(
-            (100 * amount).toString() + " " + lunchCarb[randomNumber].Name);
+        lunch = (100 * amount).round().toString() +
+            " " +
+            lunchCarb[randomNumber].Name;
       } else {
         lunch = amount.toString() + " " + lunchCarb[randomNumber].Name;
-        lunchMeals.add(amount.toString() + " " + lunchCarb[randomNumber].Name);
       }
       break;
     } else {
@@ -748,21 +743,30 @@ String generateLunchMeals() {
     }
 
     if (lunchCarb[randomNumber].Name.contains('Gram')) {
-      lunch +=
-          " " + (100 * amount).toString() + " " + lunchCarb[randomNumber].Name;
-      lunchMeals
-          .add((100 * amount).toString() + " " + lunchCarb[randomNumber].Name);
+      lunch += " " +
+          (100 * amount).round().toString() +
+          " " +
+          lunchCarb[randomNumber].Name +
+          "\n";
     } else {
-      lunch += " " + amount.toString() + " " + lunchCarb[randomNumber].Name;
-      lunchMeals.add(amount.toString() + " " + lunchCarb[randomNumber].Name);
+      lunch +=
+          " " + amount.toString() + " " + lunchCarb[randomNumber].Name + "\n";
     }
-  } while (lCalories > lunchCalories);
+    lCalories += lunchVegeiesAndLegumes[randomNumber].Calories * amount;
+    lCarb += lunchVegeiesAndLegumes[randomNumber].Carbohydrates * amount;
+    lFat += lunchVegeiesAndLegumes[randomNumber].Fat * amount;
+    lProtein += lunchVegeiesAndLegumes[randomNumber].Protein * amount;
+  } while (lCalories > lunchCalories ||
+      lFat > fat * 0.5 ||
+      lCarb > carb * 0.5 ||
+      lProtein > protein * 0.5);
 
   if (checkBad(lunch)) {
     generateLunchMeals();
   }
 
-  lMeals.add(lunchMeals);
+  lMeals.add(lunch.replaceAll("\n", ""));
+  //print(lCalories);
   return lunch;
 }
 
@@ -770,7 +774,6 @@ String generateDinnerMeals() {
   //print("im in here");
   String dinner = "";
   var breakfastCalories = calories * 0.25;
-  List<dynamic> dinnerMeals = [];
   do {
     dinner = "";
     var rand = Random();
@@ -778,14 +781,13 @@ String generateDinnerMeals() {
     int len = breakfastProtein.length;
     int randomNumber = rand.nextInt(len);
     var amount;
-    var value = protein * breakfastCalories * 0.5;
+    var value = 0.4 * breakfastCalories * 0.5;
     //print(breakfastProtein[randomNumber].Calories);
     //print(value);
-    print(breakfastProtein[randomNumber].Name);
+    //print(breakfastProtein[randomNumber].Name);
 
     if (breakfastProtein[randomNumber].Meal == 1) {
       amount = Is_Meal(breakfastProtein[randomNumber], breakfastCalories);
-      dinnerMeals.clear();
 
       dCalories = breakfastProtein[randomNumber].Calories * amount;
       dCarb = breakfastProtein[randomNumber].Carbohydrates * amount;
@@ -793,16 +795,11 @@ String generateDinnerMeals() {
       dProtein = breakfastProtein[randomNumber].Protein * amount;
 
       if (breakfastProtein[randomNumber].Name.contains('Gram')) {
-        dinner = (100 * amount).toString() +
+        dinner = (100 * amount).round().toString() +
             " " +
             breakfastProtein[randomNumber].Name;
-        dinnerMeals.add((100 * amount).toString() +
-            " " +
-            breakfastProtein[randomNumber].Name);
       } else {
         dinner = amount.toString() + " " + breakfastProtein[randomNumber].Name;
-        dinnerMeals
-            .add(amount.toString() + " " + breakfastProtein[randomNumber].Name);
       }
 
       break;
@@ -811,15 +808,13 @@ String generateDinnerMeals() {
     }
 
     if (breakfastProtein[randomNumber].Name.contains('Gram')) {
-      dinner +=
-          (100 * amount).toString() + " " + breakfastProtein[randomNumber].Name;
-      dinnerMeals.add((100 * amount).toString() +
+      dinner += (100 * amount).round().toString() +
           " " +
-          breakfastProtein[randomNumber].Name);
+          breakfastProtein[randomNumber].Name +
+          "\n";
     } else {
-      dinner += amount.toString() + " " + breakfastProtein[randomNumber].Name;
-      dinnerMeals
-          .add(amount.toString() + " " + breakfastProtein[randomNumber].Name);
+      dinner +=
+          amount.toString() + " " + breakfastProtein[randomNumber].Name + "\n";
     }
 
     dCalories = breakfastProtein[randomNumber].Calories * amount;
@@ -830,15 +825,14 @@ String generateDinnerMeals() {
     len = breakfastDairyAndLegumes.length;
     randomNumber = rand.nextInt(len);
 
-    value = protein * breakfastCalories * 0.5;
+    value = 0.4 * breakfastCalories * 0.5;
     //print(breakfastDairyAndLegumes[randomNumber].Calories);
     //print(value);
-    print(breakfastDairyAndLegumes[randomNumber].Name);
+    //print(breakfastDairyAndLegumes[randomNumber].Name);
 
     if (breakfastDairyAndLegumes[randomNumber].Meal == 1) {
       amount =
           Is_Meal(breakfastDairyAndLegumes[randomNumber], breakfastCalories);
-      dinnerMeals.clear();
 
       dCalories = breakfastDairyAndLegumes[randomNumber].Calories * amount;
       dCarb = breakfastDairyAndLegumes[randomNumber].Carbohydrates * amount;
@@ -846,19 +840,13 @@ String generateDinnerMeals() {
       dProtein = breakfastDairyAndLegumes[randomNumber].Protein * amount;
 
       if (breakfastDairyAndLegumes[randomNumber].Name.contains('Gram')) {
-        dinner = (100 * amount).toString() +
+        dinner = (100 * amount).round().toString() +
             " " +
             breakfastDairyAndLegumes[randomNumber].Name;
-        dinnerMeals.add((100 * amount).toString() +
-            " " +
-            breakfastDairyAndLegumes[randomNumber].Name);
       } else {
         dinner = amount.toString() +
             " " +
             breakfastDairyAndLegumes[randomNumber].Name;
-        dinnerMeals.add(amount.toString() +
-            " " +
-            breakfastDairyAndLegumes[randomNumber].Name);
       }
 
       break;
@@ -867,20 +855,16 @@ String generateDinnerMeals() {
     }
     if (breakfastDairyAndLegumes[randomNumber].Name.contains('Gram')) {
       dinner += " " +
-          (100 * amount).toString() +
+          (100 * amount).round().toString() +
           " " +
-          breakfastDairyAndLegumes[randomNumber].Name;
-      dinnerMeals.add((100 * amount).toString() +
-          " " +
-          breakfastDairyAndLegumes[randomNumber].Name);
+          breakfastDairyAndLegumes[randomNumber].Name +
+          "\n";
     } else {
       dinner += " " +
           amount.toString() +
           " " +
-          breakfastDairyAndLegumes[randomNumber].Name;
-      dinnerMeals.add(amount.toString() +
-          " " +
-          breakfastDairyAndLegumes[randomNumber].Name);
+          breakfastDairyAndLegumes[randomNumber].Name +
+          "\n";
     }
 
     dCalories += breakfastDairyAndLegumes[randomNumber].Calories * amount;
@@ -891,14 +875,13 @@ String generateDinnerMeals() {
     len = breakfastVegeies.length;
     randomNumber = rand.nextInt(len);
 
-    value = carb * breakfastCalories * 0.2;
+    value = 0.4 * breakfastCalories * 0.2;
     //print(breakfastVegeies[randomNumber].Calories);
     //print(value);
-    print(breakfastVegeies[randomNumber].Name);
+    //print(breakfastVegeies[randomNumber].Name);
 
     if (breakfastVegeies[randomNumber].Meal == 1) {
       amount = Is_Meal(breakfastVegeies[randomNumber], breakfastCalories);
-      dinnerMeals.clear();
 
       dCalories = breakfastVegeies[randomNumber].Calories * amount;
       dCarb = breakfastVegeies[randomNumber].Carbohydrates * amount;
@@ -906,16 +889,11 @@ String generateDinnerMeals() {
       dProtein = breakfastVegeies[randomNumber].Protein * amount;
 
       if (breakfastVegeies[randomNumber].Name.contains('Gram')) {
-        dinner = (100 * amount).toString() +
+        dinner = (100 * amount).round().toString() +
             " " +
             breakfastVegeies[randomNumber].Name;
-        dinnerMeals.add((100 * amount).toString() +
-            " " +
-            breakfastVegeies[randomNumber].Name);
       } else {
         dinner = amount.toString() + " " + breakfastVegeies[randomNumber].Name;
-        dinnerMeals
-            .add(amount.toString() + " " + breakfastVegeies[randomNumber].Name);
       }
 
       break;
@@ -924,17 +902,16 @@ String generateDinnerMeals() {
     }
     if (breakfastVegeies[randomNumber].Name.contains('Gram')) {
       dinner += " " +
-          (100 * amount).toString() +
+          (100 * amount).round().toString() +
           " " +
-          breakfastVegeies[randomNumber].Name;
-      dinnerMeals.add((100 * amount).toString() +
-          " " +
-          breakfastVegeies[randomNumber].Name);
+          breakfastVegeies[randomNumber].Name +
+          "\n";
     } else {
-      dinner +=
-          " " + amount.toString() + " " + breakfastVegeies[randomNumber].Name;
-      dinnerMeals
-          .add(amount.toString() + " " + breakfastVegeies[randomNumber].Name);
+      dinner += " " +
+          amount.toString() +
+          " " +
+          breakfastVegeies[randomNumber].Name +
+          "\n";
     }
 
     dCalories += breakfastVegeies[randomNumber].Calories * amount;
@@ -945,14 +922,13 @@ String generateDinnerMeals() {
     len = breakfastCarb.length;
     randomNumber = rand.nextInt(len);
 
-    value = carb * breakfastCalories * 0.8;
+    value = 0.4 * breakfastCalories * 0.8;
     //print(breakfastCarb[randomNumber].Calories);
     //print(value);
-    print(breakfastCarb[randomNumber].Name);
+    //print(breakfastCarb[randomNumber].Name);
 
     if (breakfastCarb[randomNumber].Meal == 1) {
       amount = Is_Meal(breakfastCarb[randomNumber], breakfastCalories);
-      dinnerMeals.clear();
 
       dCalories = breakfastCarb[randomNumber].Calories * amount;
       dCarb = breakfastCarb[randomNumber].Carbohydrates * amount;
@@ -960,14 +936,11 @@ String generateDinnerMeals() {
       dProtein = breakfastCarb[randomNumber].Protein * amount;
 
       if (breakfastCarb[randomNumber].Name.contains('Gram')) {
-        dinner =
-            (100 * amount).toString() + " " + breakfastCarb[randomNumber].Name;
-        dinnerMeals.add(
-            (100 * amount).toString() + " " + breakfastCarb[randomNumber].Name);
+        dinner = (100 * amount).round().toString() +
+            " " +
+            breakfastCarb[randomNumber].Name;
       } else {
         dinner = amount.toString() + " " + breakfastCarb[randomNumber].Name;
-        dinnerMeals
-            .add(amount.toString() + " " + breakfastCarb[randomNumber].Name);
       }
       break;
     } else {
@@ -976,28 +949,32 @@ String generateDinnerMeals() {
 
     if (breakfastCarb[randomNumber].Name.contains('Gram')) {
       dinner += " " +
-          (100 * amount).toString() +
+          (100 * amount).round().toString() +
           " " +
-          breakfastCarb[randomNumber].Name;
-      dinnerMeals.add(
-          (100 * amount).toString() + " " + breakfastCarb[randomNumber].Name);
+          breakfastCarb[randomNumber].Name +
+          "\n";
     } else {
-      dinner +=
-          " " + amount.toString() + " " + breakfastCarb[randomNumber].Name;
-      dinnerMeals
-          .add(amount.toString() + " " + breakfastCarb[randomNumber].Name);
+      dinner += " " +
+          amount.toString() +
+          " " +
+          breakfastCarb[randomNumber].Name +
+          "\n";
     }
 
     dCalories += breakfastCarb[randomNumber].Calories * amount;
     dCarb += breakfastCarb[randomNumber].Carbohydrates * amount;
     dFat += breakfastCarb[randomNumber].Fat * amount;
     dProtein += breakfastCarb[randomNumber].Protein * amount;
-  } while (dCalories > (breakfastCalories));
+  } while (dCalories > (breakfastCalories) ||
+      dFat > fat * 0.4 ||
+      dCarb > carb * 0.4 ||
+      dProtein > protein * 0.4);
 
   if (checkBad(dinner)) {
     generateDinnerMeals();
   }
-  dMeals.add(dinnerMeals);
+  dMeals.add(dinner.replaceAll("\n", ""));
+  //print(dCalories);
   return dinner;
 }
 
@@ -1011,6 +988,20 @@ Future<http.Response> createBadCombination(String bad) {
       'meal': toStrArr(bad),
     }),
   );
+}
+
+Future<http.Response> createDiet() {
+  return http
+      .post(Uri.parse(GlobalUrl + 'postameal'), headers: <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+  }, body: {
+    '_id': " ",
+    'breakfast': bfMeals,
+    'lunch': lMeals,
+    'dinner': dMeals,
+    'caloriesToBeBurntPerDay': caloriesBurnt,
+    'caloriesPerDay': calories,
+  });
 }
 
 Future getBadCombo() async {
@@ -1031,12 +1022,16 @@ List<String> toStrArr(String meals) {
       .replaceAll("Slice", "")
       .replaceAll("tbsp", "")
       .replaceAll("Medium", "")
+      .replaceAll("of", "")
+      .replaceAll("Of", "")
       .replaceAll("  ", "")
       .replaceAll(",", "")
-      .replaceAll(".", "");
-  print(meal);
+      .replaceAll(".", "")
+      .replaceAll("\n", "");
+
+  //print(meal);
   List<String> strarray = meal.split(" ");
-  print(strarray);
+  //print(strarray);
   return strarray;
 }
 
@@ -1055,102 +1050,129 @@ bool checkBad(var meal) {
 }
 
 saveChange() {
-  List<dynamic> meal = [];
   String strMeal = "";
   double curcalories = 0.0;
   if (Filter == "lunch") {
     if (filterLunchProtein.Name.contains('Gram')) {
-      strMeal =
-          (amountFilterLunchProtein).toString() + " " + filterLunchProtein.Name;
+      strMeal += " " +
+          (amountFilterLunchProtein).toString() +
+          " " +
+          filterLunchProtein.Name +
+          "\n";
       curcalories +=
           (amountFilterLunchProtein / 100) * filterLunchProtein.Calories;
     } else {
-      strMeal =
-          amountFilterLunchProtein.toString() + " " + filterLunchProtein.Name;
+      strMeal += " " +
+          amountFilterLunchProtein.toString() +
+          " " +
+          filterLunchProtein.Name +
+          "\n";
       curcalories += amountFilterLunchProtein * filterLunchProtein.Calories;
     }
-    meal.add(strMeal);
     if (filterLunchVegeiesAndLegumes.Name.contains('Gram')) {
-      strMeal = (amountFilterLunchVegeiesAndLegumes).toString() +
+      strMeal += " " +
+          (amountFilterLunchVegeiesAndLegumes).toString() +
           " " +
-          filterLunchVegeiesAndLegumes.Name;
+          filterLunchVegeiesAndLegumes.Name +
+          "\n";
       curcalories += (amountFilterLunchVegeiesAndLegumes / 100) *
           filterLunchVegeiesAndLegumes.Calories;
     } else {
-      strMeal = amountFilterLunchVegeiesAndLegumes.toString() +
+      strMeal += " " +
+          amountFilterLunchVegeiesAndLegumes.toString() +
           " " +
-          filterLunchVegeiesAndLegumes.Name;
+          filterLunchVegeiesAndLegumes.Name +
+          "\n";
       curcalories += amountFilterLunchVegeiesAndLegumes *
           filterLunchVegeiesAndLegumes.Calories;
     }
-    meal.add(strMeal);
     if (filterLunchCarb.Name.contains('Gram')) {
-      strMeal = (amountFilterLunchCarb).toString() + " " + filterLunchCarb.Name;
+      strMeal += " " +
+          (amountFilterLunchCarb).toString() +
+          " " +
+          filterLunchCarb.Name +
+          "\n";
       curcalories += (amountFilterLunchCarb / 100) * filterLunchCarb.Calories;
     } else {
-      strMeal = amountFilterLunchCarb.toString() + " " + filterLunchCarb.Name;
+      strMeal += " " +
+          amountFilterLunchCarb.toString() +
+          " " +
+          filterLunchCarb.Name +
+          "\n";
       curcalories += amountFilterLunchCarb * filterLunchCarb.Calories;
     }
-    meal.add(strMeal);
-  } else {
+  } else if (Filter == "breakfast" || Filter == "dinner") {
     if (filterBreakfastProtein.Name.contains('Gram')) {
-      strMeal = (amountFilterBreakfastProtein).toString() +
+      strMeal += " " +
+          (amountFilterBreakfastProtein).toString() +
           " " +
-          filterBreakfastProtein.Name;
+          filterBreakfastProtein.Name +
+          "\n";
       curcalories += (amountFilterBreakfastProtein / 100) *
           filterBreakfastProtein.Calories;
     } else {
-      strMeal = amountFilterBreakfastProtein.toString() +
+      strMeal += " " +
+          amountFilterBreakfastProtein.toString() +
           " " +
-          filterBreakfastProtein.Name;
+          filterBreakfastProtein.Name +
+          "\n";
       curcalories +=
           (amountFilterBreakfastProtein) * filterBreakfastProtein.Calories;
     }
-    meal.add(strMeal);
     if (filterBreakfastDairyAndLegumes.Name.contains('Gram')) {
-      strMeal = (amountFilterBreakfastDairyAndLegumes).toString() +
+      strMeal += " " +
+          (amountFilterBreakfastDairyAndLegumes).toString() +
           " " +
-          filterBreakfastDairyAndLegumes.Name;
+          filterBreakfastDairyAndLegumes.Name +
+          "\n";
       curcalories += (amountFilterBreakfastDairyAndLegumes / 100) *
           filterBreakfastDairyAndLegumes.Calories;
     } else {
-      strMeal = amountFilterBreakfastDairyAndLegumes.toString() +
+      strMeal += " " +
+          amountFilterBreakfastDairyAndLegumes.toString() +
           " " +
-          filterBreakfastDairyAndLegumes.Name;
+          filterBreakfastDairyAndLegumes.Name +
+          "\n";
       curcalories += (amountFilterBreakfastDairyAndLegumes) *
           filterBreakfastDairyAndLegumes.Calories;
     }
-    meal.add(strMeal);
     if (filterBreakfastVegeies.Name.contains('Gram')) {
-      strMeal = (amountFilterBreakfastVegeies).toString() +
+      strMeal += " " +
+          (amountFilterBreakfastVegeies).toString() +
           " " +
-          filterBreakfastVegeies.Name;
+          filterBreakfastVegeies.Name +
+          "\n";
       curcalories += (amountFilterBreakfastVegeies / 100) *
           filterBreakfastVegeies.Calories;
     } else {
-      strMeal = amountFilterBreakfastVegeies.toString() +
+      strMeal += " " +
+          amountFilterBreakfastVegeies.toString() +
           " " +
-          filterBreakfastVegeies.Name;
+          filterBreakfastVegeies.Name +
+          "\n";
       curcalories +=
           (amountFilterBreakfastVegeies) * filterBreakfastVegeies.Calories;
     }
-    meal.add(strMeal);
     if (filterBreakfastCarb.Name.contains('Gram')) {
-      strMeal = (amountFilterBreakfastCarb).toString() +
+      strMeal += " " +
+          (amountFilterBreakfastCarb).toString() +
           " " +
-          filterBreakfastCarb.Name;
+          filterBreakfastCarb.Name +
+          "\n";
       curcalories +=
           (amountFilterBreakfastCarb / 100) * filterBreakfastCarb.Calories;
     } else {
-      strMeal =
-          amountFilterBreakfastCarb.toString() + " " + filterBreakfastCarb.Name;
+      strMeal += " " +
+          amountFilterBreakfastCarb.toString() +
+          " " +
+          filterBreakfastCarb.Name +
+          "\n";
       curcalories += (amountFilterBreakfastCarb) * filterBreakfastCarb.Calories;
     }
-    meal.add(strMeal);
   }
   if (Filter == "breakfast") {
-    bfMeals[bfMeals.length - 1] = meal;
-    Breakfast = meal[0];
+    bfMeals[bfMeals.length - 1] = strMeal.replaceAll("\n", "");
+    Breakfast = strMeal;
     bfCalories = curcalories;
     bfCarb = filterBreakfastCarb.Carbohydrates +
         filterBreakfastDairyAndLegumes.Carbohydrates +
@@ -1164,13 +1186,11 @@ saveChange() {
         filterBreakfastDairyAndLegumes.Protein +
         filterBreakfastProtein.Protein +
         filterBreakfastVegeies.Protein;
-    for (int i = 1; i < meal.length; i++) {
-      Breakfast += " " + meal[i];
-    }
-    print(Breakfast);
+
+    //print(Breakfast);
   } else if (Filter == "lunch") {
-    lMeals[lMeals.length - 1] = meal;
-    Lunch = meal[0];
+    lMeals[lMeals.length - 1] = strMeal.replaceAll("\n", "");
+    Lunch = strMeal;
     lCalories = curcalories;
     lFat = filterLunchCarb.Fat +
         filterLunchProtein.Fat +
@@ -1181,14 +1201,11 @@ saveChange() {
     lProtein = filterLunchCarb.Protein +
         filterLunchProtein.Protein +
         filterLunchVegeiesAndLegumes.Protein;
-    for (int i = 1; i < meal.length; i++) {
-      Lunch += " " + meal[i];
-    }
 
-    print(Lunch);
-  } else {
-    dMeals[dMeals.length - 1] = meal;
-    Dinner = meal[0];
+    //print(Lunch);
+  } else if (Filter == "dinner") {
+    dMeals[dMeals.length - 1] = strMeal.replaceAll("\n", "");
+    Dinner = strMeal;
     dCalories = curcalories;
     dCarb = filterBreakfastCarb.Carbohydrates +
         filterBreakfastDairyAndLegumes.Carbohydrates +
@@ -1202,9 +1219,58 @@ saveChange() {
         filterBreakfastDairyAndLegumes.Protein +
         filterBreakfastProtein.Protein +
         filterBreakfastVegeies.Protein;
-    for (int i = 1; i < meal.length; i++) {
-      Dinner += " " + meal[i];
-    }
-    print(Dinner);
+    //print(Dinner);
   }
 }
+
+Future getAllMeals() async {
+  var responce = await http.get(Uri.parse(GlobalUrl + 'getbreakfast'));
+  var jsonData = jsonDecode(responce.body);
+  for (var i in jsonData) {
+    Dish dish = Dish(
+        i["Category"],
+        i["Name"],
+        i["Calories"].toDouble(),
+        i["Carbohydrates"].toDouble(),
+        i["Protein"].toDouble(),
+        i["Fat"].toDouble(),
+        i["Meal"]);
+
+    allMeals.add(dish);
+    allMealsStr.add(dish.Name);
+  }
+
+  responce = await http.get(Uri.parse(GlobalUrl + 'getlunch'));
+  jsonData = jsonDecode(responce.body);
+  for (var i in jsonData) {
+    Dish dish = Dish(
+        i["Category"],
+        i["Name"],
+        i["Calories"].toDouble(),
+        i["Carbohydrates"].toDouble(),
+        i["Protein"].toDouble(),
+        i["Fat"].toDouble(),
+        i["Meal"]);
+
+    allMeals.add(dish);
+    allMealsStr.add(dish.Name);
+  }
+
+  responce = await http.get(Uri.parse(GlobalUrl + 'getsnacks'));
+  jsonData = jsonDecode(responce.body);
+  for (var i in jsonData) {
+    Dish dish = Dish(
+        i["Category"],
+        i["Name"],
+        i["Calories"].toDouble(),
+        i["Carbohydrates"].toDouble(),
+        i["Protein"].toDouble(),
+        i["Fat"].toDouble(),
+        i["Meal"]);
+
+    allMeals.add(dish);
+    allMealsStr.add(dish.Name);
+  }
+}
+
+afterLog() {}

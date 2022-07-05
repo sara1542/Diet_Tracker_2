@@ -55,42 +55,60 @@ Map<String, String> authData = {
   'doctor': ''
 };
 late meal patientmeal;
+int counter = 0;
+double caloriesBurnt = 0.0;
+
 double calories = 0.0, carb = 0.0, protein = 0.0, fat = 0.0;
-double cur_calories = 0.0, cur_carb = 0.0, cur_protein = 0.0, cur_fat = 0.0;
+int cur_calories = 0, cur_carb = 0, cur_protein = 0, cur_fat = 0;
 double bfCalories = 0.0, bfCarb = 0.0, bfProtein = 0.0, bfFat = 0.0;
 double lCalories = 0.0, lCarb = 0.0, lProtein = 0.0, lFat = 0.0;
 double dCalories = 0.0, dCarb = 0.0, dProtein = 0.0, dFat = 0.0;
+double s1Calories = 0.0, s1Carb = 0.0, s1Protein = 0.0, s1Fat = 0.0;
+double s2Calories = 0.0, s2Carb = 0.0, s2Protein = 0.0, s2Fat = 0.0;
+
 String Breakfast = "";
 String Lunch = "";
 String Dinner = "";
+String First_Snack = "";
+String Second_Snack = "";
 String Filter = "";
+
 List<Dish> snacks = [];
-Dish snack1 = new Dish.empty();
-double amountSnack1 = 0.0;
-Dish snack2 = new Dish.empty();
-double amountSnack2 = 0.0;
 List<Dish> breakfastProtein = [];
-Dish filterBreakfastProtein = new Dish.empty();
-double amountFilterBreakfastProtein = 0.0;
 List<Dish> breakfastCarb = [];
-Dish filterBreakfastCarb = new Dish.empty();
-double amountFilterBreakfastCarb = 0.0;
 List<Dish> breakfastVegeies = [];
-Dish filterBreakfastVegeies = new Dish.empty();
-double amountFilterBreakfastVegeies = 0.0;
 List<Dish> breakfastDairyAndLegumes = [];
-Dish filterBreakfastDairyAndLegumes = new Dish.empty();
-double amountFilterBreakfastDairyAndLegumes = 0.0;
 List<Dish> lunchProtein = [];
-Dish filterLunchProtein = new Dish.empty();
-double amountFilterLunchProtein = 0.0;
 List<Dish> lunchCarb = [];
-Dish filterLunchCarb = new Dish.empty();
-double amountFilterLunchCarb = 0.0;
 List<Dish> lunchVegeiesAndLegumes = [];
+
+Dish filterSnack1 = new Dish.empty();
+Dish filterSnack2 = new Dish.empty();
+Dish filterBreakfastProtein = new Dish.empty();
+Dish filterBreakfastCarb = new Dish.empty();
+Dish filterBreakfastVegeies = new Dish.empty();
+Dish filterBreakfastDairyAndLegumes = new Dish.empty();
+Dish filterLunchProtein = new Dish.empty();
+Dish filterLunchCarb = new Dish.empty();
 Dish filterLunchVegeiesAndLegumes = new Dish.empty();
+
+double amountSnack1 = 0.0;
+double amountSnack2 = 0.0;
+double amountFilterBreakfastProtein = 0.0;
+double amountFilterBreakfastCarb = 0.0;
+double amountFilterBreakfastVegeies = 0.0;
+double amountFilterBreakfastDairyAndLegumes = 0.0;
+double amountFilterLunchProtein = 0.0;
+double amountFilterLunchCarb = 0.0;
 double amountFilterLunchVegeiesAndLegumes = 0.0;
+
 List<List<dynamic>> badCombo = <List<dynamic>>[];
-List<List<dynamic>> bfMeals = <List<dynamic>>[];
-List<List<dynamic>> lMeals = <List<dynamic>>[];
-List<List<dynamic>> dMeals = <List<dynamic>>[];
+List<String> bfMeals = [];
+List<String> lMeals = [];
+List<String> dMeals = [];
+List<String> sMeals = [];
+
+List<Dish> allMeals = [];
+List<String> allMealsStr = [];
+List<Dish> SelectedMeal = [];
+List<dynamic> Selected = [];
