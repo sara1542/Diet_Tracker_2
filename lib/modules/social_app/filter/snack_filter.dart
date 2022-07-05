@@ -5,14 +5,14 @@ import '../../../globals/globalVariables.dart';
 import '../../../models/dish/dish_model.dart';
 import '../generator/generator_screen.dart';
 
-class LunchFilter extends StatefulWidget {
-  const LunchFilter({Key? key}) : super(key: key);
+class SnacksFilter extends StatefulWidget {
+  const SnacksFilter({Key? key}) : super(key: key);
 
   @override
-  State<LunchFilter> createState() => _LunchFilter();
+  State<SnacksFilter> createState() => _SnacksFilter();
 }
 
-class _LunchFilter extends State<LunchFilter> {
+class _SnacksFilter extends State<SnacksFilter> {
   void setAll() {
     cur_calories =
         (bfCalories + lCalories + dCalories + s1Calories + s2Calories).round();
@@ -32,7 +32,7 @@ class _LunchFilter extends State<LunchFilter> {
           TextField(
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              amountFilterLunchProtein = double.parse(value);
+              amountSnack1 = double.parse(value);
             },
             decoration: const InputDecoration(
               labelText: "Amount",
@@ -43,7 +43,7 @@ class _LunchFilter extends State<LunchFilter> {
           DropdownButton<Dish>(
             //isDense: true,
             hint: Text('Choose'),
-            value: filterLunchProtein,
+            value: filterSnack1,
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 24,
             elevation: 16,
@@ -53,10 +53,10 @@ class _LunchFilter extends State<LunchFilter> {
             ),
             onChanged: (Dish? newValue) {
               setState(() {
-                filterLunchProtein = newValue!;
+                filterSnack1 = newValue!;
               });
             },
-            items: lunchProtein.map<DropdownMenuItem<Dish>>((Dish value) {
+            items: snacks.map<DropdownMenuItem<Dish>>((Dish value) {
               return DropdownMenuItem<Dish>(
                 value: value,
                 child: Text(value.Name),
@@ -66,7 +66,7 @@ class _LunchFilter extends State<LunchFilter> {
           TextField(
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              amountFilterLunchCarb = double.parse(value);
+              amountSnack2 = double.parse(value);
             },
             decoration: const InputDecoration(
               labelText: "Amount",
@@ -77,7 +77,7 @@ class _LunchFilter extends State<LunchFilter> {
           DropdownButton<Dish>(
             //isDense: true,
             hint: Text('Choose'),
-            value: filterLunchCarb,
+            value: filterSnack2,
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 24,
             elevation: 16,
@@ -87,45 +87,10 @@ class _LunchFilter extends State<LunchFilter> {
             ),
             onChanged: (Dish? newValue) {
               setState(() {
-                filterLunchCarb = newValue!;
+                filterSnack2 = newValue!;
               });
             },
-            items: lunchCarb.map<DropdownMenuItem<Dish>>((Dish value) {
-              return DropdownMenuItem<Dish>(
-                value: value,
-                child: Text(value.Name),
-              );
-            }).toList(),
-          ),
-          TextField(
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              amountFilterLunchVegeiesAndLegumes = double.parse(value);
-            },
-            decoration: const InputDecoration(
-              labelText: "Amount",
-              fillColor: Color.fromARGB(255, 36, 189, 51),
-              filled: true,
-            ),
-          ),
-          DropdownButton<Dish>(
-            //isDense: true,
-            hint: Text('Choose'),
-            value: filterLunchVegeiesAndLegumes,
-            icon: Icon(Icons.arrow_drop_down),
-            iconSize: 24,
-            elevation: 16,
-            underline: Container(
-              height: 2,
-              color: Color.fromARGB(255, 36, 189, 51),
-            ),
-            onChanged: (Dish? newValue) {
-              setState(() {
-                var filterLunchVegeiesAndLegumes = newValue!;
-              });
-            },
-            items: lunchVegeiesAndLegumes
-                .map<DropdownMenuItem<Dish>>((Dish value) {
+            items: snacks.map<DropdownMenuItem<Dish>>((Dish value) {
               return DropdownMenuItem<Dish>(
                 value: value,
                 child: Text(value.Name),
@@ -141,7 +106,38 @@ class _LunchFilter extends State<LunchFilter> {
             ),
             child: const Text('Save'),
             onPressed: () {
-              saveChange();
+              First_Snack =
+                  amountSnack1.toString() + " " + filterSnack1.Name.toString();
+              s1Calories = filterSnack1.Name.contains("Gram")
+                  ? filterSnack1.Calories * (amountSnack1 / 100)
+                  : filterSnack1.Calories * amountSnack1;
+              s1Carb = filterSnack1.Name.contains("Gram")
+                  ? filterSnack1.Carbohydrates * (amountSnack1 / 100)
+                  : filterSnack1.Carbohydrates * amountSnack1;
+              s1Protein = filterSnack1.Name.contains("Gram")
+                  ? filterSnack1.Protein * (amountSnack1 / 100)
+                  : filterSnack1.Protein * amountSnack1;
+              s1Fat = filterSnack1.Name.contains("Gram")
+                  ? filterSnack1.Fat * (amountSnack1 / 100)
+                  : filterSnack1.Fat * amountSnack1;
+
+              Second_Snack =
+                  amountSnack2.toString() + " " + filterSnack2.Name.toString();
+              s2Calories = filterSnack2.Name.contains("Gram")
+                  ? filterSnack2.Calories * (amountSnack2 / 100)
+                  : filterSnack2.Calories * amountSnack2;
+              s2Carb = filterSnack2.Name.contains("Gram")
+                  ? filterSnack2.Carbohydrates * (amountSnack2 / 100)
+                  : filterSnack2.Carbohydrates * amountSnack2;
+              s2Protein = filterSnack2.Name.contains("Gram")
+                  ? filterSnack2.Protein * (amountSnack2 / 100)
+                  : filterSnack2.Protein * amountSnack2;
+              s2Fat = filterSnack2.Name.contains("Gram")
+                  ? filterSnack2.Fat * (amountSnack2 / 100)
+                  : filterSnack2.Fat * amountSnack2;
+
+              sMeals[sMeals.length - 1] = Second_Snack;
+              sMeals[sMeals.length - 1] = Second_Snack;
               setAll();
               Navigator.push(
                 context,

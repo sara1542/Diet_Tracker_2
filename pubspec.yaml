@@ -53,6 +53,7 @@ dependencies:
   dio: ^4.0.6
   http: ^0.13.2
   html: ^0.15.0
+  getwidget: ^3.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

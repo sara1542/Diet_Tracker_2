@@ -1,8 +1,9 @@
+import 'package:firstgp/globals/globalFunctions.dart';
 import 'package:firstgp/globals/globalVariables.dart';
+import 'package:firstgp/screens/log_meals_screen.dart';
+//import 'package:firstgp/modules/social_app/log_meals/logMeals.dart';
 //import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
 import '../../../layout/social_app/cubit/cubit.dart';
 
 class FeedsScreen extends StatelessWidget {
@@ -20,23 +21,26 @@ class FeedsScreen extends StatelessWidget {
                   SingleChildScrollView(
                     child: Column(
                       children: [
-                        getmeal("Breakfast", patientmeal.breakfast,
-                            const Icon(Icons.breakfast_dining_outlined)),
+                        getmeal(
+                            "Breakfast",
+                            patientmeal.breakfast,
+                            const Icon(Icons.breakfast_dining_outlined),
+                            context),
                         const SizedBox(
                           height: 15,
                         ),
                         getmeal("Lunch", patientmeal.lunch,
-                            const Icon(Icons.lunch_dining_outlined)),
+                            const Icon(Icons.lunch_dining_outlined), context),
                         const SizedBox(
                           height: 15,
                         ),
                         getmeal("Dinner", patientmeal.dinner,
-                            const Icon(Icons.dinner_dining)),
+                            const Icon(Icons.dinner_dining), context),
                         const SizedBox(
                           height: 15,
                         ),
                         getmeal("Snacks", patientmeal.snacks,
-                            const Icon(Icons.food_bank_outlined)),
+                            const Icon(Icons.food_bank_outlined), context),
                         const SizedBox(
                           height: 15,
                         ),
@@ -81,11 +85,34 @@ class FeedsScreen extends StatelessWidget {
   }
 }
 
-Widget getmeal(String title, String content, Icon icon) => Container(
+Widget getmeal(String title, String content, Icon icon, context) => Container(
       color: Colors.white70,
       child: Column(children: [
         Row(
-          children: [icon, const SizedBox(width: 10), Text(title)],
+          children: [
+            icon,
+            const SizedBox(width: 10),
+            Text(title),
+            const SizedBox(width: 30),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  shadowColor: Colors.black54,
+                  onPrimary: Color.fromARGB(255, 221, 204, 204),
+                  primary: Color.fromARGB(255, 245, 242, 242)),
+              //padding: EdgeInsets.only(left: 50),
+              child: Text("log your " + title,
+                  style: TextStyle(color: Colors.green)),
+              onPressed: () => {
+                getAllMeals().then(
+                  (value) => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => logMeals()),
+                      (route) => false),
+                )
+              },
+            )
+          ],
         ),
         const SizedBox(
           height: 15,

@@ -1,14 +1,10 @@
 import 'package:firstgp/modules/social_app/filter/snack_filter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ffi';
-
 import '../../../globals/globalFunctions.dart';
 import '../../../globals/globalVariables.dart';
-import '../../../models/dish/dish_model.dart';
-import '../filter/breakfast_filter_screen.dart';
-import '../filter/lunch_filter_screen.dart';
+import '../modules/social_app/filter/breakfast_filter_screen.dart';
+import '../modules/social_app/filter/lunch_filter_screen.dart';
 
 class Generator extends StatefulWidget {
   const Generator({Key? key}) : super(key: key);

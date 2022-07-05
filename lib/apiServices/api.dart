@@ -55,9 +55,7 @@ class apiServices {
       print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee11" +
           response.data['diet'].toString() +
           "                   ");
-
       currentdoctor = doctor.fromJson(response.data['diet']);
-
       return response.statusCode!;
     } else {
       throw Exception('failed to get doctor');

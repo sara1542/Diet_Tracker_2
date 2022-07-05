@@ -66,9 +66,9 @@ class user {
         debugPrint("get doctor successfully " + currentdoctor.uId);
       } else {
         //to get info of current patient
-        await getpatient(uId);
-        await getinbody(uId);
-        await getPatientDoctor(uId);
+        await getpatient(uId)
+            .then((value) => getinbody(uId))
+            .then((value) => getPatientDoctor(uId));
       }
 
       //debugPrint("**********************88 in login" + response.data);
