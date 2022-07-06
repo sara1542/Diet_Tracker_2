@@ -64,24 +64,35 @@ class apiServices {
 */
   Future<void> logmeal(String mealtype, double calories, String meal) async {
     debugPrint(GlobalUrl + 'logameal');
-
-    final response = await dio.put(GlobalUrl + 'logameal',
-        data: json.encode(<String, dynamic>{
-          "_id": uId,
-          "meal": mealtype,
-          "breakfast": meal,
-          "lunch": meal,
-          "dinner": meal,
-          "snacks": meal,
-          "breakfastCalories": calories,
-          "lunchCalories": calories,
-          "dinnerCalories": calories,
-          "snacksCalories": calories
-        }));
-    if (response.statusCode == 200) {
-      showToast(true, 'meal logged successfully');
-    } else {
-      throw Exception('failed to log the meal');
+    try {
+      final response = await dio.put(GlobalUrl + 'logameal',
+          data: json.encode(<String, dynamic>{
+            "_id": uId,
+            "meal": mealtype,
+            "breakfast": meal,
+            "lunch": meal,
+            "dinner": meal,
+            "snacks": meal,
+            "breakfastCalories": calories,
+            "lunchCalories": calories,
+            "dinnerCalories": calories,
+            "snacksCalories": calories
+          }));
+      if (response.statusCode == 200) {
+        showToast(true, 'meal logged successfully');
+      } else {
+        showToast(false, 'failed to log the meal');
+        throw Exception('failed to log the meal');
+      }
+    } on DioError catch (e) {
+      /* if (e.response!.statusCode == 404) {
+        print(e.response!.statusCode);
+      } else {
+        print(e.message);
+        // print(e.request);
+      }
+*/
+      showToast(false, 'failed to log the meal');
     }
   }
 
@@ -178,7 +189,9 @@ class apiServices {
           response.data['doctor'].toString() +
           "                   ");
 
-      currentPatientDoctor = doctor.fromJson(response.data['doctor']);
+      currentPatientDoctor = (response.data['doctor'] != null)
+          ? doctor.fromJson(response.data['doctor'])
+          : null;
 
       return response.statusCode;
     } else {

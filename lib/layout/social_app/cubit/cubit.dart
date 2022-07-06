@@ -275,9 +275,11 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 */
   Future<void> getPatientMeals() async {
+    print("holla");
     final response = await dio.get(
       getMeals + uId,
     );
+    print(response);
     if (response.statusCode == 200) {
       print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee11" +
           response.data['diet'].toString() +

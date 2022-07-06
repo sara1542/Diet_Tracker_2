@@ -53,7 +53,8 @@ Map<String, String> authData = {
   'detection price': '',
   'doctor': ''
 };
-late meal patientmeal;
+meal patientmeal = meal("", "no meals today", "no meals today",
+    "no meals today", "no meals today", "");
 int counter = 0;
 double caloriesBurnt = 0.0;
 
