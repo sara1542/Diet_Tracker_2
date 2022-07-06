@@ -1,5 +1,6 @@
 import 'package:firstgp/layout/social_app/social_layout.dart';
 import 'package:firstgp/modules/social_app/feeds/feeds_screen.dart';
+import 'package:firstgp/screens/takeMealsAmount.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/dropdown/gf_multiselect.dart';
 import 'package:getwidget/types/gf_checkbox_type.dart';
@@ -7,7 +8,8 @@ import '../../../globals/globalFunctions.dart';
 import '../../../globals/globalVariables.dart';
 
 class logMeals extends StatefulWidget {
-  const logMeals({Key? key}) : super(key: key);
+  String meal;
+  logMeals(this.meal);
 
   @override
   State<logMeals> createState() => _logMeals();
@@ -31,6 +33,37 @@ class _logMeals extends State<logMeals> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          /* MultiSelectDialogField(
+                items: 
+                (widget.meal=="breakfast") ?
+                 bfMeals:(widget.meal=="lunch")?lMeals:(widget.meal=="dinner")?dMeals:sMeals,
+                
+                title: Text(widget.meal),
+                selectedColor: Colors.blue,
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.1),
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                  border: Border.all(
+                    color: Colors.blue,
+                    width: 2,
+                  ),
+                ),
+                buttonIcon: Icon(
+                (widget.meal=="breakfast") ?
+                 Icons.breakfast_dining:(widget.meal=="lunch")?Icons.lunch_dining:Icons.food_bank,
+                  color: Colors.blue,
+                ),
+                buttonText: Text(
+                  widget.meal,
+                  style: TextStyle(
+                    color: Colors.blue[800],
+                    fontSize: 16,
+                  ),
+                ),
+                onConfirm: (results) {
+                  //_selectedAnimals = results;
+                },
+              ),*/
           // ElevatedButton(
           //     style: ElevatedButton.styleFrom(
           //       primary: Color.fromARGB(255, 13, 164, 28),
@@ -41,8 +74,16 @@ class _logMeals extends State<logMeals> {
           //     }),
           Container(
             child: GFMultiSelect(
-              items: allMealsStr,
+              items: //allMealsStr,
+                  (widget.meal == "Breakfast")
+                      ? breakfastMealsStr
+                      : (widget.meal == "Lunch")
+                          ? lunchMealsStr
+                          : (widget.meal == "Dinner")
+                              ? breakfastMealsStr
+                              : snacksMealsStr,
               onSelect: (value) {
+                debugPrint(value.toString());
                 Selected = value;
               },
               dropdownTitleTileText: 'Select',
@@ -79,12 +120,16 @@ class _logMeals extends State<logMeals> {
               ),
               child: const Text('Done'),
               onPressed: () async {
-                await afterLog();
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Generator()),
-                // );
-              }),
+                //await afterLog();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            takeMealsAmountWidget(
+                              meal: widget.meal,
+                            )),
+                    (route) => false);
+              })
         ]),
       ),
     );

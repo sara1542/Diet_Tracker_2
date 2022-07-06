@@ -62,6 +62,29 @@ class apiServices {
     }
   }
 */
+  Future<void> logmeal(String mealtype, double calories, String meal) async {
+    debugPrint(GlobalUrl + 'logameal');
+
+    final response = await dio.put(GlobalUrl + 'logameal',
+        data: json.encode(<String, dynamic>{
+          "_id": uId,
+          "meal": mealtype,
+          "breakfast": meal,
+          "lunch": meal,
+          "dinner": meal,
+          "snacks": meal,
+          "breakfastCalories": calories,
+          "lunchCalories": calories,
+          "dinnerCalories": calories,
+          "snacksCalories": calories
+        }));
+    if (response.statusCode == 200) {
+      showToast(true, 'meal logged successfully');
+    } else {
+      throw Exception('failed to log the meal');
+    }
+  }
+
   Future<void> registerAdoctor(String docId) async {
     debugPrint(GlobalUrl + 'subscribeAdoctor');
     debugPrint(docId);

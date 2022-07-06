@@ -107,7 +107,7 @@ Widget getmeal(String title, String content, Icon icon, context) => Container(
                   (value) => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => logMeals()),
+                          builder: (BuildContext context) => logMeals(title)),
                       (route) => false),
                 )
               },
@@ -121,7 +121,9 @@ Widget getmeal(String title, String content, Icon icon, context) => Container(
             color: Colors.black45,
           ),
         ),
-        content != null ? Text(content) : Text("no meal today"),
+        content != null
+            ? Text(content, style: const TextStyle(fontSize: 15))
+            : const Text("no meal today"),
         const SizedBox(
           height: 10,
         )

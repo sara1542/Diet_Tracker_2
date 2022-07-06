@@ -16,15 +16,6 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
-String getLocation(String fullAdress) {
-  String res = "";
-  for (int i = 0; i < fullAdress.length; i++) {
-    if (fullAdress[i] == ':') return res;
-    res = res + fullAdress[i];
-  }
-  return res;
-}
-
 apiServices api = new apiServices();
 Future<void> getinbody(String uId) async {
   await api.getInbody(uId);
@@ -122,115 +113,39 @@ void submit(context) async {
   }
 }
 
-String getDoctorName(String fullNameStatement) {
-  String res = "";
-  for (int i = 13; i < fullNameStatement.length; i++) {
-    //skipping a7gez al2an ma3
-    res = res + fullNameStatement[i];
-  }
-  return res;
-}
+Future<void> logmeal(
+    List<TextEditingController> controllers, String meal) async {
+  String mealCompleteName = "";
+  double calories = 0.0;
+  for (int i = 0; i < Selected.length; i++) {
+    if (meal == "Snacks") {
+      mealCompleteName +=
+          controllers[i].text + " " + snacksMealsStr[Selected[i]] + " , ";
+      double temp = (snacksMealsStr[Selected[i]].contains("Gram"))
+          ? (double.parse(controllers[i].text)) / 100
+          : (double.parse(controllers[i].text));
+      calories += snacksMeals[Selected[i]].Calories * temp;
+    } else if (meal == "Lunch") {
+      mealCompleteName +=
+          controllers[i].text + " " + lunchMealsStr[Selected[i]] + " , ";
+      double temp = (lunchMealsStr[Selected[i]].contains("Gram"))
+          ? (double.parse(controllers[i].text)) / 100
+          : (double.parse(controllers[i].text));
 
-String getMoneyValue(String money) {
-  String res = "";
-  for (int i = 0; i < money.length; i++) {
-    if (money[i] == ' ') return res;
-    res = res + money[i];
-  }
-  return res;
-}
+      calories += lunchMeals[Selected[i]].Calories * temp;
+    } else {
+      mealCompleteName +=
+          controllers[i].text + " " + breakfastMealsStr[Selected[i]] + " , ";
+      double temp = (breakfastMealsStr[Selected[i]].contains("Gram"))
+          ? (double.parse(controllers[i].text)) / 100
+          : (double.parse(controllers[i].text));
 
-/*Future<doctor?> extractData(String visitaUrl) async {
-//https://www.vezeeta.com/ar/dr/%D8%AF%D9%83%D8%AA%D9%88%D8%B1-%D8%A3%D8%AD%D9%85%D8%AF-%D9%85%D8%A7%D8%AC%D8%AF-%D8%AA%D8%AE%D8%B3%D9%8A%D8%B3-%D9%88%D8%AA%D8%BA%D8%B0%D9%8A%D8%A9#patients-reviews
-  final translator = GoogleTranslator();
-  final response1 = await http.Client()
-      .get(Uri.parse(visitaUrl), headers: {"Content-Type": "application/json"});
-  if (response1.statusCode == 200) {
-    var document = parser.parse(response1.body);
-    print(document.body.toString());
-    try {
-      var ratingScore = document.getElementsByClassName(
-          'DoctorReviewsstyle__RatingText-sc-o1mk5u-14 hCBXNB')[0];
-      print(ratingScore.text.trim());
-      var responseString2 = document.getElementsByClassName(
-          'ReservationDetailsstyle__ItemText-sc-iq98nc-18 eVEjap')[0];
-      var doctorName = document
-          .getElementsByClassName(
-              'HeaderContentBackgroundstyle__Headlines-sc-1gstdfx-1 gNsfTb')[0]
-          .children[0];
-      print(getDoctorName(doctorName.text.trim()));
-      //SelectClinicstyle__AddressText-sc-1gcjuvq-6 dokQEl
-      var address = document
-          .getElementsByClassName(
-              'SelectClinicstyle__SelectClinicsConatiner-sc-1gcjuvq-0 SelectClinicstyle__PaddedConatiner-sc-1gcjuvq-3 iTBmoU')[0]
-          .children[1];
-      print(getLocation(address.text.trim()));
-      String arabicMoney = responseString2.text.trim();
-      String englishMoney = "0.0";
-      await translator
-          .translate(getMoneyValue(arabicMoney), from: 'ar', to: 'en')
-          .then((value) {
-        englishMoney = value.toString();
-        print(value);
-      });
-      print(englishMoney);
-      await translator
-          .translate(getLocation(address.text.trim()), from: 'ar', to: 'en')
-          .then((value) {
-        print(value);
-      });
-      await translator
-          .translate(getDoctorName(doctorName.text.trim()),
-              from: 'ar', to: 'en')
-          .then((value) {
-        print(value);
-      });
-      return doctor(
-          getDoctorName(doctorName.text.trim()),
-          getLocation(address.text.trim()),
-          double.parse(englishMoney),
-          double.parse(ratingScore.text.trim()),
-          address.text.trim());
-    } catch (e) {
-      print("error1");
-      return null;
+      calories += breakfastMeals[Selected[i]].Calories * temp;
     }
-  } else {
-    print("error2");
-    return null;
+    await api.logmeal(meal, calories, mealCompleteName);
   }
 }
-*/
-// Future<void> getCurrentPosition() async {
-//   position = await Geolocator.getCurrentPosition(
-//       desiredAccuracy: LocationAccuracy.high);
-//
-//   // atCompany();
-//   print(position.latitude);
-//   print("            ");
-//   print(position.longitude);
-//   // notifyListeners();
-// }
 
-// double calculateDistance(double lat1, double long1, double lat2, double long2) {
-//   double distanceInMeters =
-//       Geolocator.distanceBetween(lat1, long1, lat2, long2);
-//   return distanceInMeters;
-// }
-
-/*Future<void> getDoctorsData() async {
-  print("in get doctores data");
-  for (int i = 0; i < doctorsVisitaUrl.length; i++) {
-    doctor? temp = await extractData(doctorsVisitaUrl[i]);
-    temp!.price = (i == 0) ? 100 : 300;
-    doctors.add(temp);
-    print(temp.name + "  " + temp.price.toString() + "  is added");
-  }
-  print(" at the end in get doctores data");
-  // doctor1 =
-  // doctor2 = await extractData('');
-}
-*/
 final String apikey = 'helloworld';
 double h = 0, w = 0, bfm = 0, tbw = 0;
 Widget defaultTextFormField(
@@ -241,12 +156,12 @@ Widget defaultTextFormField(
         decoration: InputDecoration(
             // contentPadding: EdgeInsets.fromLTRB(5.0, 20, 5.0, 20.0),
             labelText: " $text ",
-            labelStyle:
-                TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
-            enabledBorder: new OutlineInputBorder(
+            labelStyle: const TextStyle(
+                color: Colors.black54, fontWeight: FontWeight.bold),
+            enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue),
-              borderRadius: const BorderRadius.all(
-                const Radius.circular(10.0),
+              borderRadius: BorderRadius.all(
+                Radius.circular(10.0),
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -274,6 +189,7 @@ Future getMeals() async {
   await getSnacks();
 }
 
+//Future logMeal() async {}
 Future getSnacks() async {
   var responce = await http.get(Uri.parse(GlobalUrl + 'getsnacks'));
   var jsonData = jsonDecode(responce.body);
@@ -1220,6 +1136,14 @@ saveChange() {
 }
 
 Future getAllMeals() async {
+  //allMeals = [];
+  //allMealsStr = [];
+  breakfastMeals = [];
+  breakfastMealsStr = [];
+  lunchMeals = [];
+  lunchMealsStr = [];
+  snacksMeals = [];
+  snacksMealsStr = [];
   var responce = await http.get(Uri.parse(GlobalUrl + 'getbreakfast'));
   var jsonData = jsonDecode(responce.body);
   for (var i in jsonData) {
@@ -1231,9 +1155,10 @@ Future getAllMeals() async {
         i["Protein"].toDouble(),
         i["Fat"].toDouble(),
         i["Meal"]);
-
-    allMeals.add(dish);
-    allMealsStr.add(dish.Name);
+    breakfastMeals.add(dish);
+    breakfastMealsStr.add(dish.Name);
+    //allMeals.add(dish);
+    //allMealsStr.add(dish.Name);
   }
 
   responce = await http.get(Uri.parse(GlobalUrl + 'getlunch'));
@@ -1247,11 +1172,11 @@ Future getAllMeals() async {
         i["Protein"].toDouble(),
         i["Fat"].toDouble(),
         i["Meal"]);
-
-    allMeals.add(dish);
-    allMealsStr.add(dish.Name);
+    lunchMeals.add(dish);
+    lunchMealsStr.add(dish.Name);
+    //allMeals.add(dish);
+    //allMealsStr.add(dish.Name);
   }
-
   responce = await http.get(Uri.parse(GlobalUrl + 'getsnacks'));
   jsonData = jsonDecode(responce.body);
   for (var i in jsonData) {
@@ -1263,10 +1188,9 @@ Future getAllMeals() async {
         i["Protein"].toDouble(),
         i["Fat"].toDouble(),
         i["Meal"]);
-
-    allMeals.add(dish);
-    allMealsStr.add(dish.Name);
+    snacksMeals.add(dish);
+    snacksMealsStr.add(dish.Name);
+    //allMeals.add(dish);
+    //allMealsStr.add(dish.Name);
   }
 }
-
-afterLog() {}

@@ -107,7 +107,14 @@ List<String> lMeals = [];
 List<String> dMeals = [];
 List<String> sMeals = [];
 
-List<Dish> allMeals = [];
-List<String> allMealsStr = [];
+//List<Dish> allMeals = [];
+//List<String> allMealsStr = [];
+List<Dish> breakfastMeals = [];
+List<String> breakfastMealsStr = [];
+List<Dish> lunchMeals = [];
+List<String> lunchMealsStr = [];
+
+List<Dish> snacksMeals = [];
+List<String> snacksMealsStr = [];
 List<Dish> SelectedMeal = [];
 List<dynamic> Selected = [];
