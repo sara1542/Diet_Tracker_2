@@ -6,13 +6,17 @@ import '../../../globals/globalVariables.dart';
 import '../../../models/dish/dish_model.dart';
 
 class BreakfastFilter extends StatefulWidget {
-  const BreakfastFilter({Key? key}) : super(key: key);
+  String patientId;
+   BreakfastFilter({Key? key,
+    required this.patientId}) :
+        super(key: key);
 
   @override
   State<BreakfastFilter> createState() => _BreakfastFilter();
 }
 
 class _BreakfastFilter extends State<BreakfastFilter> {
+
   void setAll() {
     cur_calories =
         (bfCalories + lCalories + dCalories + s1Calories + s2Calories).round();
@@ -20,6 +24,10 @@ class _BreakfastFilter extends State<BreakfastFilter> {
     cur_protein =
         (bfProtein + lProtein + dProtein + s1Protein + s2Protein).round();
     cur_fat = (bfProtein + lFat + dFat + s1Fat + s2Fat).round();
+    bfCaloriesList[bfCaloriesList.length - 1] = bfCalories;
+    lCaloriesList[lCaloriesList.length - 1] = (lCalories);
+    dCaloriesList[dCaloriesList.length - 1] = (dCalories);
+    sCaloriesList[sCaloriesList.length - 1] = (s1Calories + s2Calories);
   }
 
   @override
@@ -177,10 +185,8 @@ class _BreakfastFilter extends State<BreakfastFilter> {
             onPressed: () async {
               await saveChange();
               setAll();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Generator()),
-              );
+              Navigator.pop(
+                  context);
             },
           ),
         ]),

@@ -13,13 +13,6 @@ class doctorsScreen extends StatefulWidget {
 class _doctorsScreenState extends State<doctorsScreen> {
   @override
   void initState() {
-    /*for (int i = 0; i < doctors.length; i++) {
-      print("in init state" +
-          doctors[i].username +
-          " " +
-          doctors[i].ratingScore.toString() +
-          "\n");
-    }*/
     tempDoctors = doctors;
   }
 

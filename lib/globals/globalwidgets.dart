@@ -71,7 +71,7 @@ Widget defaultTextForm(
               borderRadius: BorderRadius.all(Radius.circular(5.0))),
           focusedBorder: OutlineInputBorder(
             borderSide:
-                BorderSide(color: Colors.blue[300]!.withOpacity(1), width: 3),
+                BorderSide(color: Colors.green[300]!.withOpacity(1), width: 3),
           )),
       controller: controller,
       validator: (value) {
@@ -107,7 +107,7 @@ Widget passwordDefaultTextFiled(
               icon: Icon(
                 Icons.remove_red_eye,
               ),
-              color: showpass ? Colors.blue : Colors.grey,
+              color: showpass ? Colors.green : Colors.grey,
               onPressed: () => {
                     if (passType == 0)
                       {provider.togglePassword()}
@@ -123,7 +123,7 @@ Widget passwordDefaultTextFiled(
               borderRadius: BorderRadius.all(Radius.circular(5.0))),
           focusedBorder: OutlineInputBorder(
             borderSide:
-                BorderSide(color: Colors.blue[300]!.withOpacity(1), width: 3),
+                BorderSide(color: Colors.green[300]!.withOpacity(1), width: 3),
           )),
       controller: controller,
       validator: (value) {

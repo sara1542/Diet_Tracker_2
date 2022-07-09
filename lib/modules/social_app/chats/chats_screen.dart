@@ -8,9 +8,7 @@ import '../../../layout/social_app/cubit/states.dart';
 import '../../../shared/components/components.dart';
 
 class ChatsScreen extends StatelessWidget {
-  List<String> receivers = [];
-  List<String> images = [];
-  List<String> names = [];
+
 
   ChatsScreen({Key? key}) : super(key: key);
 
@@ -29,10 +27,12 @@ class ChatsScreen extends StatelessWidget {
                 receivers = [];
                 images = [];
                 names = [];
-                for (int i = 0; i < patients.length; i++) {
-                  receivers.add(patients[i].uId);
-                  names.add(patients[i].username);
-                  images.add(patients[i].image);
+                debugPrint("vvvvvvvvvvvv");
+                for (int i = 0; i < doctorPatients.length; i++) {
+                  debugPrint("vvvvvvvvvvvv");
+                  receivers.add(doctorPatients[i].uId);
+                  names.add(doctorPatients[i].username);
+                  images.add(doctorPatients[i].image);
                 }
               } else {
                 receivers = ['chatbot', 'community'];
@@ -44,7 +44,7 @@ class ChatsScreen extends StatelessWidget {
 
                 if (currentPatientDoctor != null) {
                   receivers.add(currentPatientDoctor!.uId);
-                  names.add(currentPatientDoctor!.username);
+                  names.add('Dr '+currentPatientDoctor!.username);
                   images.add(currentPatientDoctor!.image);
                 }
               }

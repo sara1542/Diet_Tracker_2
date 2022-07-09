@@ -52,22 +52,22 @@ class SocialLayout extends StatelessWidget {
                       IconBroken.Chat,
                     ),
                     label: 'Chats'),
+                !isDoctor
+                    ? const BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.how_to_reg_sharp,
+                    ),
+                    label: 'Doctors')
+                    : const BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.playlist_add_circle_outlined,
+                    ),
+                    label: 'Patients'),
                 const BottomNavigationBarItem(
                     icon: Icon(
                       IconBroken.Setting,
                     ),
                     label: 'Settings'),
-                !isDoctor
-                    ? const BottomNavigationBarItem(
-                        icon: Icon(
-                          Icons.how_to_reg_sharp,
-                        ),
-                        label: 'doctors')
-                    : const BottomNavigationBarItem(
-                        icon: Icon(
-                          Icons.playlist_add_circle_outlined,
-                        ),
-                        label: 'patients'),
               ],
             ),
           );

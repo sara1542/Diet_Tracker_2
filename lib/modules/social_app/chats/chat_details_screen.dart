@@ -112,7 +112,7 @@ class ChatDetailsScreen extends StatelessWidget {
                           ),
                           Container(
                             height: 50.0,
-                            color: Colors.blue,
+                            color: Colors.green,
                             child: MaterialButton(
                               onPressed: () {
                                 if (receiver == "community") {
@@ -342,7 +342,7 @@ class ChatDetailsScreen extends StatelessWidget {
         child: Flexible(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.blue[100],
+              color: Colors.green[100],
               borderRadius: const BorderRadiusDirectional.only(
                 bottomStart: Radius.circular(10.0),
                 topEnd: Radius.circular(10.0),

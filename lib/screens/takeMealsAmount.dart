@@ -66,7 +66,7 @@ class takeMealsAmountWidget extends StatelessWidget {
                                                 Radius.circular(5.0))),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: Colors.blue[300]!
+                                              color: Colors.green[300]!
                                                   .withOpacity(1),
                                               width: 3),
                                         )),

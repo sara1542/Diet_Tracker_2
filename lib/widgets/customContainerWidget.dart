@@ -27,7 +27,7 @@ class CustomContainer_HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'doctor ' + Doctor.username,
+                  'Dr ' + Doctor.username,
                   style: TextStyle(
                       fontSize: 20, color: Color.fromARGB(255, 102, 102, 110)),
                 ),
@@ -68,28 +68,12 @@ class CustomContainer_HomePage extends StatelessWidget {
                         //api.registerAdoctor(Doctor.uId);
                       }
 
-                      /*Text(
-                          "subscribe",
-                          style: TextStyle(fontSize: 15, color: Colors.black54),
-                        )),
-                    onTap: () {
-                      api.registerAdoctor(Doctor.uId);
-                    },*/
+
                       ),
                 )
               ],
             ),
-            Container(
-              child: Icon(
-                Icons.person,
-                color: Color(0xFF181B4C),
-                size: 50,
-              ),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: Color(0xFFDBDEFF)),
-            )
+            CircleAvatar(radius: 25.0, backgroundImage: NetworkImage(Doctor.image)),
           ],
         ),
         decoration: BoxDecoration(

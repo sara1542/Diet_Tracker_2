@@ -6,7 +6,10 @@ import '../../../models/dish/dish_model.dart';
 import '../generator/generator_screen.dart';
 
 class LunchFilter extends StatefulWidget {
-  const LunchFilter({Key? key}) : super(key: key);
+  String patientId;
+  LunchFilter({Key? key,
+    required this.patientId}) :
+        super(key: key);
 
   @override
   State<LunchFilter> createState() => _LunchFilter();
@@ -20,12 +23,15 @@ class _LunchFilter extends State<LunchFilter> {
     cur_protein =
         (bfProtein + lProtein + dProtein + s1Protein + s2Protein).round();
     cur_fat = (bfProtein + lFat + dFat + s1Fat + s2Fat).round();
+    bfCaloriesList[bfCaloriesList.length - 1] = bfCalories;
+    lCaloriesList[lCaloriesList.length - 1] = (lCalories);
+    dCaloriesList[dCaloriesList.length - 1] = (dCalories);
+    sCaloriesList[sCaloriesList.length - 1] = (s1Calories + s2Calories);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -143,10 +149,8 @@ class _LunchFilter extends State<LunchFilter> {
             onPressed: () {
               saveChange();
               setAll();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Generator()),
-              );
+              Navigator.pop(
+                context);
             },
           ),
         ]),

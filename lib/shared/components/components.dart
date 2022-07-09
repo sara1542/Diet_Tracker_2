@@ -20,14 +20,14 @@ Widget defaultTextFormField(
             labelStyle:
                 TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
             enabledBorder: new OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue),
+              borderSide: BorderSide(color: Colors.green),
               borderRadius: const BorderRadius.all(
                 const Radius.circular(10.0),
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Colors.blue[300]!.withOpacity(0.6), width: 3),
+                  color: Colors.green[300]!.withOpacity(0.6), width: 3),
             )),
         controller: controller,
         validator: (value) {
@@ -46,7 +46,7 @@ Widget defaultTextFormField(
 
 Widget defaultButton(
         {double width = double.infinity,
-        Color background = Colors.blue,
+        Color background = Colors.green,
         double radius = 15.0,
         required Function() function,
         required String text,

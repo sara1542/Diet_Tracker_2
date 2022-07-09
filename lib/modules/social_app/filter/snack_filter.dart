@@ -1,3 +1,4 @@
+import 'package:firstgp/models/patient.dart';
 import 'package:flutter/material.dart';
 
 import '../../../globals/globalFunctions.dart';
@@ -6,13 +7,17 @@ import '../../../models/dish/dish_model.dart';
 import '../generator/generator_screen.dart';
 
 class SnacksFilter extends StatefulWidget {
-  const SnacksFilter({Key? key}) : super(key: key);
+  String patientId;
+  SnacksFilter({Key? key,
+    required this.patientId}) :
+        super(key: key);
 
   @override
   State<SnacksFilter> createState() => _SnacksFilter();
 }
 
 class _SnacksFilter extends State<SnacksFilter> {
+
   void setAll() {
     cur_calories =
         (bfCalories + lCalories + dCalories + s1Calories + s2Calories).round();
@@ -20,6 +25,10 @@ class _SnacksFilter extends State<SnacksFilter> {
     cur_protein =
         (bfProtein + lProtein + dProtein + s1Protein + s2Protein).round();
     cur_fat = (bfProtein + lFat + dFat + s1Fat + s2Fat).round();
+    bfCaloriesList[bfCaloriesList.length - 1] = bfCalories;
+    lCaloriesList[lCaloriesList.length - 1] = (lCalories);
+    dCaloriesList[dCaloriesList.length - 1] = (dCalories);
+    sCaloriesList[sCaloriesList.length - 1] = (s1Calories + s2Calories);
   }
 
   @override
@@ -139,10 +148,9 @@ class _SnacksFilter extends State<SnacksFilter> {
               sMeals[sMeals.length - 1] = Second_Snack;
               sMeals[sMeals.length - 1] = Second_Snack;
               setAll();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Generator()),
-              );
+
+              Navigator.pop(
+                  context);
             },
           ),
         ]),

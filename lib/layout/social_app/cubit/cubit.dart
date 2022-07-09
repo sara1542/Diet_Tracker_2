@@ -2,13 +2,15 @@ import 'dart:convert';
 
 import 'dart:io';
 
-import 'package:intl/intl.dart';
+import 'package:firstgp/modules/social_app/patients/patients_screen.dart';
+import 'package:firstgp/modules/social_app/feeds/doctor_home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firstgp/models/dish/meal_model.dart';
 import 'package:firstgp/globals/globalVariables.dart';
 import 'package:firstgp/layout/social_app/cubit/states.dart';
 import 'package:firstgp/models/patient.dart';
+import 'package:firstgp/models/history.dart';
 import 'package:firstgp/models/social_app/chat_model.dart';
 
 import 'package:firstgp/models/social_app/social-user_model.dart';
@@ -20,7 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../modules/social_app/generator/generator_screen.dart';
 import '../../../screens/doctorsScreen.dart';
 import '../../../shared/components/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -55,18 +56,36 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   int currentIndex = 0;
-  List<Widget> screens = [
-    isDoctor ? Generator() : FeedsScreen(),
-    ChatsScreen(),
-    SettingsScreen(),
-    doctorsScreen()
-  ];
+  List<Widget> screens =[] ;
+  List<String> titles = [];
+
+  void setScreens(){
+    screens=[
+      isDoctor ? DoctorHome() : FeedsScreen(),
+      ChatsScreen(),
+      isDoctor ? PatientsScreen() :doctorsScreen(),
+      SettingsScreen()
+    ];
+    titles = [
+      'News Feed',
+      'Chats',
+      (!isDoctor) ? 'Doctors' : "Patients",
+      'Settings'
+    ];
+  }
 
   void ChangeBottomNav(int index) {
-    print(isDoctor.toString());
-    if (index == 1) {
+    if (index == 1|| index==2) {
       if (isDoctor) {
         getDoctorPatients();
+        receivers = [];
+        images = [];
+        names = [];
+        for (int i = 0; i < doctorPatients.length; i++) {
+          receivers.add(doctorPatients[i].uId);
+          names.add(doctorPatients[i].username);
+          images.add(doctorPatients[i].image);
+        }
       } else {
         getPatientsOfSameCase();
       }
@@ -77,13 +96,6 @@ class SocialCubit extends Cubit<SocialStates> {
     currentIndex = index;
     emit(SocialChangeBottomNavState());
   }
-
-  List<String> titles = [
-    'News Feed',
-    'Chats',
-    'Settings',
-    (!isDoctor) ? 'doctors' : "patients"
-  ];
 
   File? profileImage;
   var picker = ImagePicker();
@@ -123,6 +135,7 @@ class SocialCubit extends Cubit<SocialStates> {
             age: age,
             price: price,
             clinicPhone: clinicPhone);
+        profileImage=null;
       }).catchError((error) {});
       emit(SocialUploadProfileImageErrorState());
     }).catchError((error) {
@@ -275,7 +288,6 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 */
   Future<void> getPatientMeals() async {
-    print("holla");
     final response = await dio.get(
       getMeals + uId,
     );
@@ -289,7 +301,26 @@ class SocialCubit extends Cubit<SocialStates> {
       throw Exception('failed to get meal');
     }
   }
-
+  Future<void> getPatientLoggedMeals(uId) async {
+  print("444444444444444");
+    final response = await dio.get(
+      GlobalUrl +"getdietmeals/"+ uId,
+    );
+    print(response);
+    if (response.statusCode == 200) {
+      loggedMeals.breakfast = List.from(jsonDecode(response.toString())['breakfast']);
+      loggedMeals.lunch = List.from(jsonDecode(response.toString())['lunch']);
+      loggedMeals.dinner = List.from(jsonDecode(response.toString())['dinner']);
+      loggedMeals.snacks = List.from(jsonDecode(response.toString())['snacks']);
+      loggedMeals.breakfast_daily_calories = List.from(jsonDecode(response.toString())['breakfast daily calories']);
+      loggedMeals.lunch_daily_calories = List.from(jsonDecode(response.toString())['lunch daily calories']);
+      loggedMeals.dinner_daily_calories = List.from(jsonDecode(response.toString())['dinner daily calories']);
+      loggedMeals.snacks_daily_calories = List.from(jsonDecode(response.toString())['snacks daily calories']);
+      print(loggedMeals.breakfast.length.toString()+" rrrrrrr");
+    } else {
+      throw Exception('failed to get logged meals');
+    }
+  }
   /*Future<void> incrementMealCounter(String dietId) async {
     final response = await dio.put(
       incrementCounter + dietId,
@@ -301,8 +332,25 @@ class SocialCubit extends Cubit<SocialStates> {
     }*/
   }
 */
+  Future<num?> getPatientHistory(String uId) async {
+    final response = await dio.get(
+      GlobalUrl +"getHistory/"+ uId,
+    );
+
+    if (response.statusCode == 200) {
+      print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeHistory" +
+          response.data.toString() +
+          "                   ");
+
+      patientHistories.add( history.fromJson(response.data));
+
+      return response.statusCode;
+    } else {
+      throw Exception('failed to get history');
+    }
+  }
   Future<int?> getDoctorPatients() async {
-    print('got here');
+
     final response = await dio.get(
       GlobalUrl + "getdoctorpatients/" + uId,
       //  queryParameters: <String,dynamic>{'id': uId}
@@ -313,9 +361,12 @@ class SocialCubit extends Cubit<SocialStates> {
           response.data['patients'].toString() +
           "                   ");
 
-      patients = (response.data['patients'] as List)
+      doctorPatients = (response.data['patients'] as List)
           .map((data) => patient.fromJson(data))
           .toList();
+      for(int i=0;i<doctorPatients.length;i++){
+      getPatientHistory(doctorPatients[i].uId);
+      }
 
       return response.statusCode;
     } else {

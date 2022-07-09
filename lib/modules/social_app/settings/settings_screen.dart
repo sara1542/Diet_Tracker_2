@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../globals/globalFunctions.dart';
 import '../../../layout/social_app/cubit/cubit.dart';
 import '../../../screens/loginandregister.dart';
 import '../edit_profile/scan_inbody_screen.dart';
@@ -41,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
            children: [
              CircleAvatar(
                radius: 57,
-               backgroundColor: Colors.blue[200],
+               backgroundColor: Colors.green[200],
                child: CircleAvatar(
                  radius: 55.0,
                  backgroundImage: NetworkImage(currentuser.image),
@@ -71,7 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Container(
           height: 1.0,
           width: double.infinity,
-          color: Colors.blue,
+          color: Colors.green,
         ),
         const SizedBox(
           height: 50.0,
@@ -83,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold
-                  ,color: Colors.blue
+                  ,color: Colors.green
               ),
             ),
             Text(
@@ -107,11 +108,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold
-                  ,color: Colors.blue
+                  ,color: Colors.green
               ),
             ),
             Text(
-              currentInbody.height.toString()+ ' Cm',
+              currentInbody.height!.round().toString()+ ' Cm',
               style: TextStyle(
                 color: Colors.grey[600],
                 fontWeight: FontWeight.bold,
@@ -132,7 +133,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold
-                  ,color: Colors.blue
+                  ,color: Colors.green
               ),
             ),
             Text(
@@ -153,7 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold
-                  ,color: Colors.blue
+                  ,color: Colors.green
               ),
             ),
             Text(
@@ -178,7 +179,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold
-                  ,color: Colors.blue
+                  ,color: Colors.green
               ),
             ),
             Text(
@@ -200,7 +201,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold
-                  ,color: Colors.blue
+                  ,color: Colors.green
               ),
             ),
             Text(
@@ -225,7 +226,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold
-                  ,color: Colors.blue
+                  ,color: Colors.green
               ),
             ),
             Text(
@@ -260,8 +261,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: OutlinedButton(
                 onPressed: (){
                   SocialCubit.get(context).currentIndex=0;
-                    reloadChats=true;
-                    currentPatientDoctor=null;
+                  setAllToLogout();
                  navigateAndFinish(
                     context,
                     LoginScreen(),

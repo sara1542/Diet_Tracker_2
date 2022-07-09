@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:firstgp/layout/social_app/cubit/cubit.dart';
 import 'package:firstgp/layout/social_app/social_layout.dart';
 
 import 'package:flutter/material.dart';
@@ -41,11 +43,10 @@ void submit(context) async {
         .then((value) {
       showToast(true, 'signed in succesfully');
       print('signed in succesfully');
-
-      //currentuser.email = authData['email']!;
       authData['email'] = '';
       authData['password'] = '';
       isDoctor = currentuser.role == 'doctor' ? true : false;
+      SocialCubit.get(context).setScreens();
 
       button_provider.togglesigninOrsignupProgressIndicator();
     }).then((value) {
@@ -159,14 +160,14 @@ Widget defaultTextFormField(
             labelStyle: const TextStyle(
                 color: Colors.black54, fontWeight: FontWeight.bold),
             enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue),
+              borderSide: BorderSide(color: Colors.green),
               borderRadius: BorderRadius.all(
                 Radius.circular(10.0),
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Colors.blue[300]!.withOpacity(0.6), width: 3),
+                  color: Colors.green[300]!.withOpacity(0.6), width: 3),
             )),
         controller: controller,
         validator: (value) {
@@ -889,7 +890,18 @@ String generateDinnerMeals() {
   //print(dCalories);
   return dinner;
 }
-
+void setAllToLogout(){
+  doctors = [];
+  patients = [];
+  doctorPatients = [];
+  patientHistories=[];
+  patientsOfSameCase = [];
+  reloadChats=true;
+  currentPatientDoctor=null;
+   currentpatient = new patient.empty();
+  currentInbody = new inbody.empty();
+   currentdoctor = new doctor.empty();
+}
 Future<http.Response> createBadCombination(String bad) {
   return http.post(
     Uri.parse(GlobalUrl + 'postameal'),
@@ -902,18 +914,42 @@ Future<http.Response> createBadCombination(String bad) {
   );
 }
 
-Future<http.Response> createDiet() {
-  return http
-      .post(Uri.parse(GlobalUrl + 'postameal'), headers: <String, String>{
-    'Content-Type': 'application/json; charset=UTF-8',
-  }, body: {
-    '_id': " ",
-    'breakfast': bfMeals,
-    'lunch': lMeals,
-    'dinner': dMeals,
-    'caloriesToBeBurntPerDay': caloriesBurnt,
-    'caloriesPerDay': calories,
-  });
+Dio dio = new Dio();
+
+Future<int?> createDiet(String id) async {
+  final response = await dio.post(GlobalUrl + 'createAdiet',
+      data: json.encode({
+        '_id': id,
+        'breakfast': bfMeals,
+        'lunch': lMeals,
+        'dinner': dMeals,
+        'caloriesToBeBurntPerDay': caloriesBurnt.round(),
+        'breakfastCaloriesPerDay': bfCaloriesList,
+        'lunchCaloriesPerDay': lCaloriesList,
+        'dinnerCaloriesPerDay': dCaloriesList,
+        'snacksCaloriesPerDay': sCaloriesList
+      }));
+  if (response.statusCode == 200 && response.statusMessage == 'OK') {
+    print("Meals updated successfully");
+    return response.statusCode;
+  } else {
+    throw Exception('failed to update meal' + response.statusMessage!);
+  }
+
+  // return http
+  //     .post(Uri.parse(GlobalUrl + 'createAdiet'), headers: <String, String>{
+  // 'Content-Type': 'application/json; charset=UTF-8',
+  // }, body: {
+  //     '_id': id,
+  //     'breakfast': bfMeals,
+  //     'lunch': lMeals,
+  //     'dinner': dMeals,
+  //     'caloriesToBeBurntPerDay': caloriesBurnt.round(),
+  //     'breakfastCaloriesPerDay': bfCaloriesList,
+  //     'lunchCaloriesPerDay': lCaloriesList,
+  //     'dinnerCaloriesPerDay': dCaloriesList,
+  //     'snacksCaloriesPerDay': sCaloriesList
+  // });
 }
 
 Future getBadCombo() async {
@@ -1193,4 +1229,65 @@ Future getAllMeals() async {
     //allMeals.add(dish);
     //allMealsStr.add(dish.Name);
   }
+}
+
+void setAllMealsToZero(){
+   counter = 0;
+   caloriesBurnt = 0.0;
+
+   calories = 0.0; carb = 0.0; protein = 0.0; fat = 0.0;
+   cur_calories = 0; cur_carb = 0; cur_protein = 0;cur_fat = 0;
+   bfCalories = 0.0; bfCarb = 0.0; bfProtein = 0.0; bfFat = 0.0;
+   lCalories = 0.0; lCarb = 0.0; lProtein = 0.0; lFat = 0.0;
+   dCalories = 0.0; dCarb = 0.0; dProtein = 0.0; dFat = 0.0;
+   s1Calories = 0.0; s1Carb = 0.0; s1Protein = 0.0; s1Fat = 0.0;
+   s2Calories = 0.0; s2Carb = 0.0; s2Protein = 0.0; s2Fat = 0.0;
+
+   bfCaloriesList = [];
+ lCaloriesList = [];
+   dCaloriesList = [];
+   sCaloriesList = [];
+
+   Breakfast = "";
+   Lunch = "";
+   Dinner = "";
+   First_Snack = "";
+   Second_Snack = "";
+   Filter = "";
+
+   snacks = [];
+   breakfastProtein = [];
+   breakfastCarb = [];
+   breakfastVegeies = [];
+   breakfastDairyAndLegumes = [];
+   lunchProtein = [];
+   lunchCarb = [];
+   lunchVegeiesAndLegumes = [];
+
+   filterSnack1 = new Dish.empty();
+   filterSnack2 = new Dish.empty();
+   filterBreakfastProtein = new Dish.empty();
+   filterBreakfastCarb = new Dish.empty();
+   filterBreakfastVegeies = new Dish.empty();
+   filterBreakfastDairyAndLegumes = new Dish.empty();
+   filterLunchProtein = new Dish.empty();
+   filterLunchCarb = new Dish.empty();
+   filterLunchVegeiesAndLegumes = new Dish.empty();
+
+   amountSnack1 = 0.0;
+   amountSnack2 = 0.0;
+   amountFilterBreakfastProtein = 0.0;
+   amountFilterBreakfastCarb = 0.0;
+   amountFilterBreakfastVegeies = 0.0;
+   amountFilterBreakfastDairyAndLegumes = 0.0;
+   amountFilterLunchProtein = 0.0;
+   amountFilterLunchCarb = 0.0;
+   amountFilterLunchVegeiesAndLegumes = 0.0;
+
+ badCombo = <List<dynamic>>[];
+   bfMeals = [];
+   lMeals = [];
+   dMeals = [];
+   sMeals = [];
+
 }

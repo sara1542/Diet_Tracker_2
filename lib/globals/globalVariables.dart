@@ -1,5 +1,6 @@
 import 'package:firstgp/apiServices/api.dart';
 import 'package:firstgp/models/dish/meal_model.dart';
+import 'package:firstgp/models/history.dart';
 import 'package:firstgp/models/inbody.dart';
 import 'package:firstgp/models/patient.dart';
 
@@ -13,6 +14,8 @@ List<String> doctorsVisitaUrl = [
 ];
 List<doctor> doctors = [];
 List<patient> patients = [];
+List<patient> doctorPatients = [];
+List<history> patientHistories=[];
 List<patient> patientsOfSameCase = [];
 late Future f;
 
@@ -26,14 +29,17 @@ inbody currentInbody = new inbody.empty();
 doctor currentdoctor = new doctor.empty();
 doctor? currentPatientDoctor = null;
 
-bool isDoctor = false;
+bool isDoctor = true;
 
+List<String> receivers = [];
+List<String> images = [];
+List<String> names = [];
 bool reloadChats = true;
 
-String GlobalUrl = "http://192.168.1.60:6666/api/";
+String GlobalUrl = "http://192.168.43.80:6666/api/";
 
 apiServices api = new apiServices();
-String chatbotUrl = 'http://192.168.1.60:5005/webhooks/rest/webhook';
+String chatbotUrl = 'http://192.168.43.80:5005/webhooks/rest/webhook';
 Map<String, String> authData = {
   'email': '',
   'password': '',
@@ -53,11 +59,11 @@ Map<String, String> authData = {
   'detection price': '',
   'doctor': ''
 };
-meal patientmeal = meal("", "no meals today", "no meals today",
-    "no meals today", "no meals today", "");
+meal patientmeal = meal("", "No Available meals yet", "No Available meals yet",
+    "No Available meals yet", "No Available meals yet", "");
 int counter = 0;
 double caloriesBurnt = 0.0;
-
+LoggedMeal loggedMeals=LoggedMeal([], [],[], [],[], [],[], []);
 double calories = 0.0, carb = 0.0, protein = 0.0, fat = 0.0;
 int cur_calories = 0, cur_carb = 0, cur_protein = 0, cur_fat = 0;
 double bfCalories = 0.0, bfCarb = 0.0, bfProtein = 0.0, bfFat = 0.0;
@@ -65,6 +71,11 @@ double lCalories = 0.0, lCarb = 0.0, lProtein = 0.0, lFat = 0.0;
 double dCalories = 0.0, dCarb = 0.0, dProtein = 0.0, dFat = 0.0;
 double s1Calories = 0.0, s1Carb = 0.0, s1Protein = 0.0, s1Fat = 0.0;
 double s2Calories = 0.0, s2Carb = 0.0, s2Protein = 0.0, s2Fat = 0.0;
+
+List<dynamic> bfCaloriesList = [];
+List<dynamic> lCaloriesList = [];
+List<dynamic> dCaloriesList = [];
+List<dynamic> sCaloriesList = [];
 
 String Breakfast = "";
 String Lunch = "";

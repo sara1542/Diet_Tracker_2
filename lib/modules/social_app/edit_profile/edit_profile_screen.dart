@@ -124,7 +124,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 62,
-                        backgroundColor: Colors.blue[200],
+                        backgroundColor: Colors.green[200],
                         child: CircleAvatar(
                           radius: 60.0,
                           backgroundImage: profileImage == null
@@ -135,7 +135,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       IconButton(
                         icon: const CircleAvatar(
                             radius: 20.0,
-                            // backgroundColor: Colors.blue[300],
+                            // backgroundColor: Colors.green[300],
                             child: Icon(IconBroken.Camera)),
                         onPressed: () {
                           SocialCubit.get(context).getProfileImage();
