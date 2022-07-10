@@ -97,7 +97,7 @@ class apiServices {
   }
 
   Future<void> unsubscribeAdoctor(String docId) async {
-    debugPrint(GlobalUrl + 'subscribeAdoctor');
+    debugPrint(GlobalUrl + 'unsubscribeAdoctor');
     debugPrint(docId);
     final response = await dio.put(GlobalUrl + 'unsubscribeAdoctor',
         data: json.encode(<String, dynamic>{
@@ -105,13 +105,15 @@ class apiServices {
           "doctorid": docId,
         }));
     if (response.statusCode == 200) {
+      currentpatient.Doctor = null;
+      currentPatientDoctor = null;
       showToast(true, 'you unsubscribed the doctor successfuly');
     } else {
       throw Exception('failed to unsubscribe the doctor');
     }
   }
 
-  Future<void> registerAdoctor(String docId) async {
+  Future<void> registerAdoctor(String docId, doctor doc) async {
     debugPrint(GlobalUrl + 'subscribeAdoctor');
     debugPrint(docId);
     final response = await dio.put(GlobalUrl + 'subscribeAdoctor',
@@ -120,6 +122,8 @@ class apiServices {
           "doctorid": docId,
         }));
     if (response.statusCode == 200) {
+      currentpatient.Doctor = doc;
+      currentPatientDoctor = doc;
       showToast(true, 'you subscribed the doctor successfuly');
     } else {
       throw Exception('failed to subscribe the doctor');

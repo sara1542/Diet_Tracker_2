@@ -66,12 +66,10 @@ class _doctorDetailsState extends State<doctorDetails> {
                         children: [
                           if (currentPatientDoctor == null)
                             FlatButton(
-                                onPressed: () => {
-                                      api.registerAdoctor(widget.Doctor.uId),
-                                      setState(() {
-                                        currentpatient.Doctor = widget.Doctor;
-                                        currentPatientDoctor = widget.Doctor;
-                                      })
+                                onPressed: () async => {
+                                      await api.registerAdoctor(
+                                          widget.Doctor.uId, widget.Doctor),
+                                      setState(() {})
                                     },
                                 child: Row(
                                   children: [
@@ -91,12 +89,10 @@ class _doctorDetailsState extends State<doctorDetails> {
                           if (currentPatientDoctor != null &&
                               currentPatientDoctor!.uId == widget.Doctor.uId)
                             FlatButton(
-                                onPressed: () => {
-                                      api.unsubscribeAdoctor(widget.Doctor.uId),
-                                      setState(() {
-                                        currentpatient.Doctor = null;
-                                        currentPatientDoctor = null;
-                                      })
+                                onPressed: () async => {
+                                      await api.unsubscribeAdoctor(
+                                          widget.Doctor.uId),
+                                      setState(() {})
                                     },
                                 child: Row(
                                   children: [
