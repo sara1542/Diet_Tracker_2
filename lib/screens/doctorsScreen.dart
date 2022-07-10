@@ -121,7 +121,7 @@ class _doctorsScreenState extends State<doctorsScreen> {
                 init = false;
                 children = <Widget>[
                   SizedBox(
-                    height: 900,
+                    // height: double.infinity,
                     width: double.infinity,
                     child: ListView.builder(
                         //scrollDirection: Axis.horizontal,

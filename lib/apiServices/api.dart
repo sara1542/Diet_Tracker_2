@@ -31,7 +31,7 @@ class apiServices {
     if (response.statusCode == 200) {
       showToast(true, 'your feedback is recorded successfuly');
     } else {
-      throw Exception('failed to subscribe the doctor');
+      throw Exception('failed to record the feedback');
     }
   }
 
@@ -43,7 +43,7 @@ class apiServices {
     if (response.statusCode == 200) {
       showToast(true, 'your feedback is recorded successfuly');
     } else {
-      throw Exception('failed to subscribe the doctor');
+      throw Exception('failed to record the feedback');
     }
   }
 
@@ -96,6 +96,21 @@ class apiServices {
     }
   }
 
+  Future<void> unsubscribeAdoctor(String docId) async {
+    debugPrint(GlobalUrl + 'subscribeAdoctor');
+    debugPrint(docId);
+    final response = await dio.put(GlobalUrl + 'unsubscribeAdoctor',
+        data: json.encode(<String, dynamic>{
+          "patientid": currentuser.uId,
+          "doctorid": docId,
+        }));
+    if (response.statusCode == 200) {
+      showToast(true, 'you unsubscribed the doctor successfuly');
+    } else {
+      throw Exception('failed to unsubscribe the doctor');
+    }
+  }
+
   Future<void> registerAdoctor(String docId) async {
     debugPrint(GlobalUrl + 'subscribeAdoctor');
     debugPrint(docId);
@@ -105,7 +120,7 @@ class apiServices {
           "doctorid": docId,
         }));
     if (response.statusCode == 200) {
-      showToast(true, 'you subscibed the doctor successfuly');
+      showToast(true, 'you subscribed the doctor successfuly');
     } else {
       throw Exception('failed to subscribe the doctor');
     }
@@ -123,7 +138,10 @@ class apiServices {
           "                   ");
 
       currentdoctor = doctor.fromJson(response.data['doctor']);
-
+      currentdoctor.newsfeed =
+          response.data['doctor']["newsfeed"].cast<String>();
+      currentdoctor.newsfeed = currentdoctor.newsfeed.reversed.toList();
+      debugPrint("dodo :  " + currentdoctor.newsfeed.toString());
       return response.statusCode;
     } else {
       throw Exception('failed to get doctor');
@@ -178,7 +196,6 @@ class apiServices {
       throw Exception('failed to get inbody');
     }
   }
-
 
   Future<num?> getPatientDoctor(String uId) async {
     final response = await dio.get(

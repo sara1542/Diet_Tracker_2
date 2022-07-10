@@ -14,7 +14,7 @@ class _RegisterState extends State<Register> {
     print("************************************************88");
     authData['isdoctor'] = 'true';
     authData['gender'] = 'male';
-    authData['height'] = '120.0';
+    authData['height'] = '60.0';
     authData['weight'] = '60.0';
     authData['age'] = '20';
     authData['case'] = 'none';
@@ -258,8 +258,8 @@ class _RegisterState extends State<Register> {
               ),
               Slider(
                   value: height,
-                  max: 220.0,
-                  min: 80.0,
+                  max: 200.0,
+                  min: 30.0,
                   onChanged: (value) {
                     setState(() {
                       height = value;

@@ -56,14 +56,14 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   int currentIndex = 0;
-  List<Widget> screens =[] ;
+  List<Widget> screens = [];
   List<String> titles = [];
 
-  void setScreens(){
-    screens=[
+  void setScreens() {
+    screens = [
       isDoctor ? DoctorHome() : FeedsScreen(),
       ChatsScreen(),
-      isDoctor ? PatientsScreen() :doctorsScreen(),
+      isDoctor ? PatientsScreen() : doctorsScreen(),
       SettingsScreen()
     ];
     titles = [
@@ -75,7 +75,7 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   void ChangeBottomNav(int index) {
-    if (index == 1|| index==2) {
+    if (index == 1 || index == 2) {
       if (isDoctor) {
         getDoctorPatients();
         receivers = [];
@@ -135,7 +135,7 @@ class SocialCubit extends Cubit<SocialStates> {
             age: age,
             price: price,
             clinicPhone: clinicPhone);
-        profileImage=null;
+        profileImage = null;
       }).catchError((error) {});
       emit(SocialUploadProfileImageErrorState());
     }).catchError((error) {
@@ -301,26 +301,33 @@ class SocialCubit extends Cubit<SocialStates> {
       throw Exception('failed to get meal');
     }
   }
+
   Future<void> getPatientLoggedMeals(uId) async {
-  print("444444444444444");
+    print("444444444444444");
     final response = await dio.get(
-      GlobalUrl +"getdietmeals/"+ uId,
+      GlobalUrl + "getdietmeals/" + uId,
     );
     print(response);
     if (response.statusCode == 200) {
-      loggedMeals.breakfast = List.from(jsonDecode(response.toString())['breakfast']);
+      loggedMeals.breakfast =
+          List.from(jsonDecode(response.toString())['breakfast']);
       loggedMeals.lunch = List.from(jsonDecode(response.toString())['lunch']);
       loggedMeals.dinner = List.from(jsonDecode(response.toString())['dinner']);
       loggedMeals.snacks = List.from(jsonDecode(response.toString())['snacks']);
-      loggedMeals.breakfast_daily_calories = List.from(jsonDecode(response.toString())['breakfast daily calories']);
-      loggedMeals.lunch_daily_calories = List.from(jsonDecode(response.toString())['lunch daily calories']);
-      loggedMeals.dinner_daily_calories = List.from(jsonDecode(response.toString())['dinner daily calories']);
-      loggedMeals.snacks_daily_calories = List.from(jsonDecode(response.toString())['snacks daily calories']);
-      print(loggedMeals.breakfast.length.toString()+" rrrrrrr");
+      loggedMeals.breakfast_daily_calories = List.from(
+          jsonDecode(response.toString())['breakfast daily calories']);
+      loggedMeals.lunch_daily_calories =
+          List.from(jsonDecode(response.toString())['lunch daily calories']);
+      loggedMeals.dinner_daily_calories =
+          List.from(jsonDecode(response.toString())['dinner daily calories']);
+      loggedMeals.snacks_daily_calories =
+          List.from(jsonDecode(response.toString())['snacks daily calories']);
+      print(loggedMeals.breakfast.length.toString() + " rrrrrrr");
     } else {
       throw Exception('failed to get logged meals');
     }
   }
+
   /*Future<void> incrementMealCounter(String dietId) async {
     final response = await dio.put(
       incrementCounter + dietId,
@@ -334,7 +341,7 @@ class SocialCubit extends Cubit<SocialStates> {
 */
   Future<num?> getPatientHistory(String uId) async {
     final response = await dio.get(
-      GlobalUrl +"getHistory/"+ uId,
+      GlobalUrl + "getHistory/" + uId,
     );
 
     if (response.statusCode == 200) {
@@ -342,15 +349,15 @@ class SocialCubit extends Cubit<SocialStates> {
           response.data.toString() +
           "                   ");
 
-      patientHistories.add( history.fromJson(response.data));
+      patientHistories.add(history.fromJson(response.data));
 
       return response.statusCode;
     } else {
       throw Exception('failed to get history');
     }
   }
-  Future<int?> getDoctorPatients() async {
 
+  Future<int?> getDoctorPatients() async {
     final response = await dio.get(
       GlobalUrl + "getdoctorpatients/" + uId,
       //  queryParameters: <String,dynamic>{'id': uId}
@@ -364,8 +371,8 @@ class SocialCubit extends Cubit<SocialStates> {
       doctorPatients = (response.data['patients'] as List)
           .map((data) => patient.fromJson(data))
           .toList();
-      for(int i=0;i<doctorPatients.length;i++){
-      getPatientHistory(doctorPatients[i].uId);
+      for (int i = 0; i < doctorPatients.length; i++) {
+        await getPatientHistory(doctorPatients[i].uId);
       }
 
       return response.statusCode;

@@ -59,10 +59,14 @@ class user {
       debugPrint("in login FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
       debugPrint("in login" + response.data.toString());
       currentuser = user.fromJson(response.data["data"]["User"]);
-      debugPrint(currentuser.uId + " 7777777777777777");
+      debugPrint(
+          response.data["data"]["User"].toString() + " 7777777777777777");
       uId = currentuser.uId;
       if (currentuser.role == 'doctor') {
+        debugPrint("hagar ehab " + currentdoctor.newsfeed.toString());
         await getDoctor(uId);
+        // currentdoctor.newsfeed =
+        //   response.data["data"]["User"]["newsfeed"].cast<String>();
         debugPrint("get doctor successfully " + currentdoctor.uId);
       } else {
         //to get info of current patient
@@ -70,7 +74,7 @@ class user {
             .then((value) => getinbody(uId))
             .then((value) => getPatientDoctor(uId));
       }
-
+      showToast(true, 'signed in succesfully');
       //debugPrint("**********************88 in login" + response.data);
       //  return response.data["error"];
       //}
@@ -90,6 +94,7 @@ class user {
       }
       print('failed to sign in : $e');
       debugPrint(e.response!.statusCode.toString());
+      throw Exception("failed to login");
     }
 
     // print("shott");

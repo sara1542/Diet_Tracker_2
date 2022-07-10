@@ -8,7 +8,8 @@ import '../../../layout/social_app/cubit/cubit.dart';
 class PatientBehaviour extends StatelessWidget {
   String uId;
   String name;
-  PatientBehaviour({Key? key, required this.uId, required this.name}) : super(key: key);
+  PatientBehaviour({Key? key, required this.uId, required this.name})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,69 +23,83 @@ class PatientBehaviour extends StatelessWidget {
               List<Widget> children;
               if (snapshot.connectionState == ConnectionState.done) {
                 children = <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text("Here is what "+name+" logged through this week:"),
-                  ),
-                     ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: loggedMeals.breakfast.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            children: [
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text('Day ' + (index + 1).toString()),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              getmeal(
-                                  "Breakfast",
-                          loggedMeals.breakfast.length<index+1?"No Breakfast Logged":loggedMeals.breakfast[index],
-                                  const Icon(Icons.breakfast_dining_outlined),
-                                  context,
-                                  loggedMeals.breakfast_daily_calories[index]),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              getmeal(
-                                  "Lunch",
-                                  loggedMeals.lunch.length<index+1?"No Lunch Logged":loggedMeals.lunch[index],
-                                  const Icon(Icons.lunch_dining_outlined),
-                                  context,
-                                  loggedMeals.lunch_daily_calories[index]),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              getmeal(
-                                  "Dinner",
-                                  loggedMeals.dinner.length<index+1?"No Dinner Logged":loggedMeals.dinner[index],
-                                  const Icon(Icons.dinner_dining),
-                                  context,
-                                  loggedMeals.dinner_daily_calories[index]),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              getmeal(
-                                  "Snacks",
-                                  loggedMeals.snacks.length<index+1?"No Snacks Logged":loggedMeals.snacks[index],
-                                  const Icon(Icons.food_bank_outlined),
-                                  context,
-                                  loggedMeals.snacks_daily_calories[index]),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Container(
-                                height: 1.0,
-                                width: double.infinity,
-                                color: Colors.black,
-                              ),
-                            ],
-                          );
-                        }),
-
+                  (loggedMeals.breakfast.length == 0)
+                      ? const Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text("no logged meals yet"),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text("Here is what " +
+                              name +
+                              " logged through this week:"),
+                        ),
+                  ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: loggedMeals.breakfast.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Column(
+                          children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text('Day ' + (index + 1).toString()),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            getmeal(
+                                "Breakfast",
+                                loggedMeals.breakfast.length < index + 1
+                                    ? "No Breakfast Logged"
+                                    : loggedMeals.breakfast[index],
+                                const Icon(Icons.breakfast_dining_outlined),
+                                context,
+                                loggedMeals.breakfast_daily_calories[index]),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            getmeal(
+                                "Lunch",
+                                loggedMeals.lunch.length < index + 1
+                                    ? "No Lunch Logged"
+                                    : loggedMeals.lunch[index],
+                                const Icon(Icons.lunch_dining_outlined),
+                                context,
+                                loggedMeals.lunch_daily_calories[index]),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            getmeal(
+                                "Dinner",
+                                loggedMeals.dinner.length < index + 1
+                                    ? "No Dinner Logged"
+                                    : loggedMeals.dinner[index],
+                                const Icon(Icons.dinner_dining),
+                                context,
+                                loggedMeals.dinner_daily_calories[index]),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            getmeal(
+                                "Snacks",
+                                loggedMeals.snacks.length < index + 1
+                                    ? "No Snacks Logged"
+                                    : loggedMeals.snacks[index],
+                                const Icon(Icons.food_bank_outlined),
+                                context,
+                                loggedMeals.snacks_daily_calories[index]),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              height: 1.0,
+                              width: double.infinity,
+                              color: Colors.black,
+                            ),
+                          ],
+                        );
+                      }),
                 ];
               } else if (snapshot.hasError) {
                 children = <Widget>[

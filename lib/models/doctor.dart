@@ -14,7 +14,7 @@ class doctor extends user {
   late String cliniquePhone;
   late String visitaUrl;
   late List<patient> patients;
-
+  List<dynamic> newsfeed = [];
   doctor.empty() : super.empty();
 
   doctor(

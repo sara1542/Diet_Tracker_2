@@ -41,7 +41,6 @@ void submit(context) async {
     await currentuser
         .login(authData['email']!, authData['password']!)
         .then((value) {
-      showToast(true, 'signed in succesfully');
       print('signed in succesfully');
       authData['email'] = '';
       authData['password'] = '';
@@ -890,18 +889,20 @@ String generateDinnerMeals() {
   //print(dCalories);
   return dinner;
 }
-void setAllToLogout(){
+
+void setAllToLogout() {
   doctors = [];
   patients = [];
   doctorPatients = [];
-  patientHistories=[];
+  patientHistories = [];
   patientsOfSameCase = [];
-  reloadChats=true;
-  currentPatientDoctor=null;
-   currentpatient = new patient.empty();
+  reloadChats = true;
+  currentPatientDoctor = null;
+  currentpatient = new patient.empty();
   currentInbody = new inbody.empty();
-   currentdoctor = new doctor.empty();
+  currentdoctor = new doctor.empty();
 }
+
 Future<http.Response> createBadCombination(String bad) {
   return http.post(
     Uri.parse(GlobalUrl + 'postameal'),
@@ -1231,63 +1232,83 @@ Future getAllMeals() async {
   }
 }
 
-void setAllMealsToZero(){
-   counter = 0;
-   caloriesBurnt = 0.0;
+void setAllMealsToZero() {
+  counter = 0;
+  caloriesBurnt = 0.0;
 
-   calories = 0.0; carb = 0.0; protein = 0.0; fat = 0.0;
-   cur_calories = 0; cur_carb = 0; cur_protein = 0;cur_fat = 0;
-   bfCalories = 0.0; bfCarb = 0.0; bfProtein = 0.0; bfFat = 0.0;
-   lCalories = 0.0; lCarb = 0.0; lProtein = 0.0; lFat = 0.0;
-   dCalories = 0.0; dCarb = 0.0; dProtein = 0.0; dFat = 0.0;
-   s1Calories = 0.0; s1Carb = 0.0; s1Protein = 0.0; s1Fat = 0.0;
-   s2Calories = 0.0; s2Carb = 0.0; s2Protein = 0.0; s2Fat = 0.0;
+  calories = 0.0;
+  carb = 0.0;
+  protein = 0.0;
+  fat = 0.0;
+  cur_calories = 0;
+  cur_carb = 0;
+  cur_protein = 0;
+  cur_fat = 0;
+  bfCalories = 0.0;
+  bfCarb = 0.0;
+  bfProtein = 0.0;
+  bfFat = 0.0;
+  lCalories = 0.0;
+  lCarb = 0.0;
+  lProtein = 0.0;
+  lFat = 0.0;
+  dCalories = 0.0;
+  dCarb = 0.0;
+  dProtein = 0.0;
+  dFat = 0.0;
+  s1Calories = 0.0;
+  s1Carb = 0.0;
+  s1Protein = 0.0;
+  s1Fat = 0.0;
+  s2Calories = 0.0;
+  s2Carb = 0.0;
+  s2Protein = 0.0;
+  s2Fat = 0.0;
 
-   bfCaloriesList = [];
- lCaloriesList = [];
-   dCaloriesList = [];
-   sCaloriesList = [];
+  bfCaloriesList = [];
+  lCaloriesList = [];
+  dCaloriesList = [];
+  sCaloriesList = [];
 
-   Breakfast = "";
-   Lunch = "";
-   Dinner = "";
-   First_Snack = "";
-   Second_Snack = "";
-   Filter = "";
+  Breakfast = "";
+  Lunch = "";
+  Dinner = "";
+  First_Snack = "";
+  Second_Snack = "";
+  Filter = "";
 
-   snacks = [];
-   breakfastProtein = [];
-   breakfastCarb = [];
-   breakfastVegeies = [];
-   breakfastDairyAndLegumes = [];
-   lunchProtein = [];
-   lunchCarb = [];
-   lunchVegeiesAndLegumes = [];
+  snacks = [];
+  breakfastProtein = [];
+  breakfastCarb = [];
+  breakfastVegeies = [];
+  breakfastDairyAndLegumes = [];
+  lunchProtein = [];
+  lunchCarb = [];
+  lunchVegeiesAndLegumes = [];
 
-   filterSnack1 = new Dish.empty();
-   filterSnack2 = new Dish.empty();
-   filterBreakfastProtein = new Dish.empty();
-   filterBreakfastCarb = new Dish.empty();
-   filterBreakfastVegeies = new Dish.empty();
-   filterBreakfastDairyAndLegumes = new Dish.empty();
-   filterLunchProtein = new Dish.empty();
-   filterLunchCarb = new Dish.empty();
-   filterLunchVegeiesAndLegumes = new Dish.empty();
+  filterSnack1 = new Dish.empty();
+  filterSnack2 = new Dish.empty();
+  filterBreakfastProtein = new Dish.empty();
+  filterBreakfastCarb = new Dish.empty();
+  filterBreakfastVegeies = new Dish.empty();
+  filterBreakfastDairyAndLegumes = new Dish.empty();
+  filterLunchProtein = new Dish.empty();
+  filterLunchCarb = new Dish.empty();
+  filterLunchVegeiesAndLegumes = new Dish.empty();
 
-   amountSnack1 = 0.0;
-   amountSnack2 = 0.0;
-   amountFilterBreakfastProtein = 0.0;
-   amountFilterBreakfastCarb = 0.0;
-   amountFilterBreakfastVegeies = 0.0;
-   amountFilterBreakfastDairyAndLegumes = 0.0;
-   amountFilterLunchProtein = 0.0;
-   amountFilterLunchCarb = 0.0;
-   amountFilterLunchVegeiesAndLegumes = 0.0;
+  amountSnack1 = 0.0;
+  amountSnack2 = 0.0;
+  amountFilterBreakfastProtein = 0.0;
+  amountFilterBreakfastCarb = 0.0;
+  amountFilterBreakfastVegeies = 0.0;
+  amountFilterBreakfastDairyAndLegumes = 0.0;
+  amountFilterLunchProtein = 0.0;
+  amountFilterLunchCarb = 0.0;
+  amountFilterLunchVegeiesAndLegumes = 0.0;
 
- badCombo = <List<dynamic>>[];
-   bfMeals = [];
-   lMeals = [];
-   dMeals = [];
-   sMeals = [];
-
+  badCombo = <List<dynamic>>[];
+  bfMeals = [];
+  lMeals = [];
+  dMeals = [];
+  sMeals = [];
 }

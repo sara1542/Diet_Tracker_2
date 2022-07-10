@@ -38,13 +38,15 @@ class _doctorDetailsState extends State<doctorDetails> {
                           backgroundColor: Colors.green[400],
                           child: CircleAvatar(
                               radius: 55.0,
-                              backgroundImage: NetworkImage(widget.Doctor.image)),
+                              backgroundImage:
+                                  NetworkImage(widget.Doctor.image)),
                         ),
                         const SizedBox(
                           width: 5.0,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 20, bottom: 50.0),
+                          padding:
+                              const EdgeInsets.only(left: 20, bottom: 50.0),
                           child: Text(
                             widget.Doctor.username,
                             style: const TextStyle(
@@ -56,35 +58,69 @@ class _doctorDetailsState extends State<doctorDetails> {
                       ],
                     ),
                   ),
-                  if (currentPatientDoctor == null)
-                    Padding(
-                      padding: EdgeInsets.only(left: 100),
-                      child: FlatButton(
-                          onPressed: () => {
-                                api.registerAdoctor(widget.Doctor.uId),
-                                setState(() {
-                                  currentpatient.Doctor = widget.Doctor;
-                                })
-                              },
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.read_more,
-                                size: 20,
-                                color: Colors.green[400],
-                              ),
-                              Text(
-                                " subsribe ",
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.green[400]),
-                              )
-                            ],
-                          )),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 0),
+                      child: Row(
+                        children: [
+                          if (currentPatientDoctor == null)
+                            FlatButton(
+                                onPressed: () => {
+                                      api.registerAdoctor(widget.Doctor.uId),
+                                      setState(() {
+                                        currentpatient.Doctor = widget.Doctor;
+                                        currentPatientDoctor = widget.Doctor;
+                                      })
+                                    },
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.add_alert_sharp,
+                                      size: 20,
+                                      color: Colors.green[400],
+                                    ),
+                                    Text(
+                                      " subscribe ",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.green[400]),
+                                    )
+                                  ],
+                                )),
+                          if (currentPatientDoctor != null &&
+                              currentPatientDoctor!.uId == widget.Doctor.uId)
+                            FlatButton(
+                                onPressed: () => {
+                                      api.unsubscribeAdoctor(widget.Doctor.uId),
+                                      setState(() {
+                                        currentpatient.Doctor = null;
+                                        currentPatientDoctor = null;
+                                      })
+                                    },
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.unsubscribe,
+                                      size: 20,
+                                      color: Colors.green[400],
+                                    ),
+                                    Text(
+                                      " unsubscribe ",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.green[400]),
+                                    )
+                                  ],
+                                )),
+                        ],
+                      ),
                     ),
+                  )
                 ],
               ),
               const SizedBox(
-                height:15,
+                height: 15,
               ),
               Container(
                 height: 1.0,
@@ -107,7 +143,8 @@ class _doctorDetailsState extends State<doctorDetails> {
               ),
               Row(
                 children: [
-                  Text("Gender: ", style: Theme.of(context).textTheme.bodyText2),
+                  Text("Gender: ",
+                      style: Theme.of(context).textTheme.bodyText2),
                   Text(widget.Doctor.Gender,
                       style: Theme.of(context).textTheme.bodyText1)
                 ],
@@ -130,7 +167,8 @@ class _doctorDetailsState extends State<doctorDetails> {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    if (currentPatientDoctor != null)
+                    if (currentPatientDoctor != null &&
+                        currentPatientDoctor!.uId == widget.Doctor.uId)
                       FlatButton(
                           onPressed: () => Navigator.pushAndRemoveUntil(
                                 context,
@@ -150,8 +188,8 @@ class _doctorDetailsState extends State<doctorDetails> {
                                   width: 1,
                                   color: Colors.black45,
                                 ),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10))),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(10))),
                             child: Text(
                                 'click here to give your feedback about doctor ' +
                                     widget.Doctor.username,

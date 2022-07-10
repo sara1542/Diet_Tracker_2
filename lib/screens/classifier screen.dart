@@ -32,7 +32,7 @@ class _classifierState extends State<classifier> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-                backgroundColor: Colors.orangeAccent,
+                backgroundColor: Colors.green[400],
                 title: const Text('Feedback'),
                 leading: GestureDetector(
                   onTap: () {
@@ -76,9 +76,9 @@ class _classifierState extends State<classifier> {
                               final text = _controller.text;
                               var prediction = _classifier.classify(text);
                               if (prediction[1] > prediction[0]) {
-                                api.increaseScore(widget.doc.uId);
+                                await api.increaseScore(widget.doc.uId);
                               } else {
-                                api.decreaseScore(widget.doc.uId);
+                                await api.decreaseScore(widget.doc.uId);
                               }
                               setState(() {
                                 _children.add(Dismissible(

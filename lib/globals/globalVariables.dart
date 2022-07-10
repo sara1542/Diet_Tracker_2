@@ -8,14 +8,10 @@ import '../models/doctor.dart';
 import '../models/user.dart';
 import '../models/dish/dish_model.dart';
 
-List<String> doctorsVisitaUrl = [
-  'https://www.vezeeta.com/ar/dr/%D8%AF%D9%83%D8%AA%D9%88%D8%B1-%D9%85%D8%A7%D9%8A%DA%A4%D9%84-%D8%A5%D9%85%D9%8A%D9%84-%D8%AA%D8%AE%D8%B3%D9%8A%D8%B3-%D9%88%D8%AA%D8%BA%D8%B0%D9%8A%D8%A9#patients-reviews',
-  'https://www.vezeeta.com/ar/dr/%D8%AF%D9%83%D8%AA%D9%88%D8%B1-%D9%85%D8%AD%D9%85%D8%AF-%D8%A7%D8%AD%D9%85%D8%AF-%D9%85%D9%86%D8%B5%D9%88%D8%B1#patients-reviews'
-];
 List<doctor> doctors = [];
 List<patient> patients = [];
 List<patient> doctorPatients = [];
-List<history> patientHistories=[];
+List<history> patientHistories = [];
 List<patient> patientsOfSameCase = [];
 late Future f;
 
@@ -36,10 +32,10 @@ List<String> images = [];
 List<String> names = [];
 bool reloadChats = true;
 
-String GlobalUrl = "http://192.168.43.80:6666/api/";
+String GlobalUrl = "http://192.168.1.60:6666/api/";
 
 apiServices api = new apiServices();
-String chatbotUrl = 'http://192.168.43.80:5005/webhooks/rest/webhook';
+String chatbotUrl = 'http://192.168.1.60:5005/webhooks/rest/webhook';
 Map<String, String> authData = {
   'email': '',
   'password': '',
@@ -63,7 +59,7 @@ meal patientmeal = meal("", "No Available meals yet", "No Available meals yet",
     "No Available meals yet", "No Available meals yet", "");
 int counter = 0;
 double caloriesBurnt = 0.0;
-LoggedMeal loggedMeals=LoggedMeal([], [],[], [],[], [],[], []);
+LoggedMeal loggedMeals = LoggedMeal([], [], [], [], [], [], [], []);
 double calories = 0.0, carb = 0.0, protein = 0.0, fat = 0.0;
 int cur_calories = 0, cur_carb = 0, cur_protein = 0, cur_fat = 0;
 double bfCalories = 0.0, bfCarb = 0.0, bfProtein = 0.0, bfFat = 0.0;

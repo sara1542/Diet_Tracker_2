@@ -9,7 +9,7 @@ import 'user.dart';
 
 class patient extends user {
   late inbody Inbody;
-  late doctor Doctor;
+  late doctor? Doctor;
   late diet Diet;
   late int Age;
   late String Case;
@@ -31,8 +31,7 @@ class patient extends user {
         json["gender"],
         json["age"],
         json["case"],
-        json["image"]
-    );
+        json["image"]);
   }
 
   @override
