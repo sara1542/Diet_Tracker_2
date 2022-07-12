@@ -32,10 +32,10 @@ List<String> images = [];
 List<String> names = [];
 bool reloadChats = true;
 
-String GlobalUrl = "http://192.168.1.60:6666/api/";
+String GlobalUrl = "http://192.168.1.13:6666/api/";
 
 apiServices api = new apiServices();
-String chatbotUrl = 'http://192.168.1.60:5005/webhooks/rest/webhook';
+String chatbotUrl = 'http://192.168.1.13:5005/webhooks/rest/webhook';
 Map<String, String> authData = {
   'email': '',
   'password': '',

@@ -129,8 +129,8 @@ class _ScanInbodyScreenState extends State<ScanInbodyScreen> {
                 defaultTextButton(
                   function: () {
                     SocialCubit.get(context).updateUserInBody(
-                        height: double.parse(editableHeightController.text) ,
-                        weight: double.parse(editableWeightController.text)  ,
+                        height: double.parse(editableHeightController.text),
+                        weight: double.parse(editableWeightController.text),
                         PBF: num.parse(editableBfmController.text),
                         PBW: num.parse(editableTbwController.text));
                     setState(() {});
@@ -140,8 +140,8 @@ class _ScanInbodyScreenState extends State<ScanInbodyScreen> {
               ]),
           body: Center(
               child: SingleChildScrollView(
-                child: Column(
-            children: <Widget>[
+            child: Column(
+              children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(top: 30.0),
                   alignment: Alignment.center,
@@ -209,7 +209,8 @@ class _ScanInbodyScreenState extends State<ScanInbodyScreen> {
                               ]),
                               SizedBox(height: 30.0),
                               Row(children: [
-                                Flexible(flex: 1, child: Text('Body fat Mass: ')),
+                                Flexible(
+                                    flex: 1, child: Text('Body fat Mass: ')),
                                 Flexible(
                                   flex: 2,
                                   child: defaultTextFormField(
@@ -224,9 +225,9 @@ class _ScanInbodyScreenState extends State<ScanInbodyScreen> {
                     ],
                   ),
                 )
-            ],
-          ),
-              )),
+              ],
+            ),
+          )),
         );
       },
     );

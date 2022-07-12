@@ -1,5 +1,6 @@
 import 'package:firstgp/models/patient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../globals/globalFunctions.dart';
 import '../../../globals/globalVariables.dart';
@@ -8,17 +9,23 @@ import '../generator/generator_screen.dart';
 
 class SnacksFilter extends StatefulWidget {
   String patientId;
-  SnacksFilter({Key? key,
-    required this.patientId}) :
-        super(key: key);
+  SnacksFilter({Key? key, required this.patientId}) : super(key: key);
 
   @override
   State<SnacksFilter> createState() => _SnacksFilter();
 }
 
 class _SnacksFilter extends State<SnacksFilter> {
+  bool isButtonEnabled = false;
 
-  void setAll() {
+  bool _isEnabled() {
+    if (amountSnack1 == 0.0 || amountSnack2 == 0.0) {
+      return false;
+    }
+    return true;
+  }
+
+  void setAll() async {
     cur_calories =
         (bfCalories + lCalories + dCalories + s1Calories + s2Calories).round();
     cur_carb = (bfCarb + lCarb + dCarb + s1Carb + s2Carb).round();
@@ -29,6 +36,8 @@ class _SnacksFilter extends State<SnacksFilter> {
     lCaloriesList[lCaloriesList.length - 1] = (lCalories);
     dCaloriesList[dCaloriesList.length - 1] = (dCalories);
     sCaloriesList[sCaloriesList.length - 1] = (s1Calories + s2Calories);
+    First_Snack = await saveSnack1();
+    Second_Snack = await saveSnack2();
   }
 
   @override
@@ -40,12 +49,18 @@ class _SnacksFilter extends State<SnacksFilter> {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           TextField(
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
-              amountSnack1 = double.parse(value);
+              value.isNotEmpty
+                  ? amountSnack1 = double.parse(value)
+                  : amountSnack1 = 0.0;
+              setState(() {
+                isButtonEnabled = _isEnabled();
+              });
             },
             decoration: const InputDecoration(
               labelText: "Amount",
-              fillColor: Color.fromARGB(255, 36, 189, 51),
+              fillColor: Colors.green,
               filled: true,
             ),
           ),
@@ -58,7 +73,7 @@ class _SnacksFilter extends State<SnacksFilter> {
             elevation: 16,
             underline: Container(
               height: 2,
-              color: Color.fromARGB(255, 36, 189, 51),
+              color: Colors.green,
             ),
             onChanged: (Dish? newValue) {
               setState(() {
@@ -74,12 +89,18 @@ class _SnacksFilter extends State<SnacksFilter> {
           ),
           TextField(
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
-              amountSnack2 = double.parse(value);
+              value.isNotEmpty
+                  ? amountSnack2 = double.parse(value)
+                  : amountSnack2 = 0.0;
+              setState(() {
+                isButtonEnabled = _isEnabled();
+              });
             },
             decoration: const InputDecoration(
               labelText: "Amount",
-              fillColor: Color.fromARGB(255, 36, 189, 51),
+              fillColor: Colors.green,
               filled: true,
             ),
           ),
@@ -92,7 +113,7 @@ class _SnacksFilter extends State<SnacksFilter> {
             elevation: 16,
             underline: Container(
               height: 2,
-              color: Color.fromARGB(255, 36, 189, 51),
+              color: Colors.green,
             ),
             onChanged: (Dish? newValue) {
               setState(() {
@@ -111,47 +132,16 @@ class _SnacksFilter extends State<SnacksFilter> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Color.fromARGB(255, 36, 189, 51),
+              primary: Colors.green,
             ),
             child: const Text('Save'),
-            onPressed: () {
-              First_Snack =
-                  amountSnack1.toString() + " " + filterSnack1.Name.toString();
-              s1Calories = filterSnack1.Name.contains("Gram")
-                  ? filterSnack1.Calories * (amountSnack1 / 100)
-                  : filterSnack1.Calories * amountSnack1;
-              s1Carb = filterSnack1.Name.contains("Gram")
-                  ? filterSnack1.Carbohydrates * (amountSnack1 / 100)
-                  : filterSnack1.Carbohydrates * amountSnack1;
-              s1Protein = filterSnack1.Name.contains("Gram")
-                  ? filterSnack1.Protein * (amountSnack1 / 100)
-                  : filterSnack1.Protein * amountSnack1;
-              s1Fat = filterSnack1.Name.contains("Gram")
-                  ? filterSnack1.Fat * (amountSnack1 / 100)
-                  : filterSnack1.Fat * amountSnack1;
+            onPressed: isButtonEnabled
+                ? () async {
+                    setAll();
 
-              Second_Snack =
-                  amountSnack2.toString() + " " + filterSnack2.Name.toString();
-              s2Calories = filterSnack2.Name.contains("Gram")
-                  ? filterSnack2.Calories * (amountSnack2 / 100)
-                  : filterSnack2.Calories * amountSnack2;
-              s2Carb = filterSnack2.Name.contains("Gram")
-                  ? filterSnack2.Carbohydrates * (amountSnack2 / 100)
-                  : filterSnack2.Carbohydrates * amountSnack2;
-              s2Protein = filterSnack2.Name.contains("Gram")
-                  ? filterSnack2.Protein * (amountSnack2 / 100)
-                  : filterSnack2.Protein * amountSnack2;
-              s2Fat = filterSnack2.Name.contains("Gram")
-                  ? filterSnack2.Fat * (amountSnack2 / 100)
-                  : filterSnack2.Fat * amountSnack2;
-
-              sMeals[sMeals.length - 1] = Second_Snack;
-              sMeals[sMeals.length - 1] = Second_Snack;
-              setAll();
-
-              Navigator.pop(
-                  context);
-            },
+                    Navigator.pop(context);
+                  }
+                : null,
           ),
         ]),
       ),

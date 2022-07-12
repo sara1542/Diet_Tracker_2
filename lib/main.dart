@@ -1,6 +1,7 @@
 // @dart=2.9
 //null safety problem solved by previous line
 import 'package:firstgp/layout/social_app/social_layout.dart';
+import 'package:firstgp/modules/social_app/generator/generator_screen.dart';
 import 'package:firstgp/providers/buttonProviders.dart';
 import 'package:firstgp/providers/mainPageProvider.dart';
 import 'package:firstgp/screens/loginandregister.dart';
@@ -86,7 +87,8 @@ class MyApp extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.grey))),
         home: //SocialLayout()
-            LoginScreen());
+            //LoginScreen()
+            Generator());
 //              mainPage()),
 
     // return MultiBlocProvider(

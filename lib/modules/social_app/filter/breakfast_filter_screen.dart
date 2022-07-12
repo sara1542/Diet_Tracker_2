@@ -1,5 +1,6 @@
 import 'package:firstgp/modules/social_app/generator/generator_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../globals/globalFunctions.dart';
 import '../../../globals/globalVariables.dart';
@@ -7,17 +8,29 @@ import '../../../models/dish/dish_model.dart';
 
 class BreakfastFilter extends StatefulWidget {
   String patientId;
-   BreakfastFilter({Key? key,
-    required this.patientId}) :
-        super(key: key);
+  BreakfastFilter({Key? key, required this.patientId}) : super(key: key);
 
   @override
   State<BreakfastFilter> createState() => _BreakfastFilter();
 }
 
 class _BreakfastFilter extends State<BreakfastFilter> {
+  bool isButtonEnabled = false;
 
-  void setAll() {
+  bool _isEnabled() {
+    if (amountFilterBreakfastProtein == 0.0 ||
+        amountFilterBreakfastCarb == 0.0 ||
+        amountFilterBreakfastVegeies == 0.0 ||
+        amountFilterBreakfastDairyAndLegumes == 0.0) {
+      return false;
+    }
+    return true;
+  }
+
+  void setAll() async {
+    Filter == "breakfast"
+        ? Breakfast = await saveChange()
+        : Dinner = await saveChange();
     cur_calories =
         (bfCalories + lCalories + dCalories + s1Calories + s2Calories).round();
     cur_carb = (bfCarb + lCarb + dCarb + s1Carb + s2Carb).round();
@@ -39,12 +52,18 @@ class _BreakfastFilter extends State<BreakfastFilter> {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           TextField(
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
-              amountFilterBreakfastProtein = double.parse(value);
+              value.isNotEmpty
+                  ? amountFilterBreakfastProtein = double.parse(value)
+                  : amountFilterBreakfastProtein = 0.0;
+              setState(() {
+                isButtonEnabled = _isEnabled();
+              });
             },
             decoration: const InputDecoration(
               labelText: "Amount",
-              fillColor: Color.fromARGB(255, 36, 189, 51),
+              fillColor: Colors.green,
               filled: true,
             ),
           ),
@@ -57,7 +76,7 @@ class _BreakfastFilter extends State<BreakfastFilter> {
             elevation: 16,
             underline: Container(
               height: 2,
-              color: Color.fromARGB(255, 36, 189, 51),
+              color: Colors.green,
             ),
             onChanged: (Dish? newValue) {
               setState(() {
@@ -73,12 +92,18 @@ class _BreakfastFilter extends State<BreakfastFilter> {
           ),
           TextField(
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
-              amountFilterBreakfastCarb = double.parse(value);
+              value.isNotEmpty
+                  ? amountFilterBreakfastCarb = double.parse(value)
+                  : amountFilterBreakfastCarb = 0.0;
+              setState(() {
+                isButtonEnabled = _isEnabled();
+              });
             },
             decoration: const InputDecoration(
               labelText: "Amount",
-              fillColor: Color.fromARGB(255, 36, 189, 51),
+              fillColor: Colors.green,
               filled: true,
             ),
           ),
@@ -91,7 +116,7 @@ class _BreakfastFilter extends State<BreakfastFilter> {
             elevation: 16,
             underline: Container(
               height: 2,
-              color: Color.fromARGB(255, 36, 189, 51),
+              color: Colors.green,
             ),
             onChanged: (Dish? newValue) {
               setState(() {
@@ -107,12 +132,18 @@ class _BreakfastFilter extends State<BreakfastFilter> {
           ),
           TextField(
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
-              amountFilterBreakfastVegeies = double.parse(value);
+              value.isNotEmpty
+                  ? amountFilterBreakfastVegeies = double.parse(value)
+                  : amountFilterBreakfastVegeies = 0.0;
+              setState(() {
+                isButtonEnabled = _isEnabled();
+              });
             },
             decoration: const InputDecoration(
               labelText: "Amount",
-              fillColor: Color.fromARGB(255, 36, 189, 51),
+              fillColor: Colors.green,
               filled: true,
             ),
           ),
@@ -125,7 +156,7 @@ class _BreakfastFilter extends State<BreakfastFilter> {
             elevation: 16,
             underline: Container(
               height: 2,
-              color: Color.fromARGB(255, 36, 189, 51),
+              color: Colors.green,
             ),
             onChanged: (Dish? newValue) {
               setState(() {
@@ -141,12 +172,18 @@ class _BreakfastFilter extends State<BreakfastFilter> {
           ),
           TextField(
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (value) {
-              amountFilterBreakfastDairyAndLegumes = double.parse(value);
+              value.isNotEmpty
+                  ? amountFilterBreakfastDairyAndLegumes = double.parse(value)
+                  : amountFilterBreakfastDairyAndLegumes = 0.0;
+              setState(() {
+                isButtonEnabled = _isEnabled();
+              });
             },
             decoration: const InputDecoration(
               labelText: "Amount",
-              fillColor: Color.fromARGB(255, 36, 189, 51),
+              fillColor: Colors.green,
               filled: true,
             ),
           ),
@@ -159,7 +196,7 @@ class _BreakfastFilter extends State<BreakfastFilter> {
             elevation: 16,
             underline: Container(
               height: 2,
-              color: Color.fromARGB(255, 36, 189, 51),
+              color: Colors.green,
             ),
             onChanged: (Dish? newValue) {
               setState(() {
@@ -179,15 +216,16 @@ class _BreakfastFilter extends State<BreakfastFilter> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Color.fromARGB(255, 36, 189, 51),
+              primary: Colors.green,
             ),
             child: const Text('Save'),
-            onPressed: () async {
-              await saveChange();
-              setAll();
-              Navigator.pop(
-                  context);
-            },
+            onPressed: isButtonEnabled
+                ? () async {
+                    setAll();
+
+                    Navigator.pop(context);
+                  }
+                : null,
           ),
         ]),
       ),
