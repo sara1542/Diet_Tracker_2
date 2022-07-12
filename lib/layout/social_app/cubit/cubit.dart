@@ -44,7 +44,7 @@ class SocialCubit extends Cubit<SocialStates> {
   static SocialCubit get(context) => BlocProvider.of(context);
   String getMeals = GlobalUrl + "getTodaymeal/";
   String incrementCounter = GlobalUrl + "incrementMealCounter/";
-  void getUserData() {
+  Future<void> getUserData() async {
     emit(SocialGetUserLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
       userModel = UserModel.fromJson(value.data() ?? userModel.toMap());
@@ -74,10 +74,10 @@ class SocialCubit extends Cubit<SocialStates> {
     ];
   }
 
-  void ChangeBottomNav(int index) {
+  void ChangeBottomNav(int index) async {
     if (index == 1 || index == 2) {
       if (isDoctor) {
-        getDoctorPatients();
+        await getDoctorPatients();
         receivers = [];
         images = [];
         names = [];
@@ -87,11 +87,11 @@ class SocialCubit extends Cubit<SocialStates> {
           images.add(doctorPatients[i].image);
         }
       } else {
-        getPatientsOfSameCase();
+        await getPatientsOfSameCase();
       }
     }
     if (index == 2) {
-      getUserData();
+      await getUserData();
     }
     currentIndex = index;
     emit(SocialChangeBottomNavState());

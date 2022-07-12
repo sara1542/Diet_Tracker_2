@@ -8,8 +8,6 @@ import '../../../layout/social_app/cubit/states.dart';
 import '../../../shared/components/components.dart';
 
 class ChatsScreen extends StatelessWidget {
-
-
   ChatsScreen({Key? key}) : super(key: key);
 
   @override
@@ -44,7 +42,7 @@ class ChatsScreen extends StatelessWidget {
 
                 if (currentPatientDoctor != null) {
                   receivers.add(currentPatientDoctor!.uId);
-                  names.add('Dr '+currentPatientDoctor!.username);
+                  names.add('Dr ' + currentPatientDoctor!.username);
                   images.add(currentPatientDoctor!.image);
                 }
               }
