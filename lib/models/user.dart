@@ -86,6 +86,7 @@ class user {
         // print(e.request);
       }
 */
+      print(e.toString());
       button_provider.togglesigninOrsignupProgressIndicator();
       if (e.response!.statusCode == 404) {
         showToast(false, 'incorrect email or password');

@@ -65,7 +65,9 @@ class Classifier {
 
     // Create a list of length==_sentenceLen filled with the value <pad>
     var vec = List<double>.filled(_sentenceLen, _dict[pad]!.toDouble());
-
+    for (int i = 0; i < vec.length; i++) {
+      print('bbbbb '+vec[i].toString());
+    }
     var index = 0;
     if (_dict.containsKey(start)) {
       vec[index++] = _dict[start]!.toDouble();

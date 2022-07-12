@@ -187,12 +187,14 @@ Future getMeals() async {
   await getBreakfastMeals();
   await getLunchMeals();
   await getSnacks();
+  await getBadCombo();
 }
 
 //Future logMeal() async {}
 Future getSnacks() async {
   var responce = await http.get(Uri.parse(GlobalUrl + 'getsnacks'));
   var jsonData = jsonDecode(responce.body);
+  snacks.clear();
   for (var i in jsonData) {
     Dish dish = Dish(
         i["Category"],
@@ -255,6 +257,10 @@ generateSnacks() {
 Future getBreakfastMeals() async {
   var responce = await http.get(Uri.parse(GlobalUrl + 'getbreakfast'));
   var jsonData = jsonDecode(responce.body);
+  breakfastProtein.clear();
+  breakfastCarb.clear();
+  breakfastVegeies.clear();
+  breakfastDairyAndLegumes.clear();
   for (var i in jsonData) {
     Dish dish = Dish(
         i["Category"],
@@ -490,9 +496,9 @@ String generateBreakfastMeals() {
     bfFat += breakfastCarb[randomNumber].Fat * amount;
     bfProtein += breakfastCarb[randomNumber].Protein * amount;
   } while (bfCalories > (breakfastCalories) ||
-      bfFat > fat * 0.4 ||
-      bfCarb > carb * 0.4 ||
-      bfProtein > protein * 0.4);
+      bfFat > fat ||
+      bfCarb > carb ||
+      bfProtein > protein);
 
   if (checkBad(breakfast)) {
     generateBreakfastMeals();
@@ -505,6 +511,9 @@ String generateBreakfastMeals() {
 Future getLunchMeals() async {
   var responce = await http.get(Uri.parse(GlobalUrl + 'getlunch'));
   var jsonData = jsonDecode(responce.body);
+  lunchProtein.clear();
+  lunchCarb.clear();
+  lunchVegeiesAndLegumes.clear();
   for (var i in jsonData) {
     Dish dish = Dish(
         i["Category"],
@@ -669,9 +678,9 @@ String generateLunchMeals() {
     lFat += lunchVegeiesAndLegumes[randomNumber].Fat * amount;
     lProtein += lunchVegeiesAndLegumes[randomNumber].Protein * amount;
   } while (lCalories > lunchCalories ||
-      lFat > fat * 0.5 ||
-      lCarb > carb * 0.5 ||
-      lProtein > protein * 0.5);
+      lFat > fat ||
+      lCarb > carb ||
+      lProtein > protein);
 
   if (checkBad(lunch)) {
     generateLunchMeals();
@@ -878,9 +887,9 @@ String generateDinnerMeals() {
     dFat += breakfastCarb[randomNumber].Fat * amount;
     dProtein += breakfastCarb[randomNumber].Protein * amount;
   } while (dCalories > (breakfastCalories) ||
-      dFat > fat * 0.4 ||
-      dCarb > carb * 0.4 ||
-      dProtein > protein * 0.4);
+      dFat > fat ||
+      dCarb > carb ||
+      dProtein > protein);
 
   if (checkBad(dinner)) {
     generateDinnerMeals();
@@ -955,6 +964,7 @@ Future<int?> createDiet(String id) async {
 
 Future getBadCombo() async {
   var responce = await http.get(Uri.parse(GlobalUrl + 'getbadmeals'));
+  badCombo.clear();
   var jsonData = jsonDecode(responce.body);
   for (var i in jsonData) {
     List<dynamic> list = <dynamic>[];
@@ -998,7 +1008,7 @@ bool checkBad(var meal) {
   return res;
 }
 
-saveChange() {
+Future<String> saveChange() async {
   String strMeal = "";
   double curcalories = 0.0;
   if (Filter == "lunch") {
@@ -1170,6 +1180,7 @@ saveChange() {
         filterBreakfastVegeies.Protein;
     //print(Dinner);
   }
+  return strMeal;
 }
 
 Future getAllMeals() async {
@@ -1311,4 +1322,42 @@ void setAllMealsToZero() {
   lMeals = [];
   dMeals = [];
   sMeals = [];
+}
+
+Future<String> saveSnack1() async {
+  First_Snack = amountSnack1.toString() + " " + filterSnack1.Name.toString();
+  s1Calories = filterSnack1.Name.contains("Gram")
+      ? filterSnack1.Calories * (amountSnack1 / 100)
+      : filterSnack1.Calories * amountSnack1;
+  s1Carb = filterSnack1.Name.contains("Gram")
+      ? filterSnack1.Carbohydrates * (amountSnack1 / 100)
+      : filterSnack1.Carbohydrates * amountSnack1;
+  s1Protein = filterSnack1.Name.contains("Gram")
+      ? filterSnack1.Protein * (amountSnack1 / 100)
+      : filterSnack1.Protein * amountSnack1;
+  s1Fat = filterSnack1.Name.contains("Gram")
+      ? filterSnack1.Fat * (amountSnack1 / 100)
+      : filterSnack1.Fat * amountSnack1;
+
+  sMeals[sMeals.length - 2] = First_Snack;
+  return First_Snack;
+}
+
+Future<String> saveSnack2() async {
+  Second_Snack = amountSnack2.toString() + " " + filterSnack2.Name.toString();
+  s2Calories = filterSnack2.Name.contains("Gram")
+      ? filterSnack2.Calories * (amountSnack2 / 100)
+      : filterSnack2.Calories * amountSnack2;
+  s2Carb = filterSnack2.Name.contains("Gram")
+      ? filterSnack2.Carbohydrates * (amountSnack2 / 100)
+      : filterSnack2.Carbohydrates * amountSnack2;
+  s2Protein = filterSnack2.Name.contains("Gram")
+      ? filterSnack2.Protein * (amountSnack2 / 100)
+      : filterSnack2.Protein * amountSnack2;
+  s2Fat = filterSnack2.Name.contains("Gram")
+      ? filterSnack2.Fat * (amountSnack2 / 100)
+      : filterSnack2.Fat * amountSnack2;
+
+  sMeals[sMeals.length - 1] = Second_Snack;
+  return (Second_Snack);
 }
