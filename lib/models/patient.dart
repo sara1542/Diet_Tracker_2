@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:firstgp/globals/globalVariables.dart';
 import 'package:firstgp/globals/globalFunctions.dart';
 
+import '../globals/globalwidgets.dart';
 import 'diet.dart';
 import 'doctor.dart';
 import 'inbody.dart';
@@ -38,24 +40,45 @@ class patient extends user {
   Future<int?> register() async {
     Inbody = currentInbody;
     print("herrrrrrrrrrrrrrrrrrrrrrr register" + Inbody.BMI.toString());
-    final response = await dio.post(GlobalUrl + "patientRegister",
-        data: json.encode(<String, dynamic>{
-          "username": username.trim(),
-          "email": email.trim(),
-          "password": password.trim(),
-          "gender": Gender,
-          "age": Age,
-          "Case": Case,
-          "height": Inbody.height,
-          "weight": Inbody.weight,
-          "BMI": Inbody.BMI,
-        }));
-    if (response.statusCode == 200 && response.statusMessage == 'OK') {
+    try {
+      final response = await dio.post(GlobalUrl + "patientRegister",
+          data: json.encode(<String, dynamic>{
+            "username": username.trim(),
+            "email": email.trim(),
+            "password": password.trim(),
+            "gender": Gender,
+            "age": Age,
+            "Case": Case,
+            "height": Inbody.height,
+            "weight": Inbody.weight,
+            "BMI": Inbody.BMI,
+          }));
       uId = currentuser.uId = currentpatient.uId = uId.trim();
-
-      return response.statusCode;
-    } else {
-      throw Exception('failed to register' + response.statusMessage!);
+    } on DioError catch (e) {
+      /* if (e.response!.statusCode == 404) {
+        print(e.response!.statusCode);
+      } else {
+        print(e.message);
+        // print(e.request);
+      }
+*/
+      button_provider.togglesigninOrsignupProgressIndicator();
+      print(e.response!.data['error'].toString());
+      print("jjjjjkkk " + e.error.toString());
+      if (e.response!.statusCode == 400) {
+        showToast(false, e.response!.data['error'].toString());
+      } else {
+        showToast(false, 'check your internet connection and try again');
+      }
+      print('failed to sign in : $e');
+      //debugPrint(e.response!.toString());
+      throw Exception("failed to register");
     }
+    //  if (response.statusCode == 200 && response.statusMessage == 'OK') {
+
+    //return response.statusCode;
+    //} else {
+    //throw Exception('failed to register' + response.statusMessage!);
+    //}
   }
 }

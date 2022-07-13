@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:firstgp/globals/globalwidgets.dart';
 import 'package:firstgp/models/patient.dart';
 import 'package:firstgp/models/user.dart';
 import 'package:flutter/material.dart';
@@ -48,36 +50,59 @@ class doctor extends user {
         json["ratingScore"]);
   }
   Future<int?> register() async {
-    if (authData['visita url (optional)'] != '') {
-      final getScore = await dio.post(GlobalUrl + 'getscore',
-          data: json.encode(
-              <String, String>{"url": authData['visita url (optional)']!}));
-      if (getScore.statusCode == 200) {
-        print("rating score::: " + getScore.data.toString());
-        ratingScore = double.parse(getScore.data['score']);
-        //  return getScore.statusCode;
-      } else {
-        throw Exception('failed to post rating score from visita');
+    final getScoreAndDocId = await dio.post(GlobalUrl + 'getscore',
+        data: json
+            .encode(<String, String>{"url": authData['Veseeta profile URL']!}));
+
+    if (getScoreAndDocId.statusCode == 200) {
+      print("rating score::: " + getScoreAndDocId.data.toString());
+      ratingScore = double.parse(getScoreAndDocId.data['data'][0]);
+      print("res" + ratingScore.toString());
+      if (getScoreAndDocId.data['data'][1] != authData['Doctor Vezeeta id']) {
+        showToast(false, 'incorrect doctor id! ');
+        throw Exception('Doctor Vezeeta id is false! ');
       }
-    }
-    print("after condition");
-    final response = await dio.post(GlobalUrl + "doctorRegister",
-        data: json.encode(<String, dynamic>{
-          "username": username.trim(),
-          "email": email.trim(),
-          "password": password.trim(),
-          "gender": Gender,
-          "ratingScore":
-              (authData['visita url (optional)'] != '') ? ratingScore : 0,
-          // "visitaurl": visitaUrl,
-          "clinicPhone": cliniquePhone,
-          "price": price
-        }));
-    if (response.statusCode == 200) {
-      uId = currentuser.uId = currentdoctor.uId = uId.trim();
-      return response.statusCode;
+      //  return getScore.statusCode;
     } else {
-      throw Exception('failed to register');
+      throw Exception('failed to get data from veseeta');
+    }
+
+    print("after condition");
+    try {
+      final response = await dio.post(GlobalUrl + "doctorRegister",
+          data: json.encode(<String, dynamic>{
+            "username": username.trim(),
+            "email": email.trim(),
+            "password": password.trim(),
+            "gender": Gender,
+            "ratingScore": ratingScore,
+            // "visitaurl": visitaUrl,
+            "clinicPhone": cliniquePhone,
+            "price": price
+          }));
+      if (response.statusCode == 200) {
+        uId = currentuser.uId = currentdoctor.uId = uId.trim();
+        return response.statusCode;
+      }
+    } on DioError catch (e) {
+      /* if (e.response!.statusCode == 404) {
+        print(e.response!.statusCode);
+      } else {
+        print(e.message);
+        // print(e.request);
+      }
+*/
+      button_provider.togglesigninOrsignupProgressIndicator();
+      print(e.response!.data['error'].toString());
+      print("jjjjjkkk " + e.error.toString());
+      if (e.response!.statusCode == 400) {
+        showToast(false, e.response!.data['error'].toString());
+      } else {
+        showToast(false, 'check your internet connection and try again');
+      }
+      print('failed to sign in : $e');
+      debugPrint(e.response!.toString());
+      throw Exception("failed to register");
     }
   }
 }

@@ -23,7 +23,7 @@ Widget signUPorLogin(
                       {_formKey.currentState!.save(), submit(context)}
                   },
                 ))
-            : CircularProgressIndicator(),
+            : const CircularProgressIndicator(),
         Divider(
           color: Colors.grey[350],
         ),
@@ -51,7 +51,7 @@ Widget loginOrRegisterButton(String title) => SizedBox(
           },
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
           ),
         ),
@@ -61,35 +61,38 @@ Widget defaultTextForm(
         {Function? onsaved,
         required TextEditingController controller,
         required String text}) =>
-    TextFormField(
-      decoration: InputDecoration(
-          labelText: text,
-          labelStyle:
-              TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black12),
-              borderRadius: BorderRadius.all(Radius.circular(5.0))),
-          focusedBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Colors.green[300]!.withOpacity(1), width: 3),
-          )),
-      controller: controller,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Invalid $text!';
-        } else if (text == "email") {
-          bool emailValid = RegExp(
-                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-              .hasMatch(value);
-          print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh' + emailValid.toString());
-          if (!emailValid) return 'invalid email';
-        }
-        print("in validatorrr");
-        return null;
-      },
-      onSaved: (value) {
-        authData[text] = value!;
-      },
+    SizedBox(
+      width: 350,
+      child: TextFormField(
+        decoration: InputDecoration(
+            labelText: text,
+            labelStyle: const TextStyle(
+                color: Colors.black54, fontWeight: FontWeight.bold),
+            enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.all(Radius.circular(5.0))),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors.green[300]!.withOpacity(1), width: 3),
+            )),
+        controller: controller,
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'Invalid $text!';
+          } else if (text == "email") {
+            bool emailValid = RegExp(
+                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                .hasMatch(value);
+            print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh' + emailValid.toString());
+            if (!emailValid) return 'invalid email';
+          }
+          print("in validatorrr");
+          return null;
+        },
+        onSaved: (value) {
+          authData[text] = value!;
+        },
+      ),
     );
 
 Widget passwordDefaultTextFiled(
@@ -98,44 +101,47 @@ Widget passwordDefaultTextFiled(
         TextEditingController controller,
         int passType,
         TextEditingController? compareController) =>
-    TextFormField(
-      obscureText: !showpass,
-      decoration: InputDecoration(
-          labelText: text,
-          prefixIcon: Icon(Icons.security),
-          suffixIcon: IconButton(
-              icon: Icon(
-                Icons.remove_red_eye,
-              ),
-              color: showpass ? Colors.green : Colors.grey,
-              onPressed: () => {
-                    if (passType == 0)
-                      {provider.togglePassword()}
-                    else if (passType == 1)
-                      {provider.toggleConfirmPassword()}
-                    else
-                      {provider.toggleLoginPassword()}
-                  }),
-          labelStyle:
-              TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black12),
-              borderRadius: BorderRadius.all(Radius.circular(5.0))),
-          focusedBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Colors.green[300]!.withOpacity(1), width: 3),
-          )),
-      controller: controller,
-      validator: (value) {
-        if (value!.isEmpty) return 'Invalid password';
-        if (passType == 1) {
-          if (value != compareController!.text) {
-            return 'password does not match!';
+    SizedBox(
+      width: 350,
+      child: TextFormField(
+        obscureText: !showpass,
+        decoration: InputDecoration(
+            labelText: text,
+            prefixIcon: Icon(Icons.security),
+            suffixIcon: IconButton(
+                icon: const Icon(
+                  Icons.remove_red_eye,
+                ),
+                color: showpass ? Colors.green : Colors.grey,
+                onPressed: () => {
+                      if (passType == 0)
+                        {provider.togglePassword()}
+                      else if (passType == 1)
+                        {provider.toggleConfirmPassword()}
+                      else
+                        {provider.toggleLoginPassword()}
+                    }),
+            labelStyle: const TextStyle(
+                color: Colors.black54, fontWeight: FontWeight.bold),
+            enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.all(Radius.circular(5.0))),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors.green[300]!.withOpacity(1), width: 3),
+            )),
+        controller: controller,
+        validator: (value) {
+          if (value!.isEmpty) return 'Invalid password';
+          if (passType == 1) {
+            if (value != compareController!.text) {
+              return 'password does not match!';
+            }
           }
-        }
-        return null;
-      },
-      onSaved: (value) {
-        authData[text] = value!;
-      },
+          return null;
+        },
+        onSaved: (value) {
+          authData[text] = value!;
+        },
+      ),
     );

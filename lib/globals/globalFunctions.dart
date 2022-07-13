@@ -39,11 +39,11 @@ void submit(context) async {
   print("in submit " + authData.toString());
   if (provider.isLogin) {
     await currentuser
-        .login(authData['email']!, authData['password']!)
+        .login(authData['Email']!, authData['Password']!)
         .then((value) {
       print('signed in succesfully');
-      authData['email'] = '';
-      authData['password'] = '';
+      authData['Email'] = '';
+      authData['Password'] = '';
       isDoctor = currentuser.role == 'doctor' ? true : false;
       SocialCubit.get(context).setScreens();
 
@@ -60,44 +60,34 @@ void submit(context) async {
               ),
               (route) => false,
             ));
-    /*.catchError((error) {
-          button_provider.togglesigninOrsignupProgressIndicator();
-          if (error.response.statusCode == 404) {
-            showToast(false, 'incorrect email or password');
-          } else {
-            showToast(false, 'check your internet connection and try again');
-          }
-          print('failed to sign in : $error');
-          debugPrint(error.response.statusCode.toString());
-        });*/
   } else {
     if (authData['isdoctor'] == 'true') {
       print('registering a doctor');
       currentuser = doctor(
           "",
-          authData['username']!,
-          authData['email']!,
-          authData['password']!,
-          authData['gender']!,
-          double.parse(authData['detection price']!),
-          authData['clinic number']!,
+          authData['Username']!,
+          authData['Email']!,
+          authData['Password']!,
+          authData['Gender']!,
+          double.parse(authData['Detection price']!),
+          authData['Clinic number']!,
           authData['image']!);
     } else {
       print('registering a patient');
-      double height = double.parse(authData['height']!);
-      double weight = double.parse(authData['weight']!);
+      double height = double.parse(authData['Height']!);
+      double weight = double.parse(authData['Weight']!);
 
       currentInbody =
           inbody(height, weight, weight / (height / 100.0), 0.0, 0.0);
 
       currentuser = patient(
         '',
-        authData['username']!,
-        authData['email']!,
-        authData['password']!,
-        authData['gender']!,
-        int.parse(authData['age']!),
-        authData['case']!,
+        authData['Username']!,
+        authData['Email']!,
+        authData['Password']!,
+        authData['Gender']!,
+        int.parse(authData['Age']!),
+        authData['Case']!,
         authData['image']!,
       );
     }
@@ -105,9 +95,10 @@ void submit(context) async {
       button_provider.togglesigninOrsignupProgressIndicator();
       showToast(true, 'signed up succesfully');
       provider.toggleisLogin();
+      // button_provider.togglesigninOrsignupProgressIndicator();
     }).catchError((error) {
-      button_provider.togglesigninOrsignupProgressIndicator();
-      showToast(false, 'failed to sign up : $error');
+      //button_provider.togglesigninOrsignupProgressIndicator();
+      // showToast(false, 'failed to sign up : $error');
       print('error ' + error.toString());
     });
   }

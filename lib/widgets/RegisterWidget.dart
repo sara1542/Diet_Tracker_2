@@ -11,20 +11,20 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   @override
   void initState() {
-    print("************************************************88");
     authData['isdoctor'] = 'true';
-    authData['gender'] = 'male';
-    authData['height'] = '60.0';
-    authData['weight'] = '60.0';
-    authData['age'] = '20';
-    authData['case'] = 'none';
+    authData['Gender'] = 'male';
+    authData['Height'] = '60.0';
+    authData['Weight'] = '60.0';
+    authData['Age'] = '20';
+    authData['Case'] = 'none';
   }
 
   confirmPasswordValidation(String value) {
-    if (value.isEmpty)
+    if (value.isEmpty) {
       return 'empty password';
-    else if (value != passwordController.text) return 'does not match password';
-
+    } else if (value != passwordController.text) {
+      return 'does not match password';
+    }
     return null;
   }
 
@@ -33,6 +33,7 @@ class _RegisterState extends State<Register> {
   final usernameController = TextEditingController();
   final clinicController = TextEditingController();
   final visitaController = TextEditingController();
+  final doctoridController = TextEditingController();
   final passwordController = TextEditingController();
 
   final confirmPasswordController = TextEditingController();
@@ -48,43 +49,46 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      defaultTextForm(controller: usernameController, text: 'username'),
-      SizedBox(
+      defaultTextForm(controller: usernameController, text: 'Username'),
+      const SizedBox(
         height: 5,
       ),
-      defaultTextForm(controller: emailController, text: 'email'),
-      SizedBox(
+      defaultTextForm(controller: emailController, text: 'Email'),
+      const SizedBox(
         height: 5,
       ),
-      passwordDefaultTextFiled(provider.showPassword, 'password',
+      passwordDefaultTextFiled(provider.showPassword, 'Password',
           passwordController, 0, passwordController),
-      passwordDefaultTextFiled(provider.showConfirmPassword, 'confirm password',
+      passwordDefaultTextFiled(provider.showConfirmPassword, 'Confirm password',
           confirmPasswordController, 1, passwordController),
       if (isdoctor)
-        defaultTextForm(controller: clinicController, text: 'clinic number'),
+        defaultTextForm(controller: clinicController, text: 'Clinic number'),
       if (isdoctor)
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
       if (isdoctor)
         defaultTextForm(
-            controller: visitaController, text: 'visita url (optional)'),
+            controller: visitaController, text: 'Veseeta profile URL'),
       if (isdoctor)
-        SizedBox(
+        defaultTextForm(
+            controller: doctoridController, text: 'Doctor Vezeeta id'),
+      if (isdoctor)
+        const SizedBox(
           height: 5,
         ),
       if (isdoctor)
         defaultTextForm(
-            controller: detectionController, text: 'detection price'),
+            controller: detectionController, text: 'Detection price'),
       if (isdoctor)
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            "GENDER : ",
+          const Text(
+            "Gender : ",
             style:
                 TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
           ),
@@ -113,7 +117,7 @@ class _RegisterState extends State<Register> {
             onTap: () {
               setState(() {
                 isMale = true;
-                authData['gender'] = 'male';
+                authData['Gender'] = 'male';
               });
             },
           ),
@@ -142,20 +146,20 @@ class _RegisterState extends State<Register> {
             onTap: () {
               setState(() {
                 isMale = false;
-                authData['gender'] = 'female';
+                authData['Gender'] = 'female';
               });
             },
           ),
         ],
       ),
-      SizedBox(
+      const SizedBox(
         height: 10,
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            "ROLE : ",
+          const Text(
+            "Role : ",
             style:
                 TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
           ),
@@ -185,7 +189,6 @@ class _RegisterState extends State<Register> {
               setState(() {
                 isdoctor = true;
                 authData['isdoctor'] = 'true';
-                //  currentuser=new doctor(username, email, password, Gender, cliniqueLoc, pr, detailedLoc, cliniquePh, Age)
               });
             },
           ),
@@ -221,7 +224,7 @@ class _RegisterState extends State<Register> {
         ],
       ),
       if (!isdoctor)
-        if (!isdoctor) SizedBox(height: 10),
+        if (!isdoctor) const SizedBox(height: 10),
       if (!isdoctor)
         Container(
           height: 85,
@@ -263,7 +266,7 @@ class _RegisterState extends State<Register> {
                   onChanged: (value) {
                     setState(() {
                       height = value;
-                      authData['height'] = height.toString();
+                      authData['Height'] = height.toString();
                     });
                   })
             ],
@@ -273,7 +276,7 @@ class _RegisterState extends State<Register> {
               borderRadius: BorderRadiusDirectional.circular(20.0)),
         ),
       if (!isdoctor)
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
       if (!isdoctor)
@@ -293,7 +296,7 @@ class _RegisterState extends State<Register> {
                   ),
                   Text(
                     '$weight',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -305,7 +308,7 @@ class _RegisterState extends State<Register> {
                         onPressed: () {
                           setState(() {
                             weight--;
-                            authData['weight'] = weight.toString();
+                            authData['Weight'] = weight.toString();
                           });
                         },
                         mini: true,
@@ -316,7 +319,7 @@ class _RegisterState extends State<Register> {
                         onPressed: () {
                           setState(() {
                             weight++;
-                            authData['weight'] = weight.toString();
+                            authData['Weight'] = weight.toString();
                           });
                         },
                         mini: true,
@@ -350,7 +353,7 @@ class _RegisterState extends State<Register> {
                         onPressed: () {
                           setState(() {
                             age--;
-                            authData['age'] = age.toString();
+                            authData['Age'] = age.toString();
                           });
                         },
                         mini: true,
@@ -361,7 +364,7 @@ class _RegisterState extends State<Register> {
                         onPressed: () {
                           setState(() {
                             age++;
-                            authData['age'] = age.toString();
+                            authData['Age'] = age.toString();
                           });
                         },
                         mini: true,
@@ -378,7 +381,7 @@ class _RegisterState extends State<Register> {
               borderRadius: BorderRadiusDirectional.circular(20.0)),
         ),
       if (!isdoctor)
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
       if (!isdoctor)
@@ -387,7 +390,7 @@ class _RegisterState extends State<Register> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'case: ',
                 style: TextStyle(
                     fontSize: 20,
@@ -413,7 +416,7 @@ class _RegisterState extends State<Register> {
                   ].map((String val) {
                     return DropdownMenuItem(
                       value: val,
-                      child: new Text(val),
+                      child: Text(val),
                     );
                   }).toList()),
             ],

@@ -37,23 +37,24 @@ String GlobalUrl = "http://192.168.1.60:6666/api/";
 apiServices api = new apiServices();
 String chatbotUrl = 'http://192.168.1.60:5005/webhooks/rest/webhook';
 Map<String, String> authData = {
-  'email': '',
-  'password': '',
-  'username': '',
-  'confirm password': '',
-  'visita url (optional)': '',
+  'Email': '',
+  'Password': '',
+  'Username': '',
+  'Confirm password': '',
+  'Veseeta profile URL': '',
   'isdoctor': '',
-  'gender': '',
+  'Gender': '',
   'ratingScore': '',
-  'clinic number': '',
-  'case': '',
-  'height': '',
-  'weight': '',
-  'age': '',
+  'Clinic number': '',
+  'Case': '',
+  'Height': '',
+  'Weight': '',
+  'Age': '',
   'image':
       'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png',
-  'detection price': '',
-  'doctor': ''
+  'Detection price': '',
+  'doctor': '',
+  'Doctor Vezeeta id': ''
 };
 meal patientmeal = meal("", "No Available meals yet", "No Available meals yet",
     "No Available meals yet", "No Available meals yet", "");
