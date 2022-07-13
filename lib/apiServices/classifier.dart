@@ -65,22 +65,25 @@ class Classifier {
 
     // Create a list of length==_sentenceLen filled with the value <pad>
     var vec = List<double>.filled(_sentenceLen, _dict[pad]!.toDouble());
-    for (int i = 0; i < vec.length; i++) {
-      print('bbbbb '+vec[i].toString());
-    }
+    //it is filled with _dic[pad] which is = 0 the vec length= max len (post paddig with 0 s)
+
+    // for (int i = 0; i < vec.length; i++) {
+    // print('bbbbb ' + vec[i].toString());
+    //}
     var index = 0;
     if (_dict.containsKey(start)) {
+      //puts in the first index the encoding (index from vocab_file) of the tag <start
       vec[index++] = _dict[start]!.toDouble();
     }
-
-    // For each word in sentence find corresponding index in dict
+    // For each word in sentence find corresponding index in dict (encode words)
     for (var tok in toks) {
       if (index > _sentenceLen) {
         break;
       }
       vec[index++] = _dict.containsKey(tok)
           ? _dict[tok]!.toDouble()
-          : _dict[unk]!.toDouble();
+          : _dict[unk]!
+              .toDouble(); //if word is found in the dic then encode it else consider it unknown and encode it with the value of the tag <unknown
     }
 
     // returning List<List<double>> as our interpreter input tensor expects the shape, [1,256]
